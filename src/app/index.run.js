@@ -14,8 +14,6 @@
 			$window.localStorage['storageName'] = angular.toJson(data);
 		})
 
-
-
 		$log.debug('runBlock end');
 	}
 

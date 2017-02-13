@@ -15,6 +15,12 @@
         controllerAs: 'login'
       })
 
+      .state('userMgmt', {
+        url: '/user-management',
+        templateUrl: 'app/userMgmt/userMgmt.html',
+        controller: 'UserMgmtController',
+        controllerAs: 'userMgmt'
+      })
       // Login Page
       // .state('login', {
       //   url: '/login',
