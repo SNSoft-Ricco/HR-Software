@@ -6,12 +6,13 @@
     .factory('localdb', localdb);
 
   /** @ngInject */
-  function localdb($log,$window) {
-    const dbName = "snsofthrdb";
+  function localdb($log, $window, $q) {
+    var dbName = "snsofthrdb";
 
     var service = {
       getLocal : getLocal,
-      addUser : addUser
+      addUser : addUser,
+      getUser: getUser
     };
 
     return service;
@@ -30,7 +31,7 @@
       }
 
       // Open database
-      const dbName = "snsofthrdb";
+      var dbName = "snsofthrdb";
 
       var db;
       var request = indexedDB.open(dbName, 2);
@@ -103,8 +104,58 @@
           alert("Transaction error: " + event.target.errorCode);
         };        
       };
+    }
 
+    function getUser(username) {
+      var deferred = $q.defer();
 
+      var db;
+      var request = indexedDB.open(dbName, 2);
+
+      // Open database - Response
+      request.onerror = function(event) {
+        // Open database - Error
+        alert("Database error: " + event.target.errorCode);
+      };
+      request.onupgradeneeded = function(event) {
+        var db = event.target.result;
+
+        // Create an objectStore to hold information about our customers. We're
+        // going to use "ssn" as our key path because it's guaranteed to be
+        // unique - or at least that's what I was told during the kickoff meeting.
+        var objectStore = 
+          db.createObjectStore("user", { keyPath : "username", autoIncrement : true });
+      };
+      request.onsuccess = function(event) {
+        // Open database - Success
+        $log.info("Success open database");
+        db = event.target.result;
+
+        var transaction = db.transaction(["user"]);
+        var userObjStore = transaction.objectStore("user");
+        var request = userObjStore.get(username);
+
+        request.onerror = function(event) {
+          $log.info("User not exist!");
+          return false;
+        };    
+        // Do something when all the data is added to the database.
+        request.onsuccess = function(event) {
+          var value = event.target.result;
+
+          if (value) {
+            $log.info("User found!");
+            deferred.resolve(value);
+          } else {
+            $log.info("User not exist!");
+            deferred.reject("User not exist!");
+          }
+        };
+
+        
+      };    
+
+      return deferred.promise;  
     }
   }
 })();

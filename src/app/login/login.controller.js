@@ -11,15 +11,20 @@
 
     vm.login = login;
 
-    localdb.getLocal();
-    localdb.addUser();
-
-    var accessData = angular.fromJson($window.localStorage['storageName']);
-    $log.info(accessData);
-    vm.userEmail = accessData.username;
-
     function login() {
-      $state.go("userMgmt");
+      localdb
+        .getUser(vm.userEmail)
+        .then(function(data){
+          // Verify success
+          $log.info("Verify success!");
+          $state.go("userMgmt");
+        }, function() {
+          // Verify failed
+          alert("Invalid credentials!");
+
+          // DEVELOPMENT
+          $state.go("userMgmt");
+        });
     }
   }
 })();
