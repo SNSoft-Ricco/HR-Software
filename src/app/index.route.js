@@ -21,6 +21,13 @@
         controller: 'UserMgmtController',
         controllerAs: 'userMgmt'
       })
+
+      .state('userRgst', {
+        url: '/user-registration',
+        templateUrl: 'app/userRgst/userRgst.html',
+        controller: 'UserRgstController',
+        controllerAs: 'userRgst'
+      })
       // Login Page
       // .state('login', {
       //   url: '/login',

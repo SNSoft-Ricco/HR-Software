@@ -11,37 +11,36 @@
     var DB_VERSION = 2;
     var db;
 
-    openDb();
-
     var service = {
+      openDb: openDb,
       addUser : addUser,
-      getUser: getUser
+      rmUser: rmUser,
+      getUser: getUser,
+      getAllUsers: getAllUsers
     };
 
     return service;
 
-    function addUser(username, password) {
-      //var deferred = $q.defer();
+    function addUser(objUser) {
+      var deferred = $q.defer();
       var DB_STORENAME = 'user';
-
-      var newUser = {
-        username: username,
-        password: password
-      }
 
       var request = 
         getObjectStore(DB_STORENAME, 'readwrite')
-        .add(newUser);
+        .add(objUser);
 
       request.onerror = function(event) {
         // Add user trasaction - Error
         alert("Transaction error: " + event.target.errorCode);
+        deferred.reject();
       }; 
 
       // Do something when all the data is added to the database.
-      request.onsuccess = function(event) {
-        $log.info("Execute add");
+      request.onsuccess = function() {
+        deferred.resolve("Successfully added user.")
       };
+
+      return deferred.promise;
     }
 
     function getUser(username) {
@@ -52,7 +51,7 @@
         getObjectStore(DB_STORENAME, 'readonly')
         .get(username);
 
-      request.onerror = function(event) {
+      request.onerror = function() {
         $log.info("Open ObjectStore Error!");
       };    
       // Do something when all the data is added to the database.
@@ -71,10 +70,63 @@
       return deferred.promise;  
     }
 
+    // Remove user from localDB
+    function rmUser(objUser) {
+      var deferred = $q.defer();
+      var DB_STORENAME = 'user';
+
+      var request = 
+        getObjectStore(DB_STORENAME, 'readwrite')
+        .delete(objUser.username);
+
+      request.onerror = function(event) {
+        // Remove user trasaction - Error
+        alert("Transaction error: " + event.target.errorCode);
+        deferred.reject();
+      }; 
+
+      request.onsuccess = function() {
+        deferred.resolve("Successfully removed user.")
+      };
+
+      return deferred.promise;
+    }
+
+    function getAllUsers() {
+      var deferred = $q.defer();
+      var DB_STORENAME = 'user';
+      var users = [];
+
+      var request = 
+        getObjectStore(DB_STORENAME, 'readonly')
+        .openCursor();
+
+      request.onerror = function() {
+        $log.info("Open Cursor Error!");
+        deferred.reject();
+      };    
+      // Do something when all the data is added to the database.
+      request.onsuccess = function(event) {
+        var cursor = event.target.result;
+
+        if (cursor) {
+          users.push(cursor.value);
+          cursor.continue();
+        }
+        else {
+          deferred.resolve(users);
+        }
+
+
+      };
+
+      return deferred.promise;
+    }
+
     function openDb() {
       $log.info("openDb ...");
       var req = indexedDB.open(DB_NAME, DB_VERSION);
-      req.onsuccess = function (evt) {
+      req.onsuccess = function () {
         // Better use "this" than "req" to get the result to avoid problems with
         // garbage collection.
         // db = req.result;
@@ -87,9 +139,9 @@
 
       req.onupgradeneeded = function (evt) {
         $log.info("openDb.onupgradeneeded");
-        var store = 
-          evt.currentTarget.result
-          .createObjectStore("user", { keyPath : "username", autoIncrement : true });
+
+        evt.currentTarget.result
+        .createObjectStore("user", { keyPath : "username", autoIncrement : true });
       };
     }
 

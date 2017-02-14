@@ -6,15 +6,33 @@
     .controller('UserMgmtController', UserMgmtController);
 
   /** @ngInject */
-  function UserMgmtController($log, $window, localdb) {
+  function UserMgmtController($log, $window, $cookies, $state, localdb) {
     var vm = this;
 
-    $log.info("User Mgmt controller");
-    vm.submit = submit;
+    vm.users = [];
 
-    function submit() {
-      $log.info(vm.username + " " + vm.pwd);
-      localdb.addUser(vm.username, vm.pwd);
+    vm.register = register;
+    vm.rmUser = rmUser;
+    vm.username = angular.fromJson($cookies.get("loggedInUser")).username;
+
+    showUsers();
+
+    function register() {
+      $state.go("userRgst");
+    }
+
+    function showUsers() {
+      localdb.getAllUsers().then(function(users){
+        vm.users = users;
+      });
+    }
+
+    function rmUser(objUser) {
+      $log.debug("Removing user: " + objUser.username);
+      localdb.rmUser(objUser).then(function(result){
+        alert(result);
+        showUsers();
+      });
     }
   }
 })();

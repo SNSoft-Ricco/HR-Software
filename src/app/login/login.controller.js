@@ -6,7 +6,7 @@
     .controller('LoginController', LoginController);
 
   /** @ngInject */
-  function LoginController($log, $window, $state, localdb) {
+  function LoginController($log, $cookies, $window, $state, localdb) {
     var vm = this;
 
     vm.login = login;
@@ -17,6 +17,7 @@
         .then(function(data){
           // Verify success
           $log.info("Verify success!");
+          $cookies.put("loggedInUser", angular.toJson(data));
           $state.go("userMgmt");
         }, function() {
           // Verify failed

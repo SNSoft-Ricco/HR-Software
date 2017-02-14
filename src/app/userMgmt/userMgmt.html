@@ -1,41 +1,36 @@
 <div class="container">
-	<form class="well form-horizontal" id="contact_form">
-		<fieldset>
+	<sns-navbar></sns-navbar>
+	<div ng-show="true">
+		<h1>You have logged in as {{ userMgmt.username }}</h1>
+		<button ng-click="userMgmt.register()">Register Employee</button>
+	</div>
 
-			<!-- Form Name -->
-			<legend>New Employee Signup</legend>
+  <div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-content">
+                <table class="table table-bordered table-striped table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Group</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+										<tr ng-repeat="user in userMgmt.users track by user.username">
+                        <td> {{ user.username }}</td>
+                        <td> {{ user.usergroup }}</td>
+                        <td> {{ user.status }}</td>
+                        <td> 
+                        	<i class="glyphicon glyphicon-remove" ng-click="userMgmt.rmUser(user)"></i>
+                        </td>
+                    </tr> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-			<!-- username-->
-			<div class="form-group">
-			  <label class="col-md-4 control-label">Username</label>  
-			  <div class="col-md-4 inputGroupContainer">
-			  <div class="input-group">
-			  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-			  <input  name="first_name" ng-model="userMgmt.username" placeholder="Enter Company's Email" class="form-control" type="text">
-			    </div>
-			  </div>
-			</div>
-
-			<!-- password --> 
-			<div class="form-group">
-			  <label class="col-md-4 control-label">Password</label>  
-			    <div class="col-md-4 inputGroupContainer">
-			    <div class="input-group">
-			        <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-			  <input name="phone" ng-model="userMgmt.pwd" placeholder="Enter personal password" class="form-control" type="password">
-			    </div>
-			  </div>
-			</div>
-
-			<!-- Button -->
-			<div class="form-group">
-			  <label class="col-md-4 control-label"></label>
-			  <div class="col-md-4">
-			    <button class="btn" ng-click="userMgmt.submit()">Submit</button>
-			  </div>
-			</div>
-
-		</fieldset>
-	</form>
 </div>
-</div><!-- /.container -->

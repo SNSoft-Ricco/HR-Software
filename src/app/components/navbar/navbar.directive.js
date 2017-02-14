@@ -3,10 +3,10 @@
 
   angular
     .module('snsoftHr')
-    .directive('acmeNavbar', acmeNavbar);
+    .directive('snsNavbar', snsNavbar);
 
   /** @ngInject */
-  function acmeNavbar() {
+  function snsNavbar() {
     var directive = {
       restrict: 'E',
       templateUrl: 'app/components/navbar/navbar.html',
