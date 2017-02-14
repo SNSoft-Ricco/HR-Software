@@ -6,52 +6,53 @@
 			<!-- Form Name -->
 			<legend>New Employee Signup</legend>
 
-			<!-- username-->
-			<div class="form-group">
-			  <label class="col-md-4 control-label">Username</label>  
-			  <div class="col-md-4 inputGroupContainer">
-			  <div class="input-group">
-			  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-			  <input  name="first_name" ng-model="userRgst.username" placeholder="Enter Company's Email" class="form-control" type="text">
+			<!-- Dynamic Fields Form -->
+			<div class="form-group" ng-repeat="(key, value) in userRgst.dynFields track by $index">
+				<label class="col-md-4 control-label">{{value.fieldName}}</label>
+				<div class="col-md-4 inputGroupContainer">
+			  	<div class="input-group">
+			  		<span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
+			  		<input 
+			  			ng-model="userRgst.inputs[$index]" 
+			  			ng-show="value.inputType == 'textbox'"
+			  			placeholder="{{value.placeholder}}" 
+			  			class="form-control" 
+			  			type="{{value.type}}">
+			  		<select 
+			  			ng-model="userRgst.inputs[$index]" 
+			  			ng-show="value.inputType == 'selectbox'"
+			  			class="form-control selectpicker">
+				      <option value=" ">Please select your state</option>
+				      <option>SysAdmin</option>
+				      <option>HR</option>
+				      <option>Department Head</option>
+				      <option>Normal Employee</option>      
+					  </select>
 			    </div>
 			  </div>
 			</div>
 
-			<!-- password --> 
+			<!-- New dynamic field -->
 			<div class="form-group">
-			  <label class="col-md-4 control-label">Password</label>  
-			    <div class="col-md-4 inputGroupContainer">
-			    <div class="input-group">
-			        <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-			  <input name="phone" ng-model="userRgst.pwd" placeholder="Enter personal password" class="form-control" type="password">
-			    </div>
+			  <label class="col-md-4 control-label"></label>
+			  <div class="col-md-4">
+			  	<div class="input-group">
+					  <input ng-model="userRgst.newName" type="text" class="form-control" placeholder="Create a new form field">
+					  <span class="input-group-btn">
+					    <button class="btn btn-default" ng-click="userRgst.newField()">Insert</button>
+					  </span>
+					</div>
 			  </div>
-			</div>
-
-			<!-- user-group --> 			   
-			<div class="form-group"> 
-			  <label class="col-md-4 control-label">User Group</label>
-			    <div class="col-md-4 selectContainer">
-			    <div class="input-group">
-			        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-					    <select ng-model="userRgst.dpmt" name="state" class="form-control selectpicker" >
-					      <option value=" " >Please select your state</option>
-					      <option>SysAdmin</option>
-					      <option>HR</option>
-					      <option>Department Head</option>
-					      <option>Normal Employee</option>      
-					    </select>
-			  </div>
-			</div>
 			</div>
 
 			<!-- Button -->
 			<div class="form-group">
-			  <label class="col-md-4 control-label"></label>
-			  <div class="col-md-4">
-			  	<button class="btn" ng-click="userRgst.back()">Back</button>
-			    <button class="btn" ng-click="userRgst.submit()">Submit</button>
-			  </div>
+				<div class="col-md-4">
+					<div class="input-group">
+						<button class="btn" ng-click="userRgst.back()">Back</button>
+				    <button class="btn" ng-click="userRgst.submit()">Submit</button>
+				  </div>
+				</div>
 			</div>
 
 		</fieldset>

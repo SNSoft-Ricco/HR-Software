@@ -25,6 +25,9 @@
       var deferred = $q.defer();
       var DB_STORENAME = 'user';
 
+      // Let new user have active status
+      objUser.status = "active";
+
       var request = 
         getObjectStore(DB_STORENAME, 'readwrite')
         .add(objUser);
