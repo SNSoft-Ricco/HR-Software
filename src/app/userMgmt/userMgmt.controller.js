@@ -13,7 +13,9 @@
 
     vm.register = register;
     vm.rmUser = rmUser;
-    vm.username = angular.fromJson($cookies.get("loggedInUser")).username;
+    vm.editUser = editUser;
+
+    //vm.username = angular.fromJson($cookies.get("loggedInUser")).username;
 
     showUsers();
 
@@ -33,6 +35,11 @@
         alert(result);
         showUsers();
       });
+    }
+
+    function editUser(objUser) {
+      $cookies.put('editUser', angular.toJson(objUser));
+      $state.go("userRgst");
     }
   }
 })();

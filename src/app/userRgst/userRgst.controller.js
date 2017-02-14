@@ -15,7 +15,8 @@
         "type": "text",
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-user",
-        "placeholder": "Enter an username"
+        "placeholder": "Enter an username",
+        "value": "test"
       },
       "userpwd": {
         "fieldName": "Password",
@@ -38,6 +39,8 @@
     }
 
     vm.dynFields = dynTemplate;
+    vm.editMode = false;
+    vm.title = "New User Registration"
 
     vm.inputs = [];
 
@@ -45,7 +48,35 @@
     vm.submit = submit;
     vm.newField = newField;
 
+    if ($cookies.get('editUser')) {
+      var objUser = angular.fromJson($cookies.get('editUser'));
+      var i = 0;
+
+      vm.editMode = true;
+      vm.title = "Edit User Information"
+
+      for (var field in objUser) {
+        $log.info(field);
+        if(vm.dynFields.hasOwnProperty(field)) {
+          vm.inputs[i] = objUser[field];
+        } else {
+          vm.dynFields[field] = {
+            "fieldName": field,
+            "type": "text",
+            "inputType": "textbox",
+            "glyphClass": "glyphicon glyphicon-list-alt"
+          };
+
+          vm.inputs[i] = objUser[field];
+        }
+
+        i++;
+      }
+    }
+
     function back() {
+      vm.editMode = false;
+      $cookies.remove('editUser');
       $state.go('userMgmt');
     }
 
@@ -59,9 +90,17 @@
         i++;
       }
 
-      localdb.addUser(fields).then(function(response){
-        alert(response);
-      });
+      if (vm.editMode)
+      {
+        localdb.editUser(fields).then(function(response){
+          alert(response);
+        });
+      } else {
+        localdb.addUser(fields).then(function(response){
+          alert(response);
+        });
+      }
+
     }
 
     function newField() {

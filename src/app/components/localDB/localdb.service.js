@@ -14,6 +14,7 @@
     var service = {
       openDb: openDb,
       addUser : addUser,
+      editUser: editUser,
       rmUser: rmUser,
       getUser: getUser,
       getAllUsers: getAllUsers
@@ -95,6 +96,25 @@
       return deferred.promise;
     }
 
+    // Edit user
+    function editUser(objUser) {
+      var deferred = $q.defer();
+      var DB_STORENAME = 'user';
+
+      var request = 
+        getObjectStore(DB_STORENAME, 'readwrite')
+        .put(objUser);
+
+      request.onerror = function(event) {
+         deferred.reject("Edit User Failed!");
+       };
+       request.onsuccess = function(event) {
+         deferred.resolve("Successfully edited user information.")
+       };
+
+       return deferred.promise;
+    }
+
     function getAllUsers() {
       var deferred = $q.defer();
       var DB_STORENAME = 'user';
@@ -145,6 +165,8 @@
 
         evt.currentTarget.result
         .createObjectStore("user", { keyPath : "username", autoIncrement : true });
+
+        // Create admin account for first time access
       };
     }
 
@@ -153,7 +175,6 @@
      * @param {string} mode either "readonly" or "readwrite"
      */
     function getObjectStore(store_name, mode) {
-      $log.info("getObjectStore: " + db);
       var tx = db.transaction(store_name, mode);
       return tx.objectStore(store_name);
     }
