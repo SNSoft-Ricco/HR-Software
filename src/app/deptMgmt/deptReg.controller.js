@@ -16,7 +16,8 @@
 					"inputType": "textbox",
 					"glyphClass": "glyphicon glyphicon-user",
 					"placeholder": "Enter a department name",
-					"value": "test"
+					"value": "test",
+					"forEdit": "false"
 				}
 			}
 
@@ -69,12 +70,11 @@
         i++;
       }
 
-      $log.info(fields);
-
       if (vm.editMode)
       {
         deptServ.editDept(fields).then(function(response){
           alert(response);
+          $state.go('deptMgmt');
         });
       } else {
         deptServ.addDept(fields).then(function(response){

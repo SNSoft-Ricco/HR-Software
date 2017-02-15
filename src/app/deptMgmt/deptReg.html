@@ -20,13 +20,14 @@
 
               <!-- Dynamic Fields Form -->
               <div class="form-group" ng-repeat="(key, value) in deptReg.dynFields track by $index">
-                <label class="col-md-4 control-label">{{value.fieldName}}</label>
+                <label class="col-md-4 control-label">{{value.fieldName | capitalize}}</label>
                 <div class="col-md-4 inputGroupContainer">
                   <div class="input-group">
                     <span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
                     <input 
                       ng-model="deptReg.inputs[$index]" 
                       ng-show="value.inputType == 'textbox'"
+                      ng-disabled="deptReg.editMode && value.forEdit"
                       placeholder="{{value.placeholder}}" 
                       class="form-control" 
                       type="{{value.type}}">
