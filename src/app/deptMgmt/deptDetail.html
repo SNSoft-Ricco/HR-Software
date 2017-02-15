@@ -11,9 +11,38 @@
             <h2>{{deptDetail.deptName}}</h2>
           </div>
 
+          <!-- Users In Department -->
+          <div class="row">
+            <div class="box col-md-12">
+              <div class="box-inner">
+                <div class="box-content">
+                  <table class="table table-bordered table-striped table-condensed">
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th>Group</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="user in deptDetail.users track by user.username">
+                        <td> {{ user.username }}</td>
+                        <td> {{ user.usergroup }}</td>
+                        <td> {{ user.department }}</td>
+                        <td> {{ user.status }}</td>
+                      </tr> 
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
+  </div>
 
   <!-- Page Actions -->
   <div ng-show="true">

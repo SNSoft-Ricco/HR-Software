@@ -6,7 +6,7 @@
     .controller('UserRgstController', UserRgstController);
 
   /** @ngInject */
-  function UserRgstController($log, $window, $cookies, $state, localdb, deptServ) {
+  function UserRgstController($log, $window, $cookies, $state, userServ, deptServ) {
     var vm = this;
 
     var dynTemplate = {
@@ -101,11 +101,11 @@
 
       if (vm.editMode)
       {
-        localdb.editUser(fields).then(function(response){
+        userServ.editUser(fields).then(function(response){
           alert(response);
         });
       } else {
-        localdb.addUser(fields).then(function(response){
+        userServ.addUser(fields).then(function(response){
           alert(response);
         });
       }
