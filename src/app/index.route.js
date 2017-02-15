@@ -28,6 +28,22 @@
         controller: 'UserRgstController',
         controllerAs: 'userRgst'
       })
+
+      // Department Management View
+      .state('deptMgmt', {
+        url: '/department-management',
+        templateUrl: 'app/deptMgmt/deptMgmt.html',
+        controller: 'DeptMgmtController',
+        controllerAs: 'deptMgmt'
+      })
+
+      // Department Registration View
+      .state('deptReg', {
+        url: '/department-registration',
+        templateUrl: 'app/deptMgmt/deptReg.html',
+        controller: 'DeptRegController',
+        controllerAs: 'deptReg'
+      })
       // Login Page
       // .state('login', {
       //   url: '/login',

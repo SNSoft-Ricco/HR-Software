@@ -1,0 +1,46 @@
+<div class="container">
+	<sns-navbar></sns-navbar>
+  <!--
+	<div ng-show="true">
+		<h1>You have logged in as {{ userMgmt.username }}</h1>
+		<button ng-click="userMgmt.register()">Register Employee</button>
+	</div>
+  -->
+
+  <div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-content">
+                <table class="table table-bordered table-striped table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+										<tr ng-repeat="dept in deptMgmt.depts track by dept.department">
+                        <td> {{ dept.department }}</td>
+                        <td> 
+                        	<i class="glyphicon glyphicon-pencil" ng-click="deptMgmt.editDept(user)"></i>
+                        	<i class="glyphicon glyphicon-remove" ng-click="deptMgmt.rmDept(user)"></i>
+                        </td>
+                    </tr> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+  <!-- Page Actions -->
+  <div ng-show="true">
+    <div class="box col-md-12">
+      <div class="box-inner">
+        <div class="box-content">
+          <button ng-click="deptMgmt.newDept()">Create New Department</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

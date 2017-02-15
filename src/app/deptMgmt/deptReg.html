@@ -1,0 +1,95 @@
+<div class="container">
+	<sns-navbar></sns-navbar>
+  <!--
+	<div ng-show="true">
+		<h1>You have logged in as {{ userMgmt.username }}</h1>
+		<button ng-click="userMgmt.register()">Register Employee</button>
+	</div>
+  -->
+
+  <!-- Page Body -->
+  <div class="row">
+    <div class="box col-md-12">
+      <div class="box-inner">
+        <div class="box-content">
+          <!-- Starts Here -->
+          <form class="well form-horizontal" id="contact_form" name="reg_form">
+            <fieldset>
+              <!-- Form Name -->
+              <legend>Department Registration</legend>
+
+              <!-- Dynamic Fields Form -->
+              <div class="form-group" ng-repeat="(key, value) in deptReg.dynFields track by $index">
+                <label class="col-md-4 control-label">{{value.fieldName}}</label>
+                <div class="col-md-4 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
+                    <input 
+                      ng-model="deptReg.inputs[$index]" 
+                      ng-show="value.inputType == 'textbox'"
+                      placeholder="{{value.placeholder}}" 
+                      class="form-control" 
+                      type="{{value.type}}">
+                    <select 
+                      ng-model="deptReg.inputs[$index]" 
+                      ng-show="value.inputType == 'selectbox' && key == 'usergroup'"
+                      class="form-control selectpicker">
+                      <option value=" ">Please select the user group</option>
+                      <option>SysAdmin</option>
+                      <option>HR</option>
+                      <option>Department Head</option>
+                      <option>Normal Employee</option>      
+                    </select>
+                    <select 
+                      ng-model="deptReg.inputs[$index]" 
+                      ng-show="value.inputType == 'selectbox' && key == 'department'"
+                      class="form-control selectpicker">
+                      <option value=" ">Please select a department</option>
+                      <option ng-repeat="(key, value) in deptReg.depts track by $index">{{value.department}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- New dynamic field -->
+              <div class="form-group">
+                <label class="col-md-4 control-label"></label>
+                <div class="col-md-4">
+                  <div class="input-group">
+                    <input 
+                      name="newName"
+                      ng-model="deptReg.newName" 
+                      type="text" 
+                      class="form-control" 
+                      placeholder="Create a new form field" 
+                      required>
+                    <span class="input-group-btn">
+                      <button 
+                        class="btn btn-default" 
+                        ng-disabled="reg_form.newName.$error.required"
+                        ng-click="deptReg.newField()">Insert</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+  <!-- Page Actions -->
+  <div ng-show="true">
+    <div class="box col-md-12">
+      <div class="box-inner">
+        <div class="box-content">
+          <!-- Starts Here -->
+          <button ui-sref="deptMgmt">Back</button>
+          <button ng-click="deptReg.newDept()">Create Departmentt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
