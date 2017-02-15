@@ -13,6 +13,7 @@
     this.rmUser = rmUser;
     this.editUser = editUser;
     this.getUser = getUser;
+    this.getUsersByIndex = getUsersByIndex;
 
     //// Local Variable Declaration
     var DB_STORENAME = 'user';
@@ -70,6 +71,39 @@
         } else {
           $log.info("User not exist!");
           deferred.reject("User not exist!");
+        }
+      };
+
+      return deferred.promise;  
+    }
+
+    // Get Users By Index
+    // Param    - Index Name
+    // Resolve  - Users object
+    function getUsersByIndex(index, key) {
+      var deferred = $q.defer();
+      var users = [];
+
+      var singleKeyRange = IDBKeyRange.only(key);
+
+      var request = 
+        localdb.getObjectStore(DB_STORENAME, 'readonly')
+        .index(index)
+        .openCursor(singleKeyRange);
+
+      request.onerror = function() {
+        $log.info("Open ObjectStore Error!");
+      };    
+      // Do something when all the data is added to the database.
+      request.onsuccess = function(event) {
+        var cursor = event.target.result;
+
+        if (cursor) {
+          users.push(cursor.value);
+          cursor.continue();
+        }
+        else {
+          deferred.resolve(users);
         }
       };
 
