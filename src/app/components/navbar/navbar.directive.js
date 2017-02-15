@@ -21,11 +21,16 @@
     return directive;
 
     /** @ngInject */
-    function NavbarController(moment) {
+    function NavbarController($log, moment) {
       var vm = this;
 
       // "vm.creationDate" is available by directive option "bindToController: true"
       vm.relativeDate = moment(vm.creationDate).fromNow();
+      vm.logout = logout;
+
+      function logout() {
+        $log.info("LOGOUT!!!");
+      }
     }
   }
 

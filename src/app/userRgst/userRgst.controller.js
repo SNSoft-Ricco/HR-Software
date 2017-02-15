@@ -30,6 +30,11 @@
         "inputType": "selectbox",
         "glyphClass": "glyphicon glyphicon-briefcase"
       },
+      "department": {
+        "fieldName": "Department",
+        "inputType": "selectbox",
+        "glyphClass": "glyphicon glyphicon-star"
+      },
       "contactno": {
         "fieldName": "Contact No.",
         "type": "text",

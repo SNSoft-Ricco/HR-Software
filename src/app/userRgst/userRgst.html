@@ -20,13 +20,21 @@
 			  			type="{{value.type}}">
 			  		<select 
 			  			ng-model="userRgst.inputs[$index]" 
-			  			ng-show="value.inputType == 'selectbox'"
+			  			ng-show="value.inputType == 'selectbox' && key == 'usergroup'"
 			  			class="form-control selectpicker">
-				      <option value=" ">Please select your state</option>
+				      <option value=" ">Please select the user group</option>
 				      <option>SysAdmin</option>
 				      <option>HR</option>
 				      <option>Department Head</option>
 				      <option>Normal Employee</option>      
+					  </select>
+					  <select 
+			  			ng-model="userRgst.inputs[$index]" 
+			  			ng-show="value.inputType == 'selectbox' && key == 'department'"
+			  			class="form-control selectpicker">
+				      <option value=" ">Please select a department</option>
+				      <option>IT Department</option>
+				      <option>HR Department</option>
 					  </select>
 			    </div>
 			  </div>
