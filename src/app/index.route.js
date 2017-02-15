@@ -42,7 +42,8 @@
         url: '/department-registration',
         templateUrl: 'app/deptMgmt/deptReg.html',
         controller: 'DeptRegController',
-        controllerAs: 'deptReg'
+        controllerAs: 'deptReg',
+        params: {myParam: null}
       })
       // Login Page
       // .state('login', {

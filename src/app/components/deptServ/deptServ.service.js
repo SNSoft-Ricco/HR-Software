@@ -11,6 +11,7 @@
     this.getAllDepartments = getAllDepartments;
     this.addDept = addDept;
     this.rmDept = rmDept;
+    this.editDept = editDept;
 
     var DB_STORENAME = 'department';
 
@@ -92,6 +93,26 @@
       };
 
       return deferred.promise;
+    }
+
+    // Edit Department
+    // Param - Department To Edit JSON object
+    // Promise Resolve - Success Message
+    function editDept(objDept) {
+      var deferred = $q.defer();
+
+      var request = 
+        localdb.getObjectStore(DB_STORENAME, 'readwrite')
+        .put(objDept);
+
+      request.onerror = function() {
+         deferred.reject("Edit Department Failed!");
+       };
+       request.onsuccess = function() {
+         deferred.resolve("Successfully edited department information.")
+       };
+
+       return deferred.promise;
     }
   }
 })();

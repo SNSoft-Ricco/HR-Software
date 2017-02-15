@@ -16,7 +16,7 @@
           <form class="well form-horizontal" id="contact_form" name="reg_form">
             <fieldset>
               <!-- Form Name -->
-              <legend>Department Registration</legend>
+              <legend>{{ deptReg.title }}</legend>
 
               <!-- Dynamic Fields Form -->
               <div class="form-group" ng-repeat="(key, value) in deptReg.dynFields track by $index">
@@ -86,7 +86,7 @@
         <div class="box-content">
           <!-- Starts Here -->
           <button ui-sref="deptMgmt">Back</button>
-          <button ng-click="deptReg.newDept()">Create Departmentt</button>
+          <button ng-click="deptReg.newDept()">Submit</button>
         </div>
       </div>
     </div>

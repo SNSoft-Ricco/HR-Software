@@ -12,16 +12,12 @@
 		// Function Declaration
 		vm.newDept = newDept;
 		vm.rmDept = rmDept;
+		vm.editDept = editDept;
 
 		// Load Departments Table
 		showAllDepts();
 
-		function showAllDepts () {
-			deptServ.getAllDepartments().then(function(depts) {
-				vm.depts = depts;
-			})
-		}
-
+		//// Public Functions
 		function newDept () {
 			$state.go('deptReg');
 		}
@@ -31,6 +27,18 @@
 			deptServ.rmDept(objDept).then(function(msg) {
 				alert(msg);
 				showAllDepts();
+			})
+		}
+
+		// Function - Edit Department
+		function editDept(objDept) {
+			$state.go("deptReg", {myParam: objDept});
+		}
+
+		//// Private Functions
+		function showAllDepts () {
+			deptServ.getAllDepartments().then(function(depts) {
+				vm.depts = depts;
 			})
 		}
 	}

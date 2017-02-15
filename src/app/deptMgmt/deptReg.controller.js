@@ -6,7 +6,7 @@
 		.controller('DeptRegController', DeptRegController);
 
 	/** @ngInject */
-	function DeptRegController($log, $window, $cookies, $state, deptServ) {
+	function DeptRegController($log, $window, $cookies, $state, $stateParams, deptServ) {
 		var vm = this;
 		
 		var dynTemplate = {
@@ -23,12 +23,41 @@
 		vm.dynFields = dynTemplate;
 		vm.editMode = false;
 		vm.inputs = [];
-		vm.newDept = newDept;
+		vm.title = "New Department Registration"
 
+		vm.newDept = newDept;
+		vm.newField = newField;
+
+		// Edit Mode
+		if (angular.isObject($stateParams.myParam)) {
+      var objDept = $stateParams.myParam;
+      var i = 0;
+
+      vm.editMode = true;
+      vm.title = "Edit Department Information"
+
+      for (var dept in objDept) {
+        if(vm.dynFields.hasOwnProperty(dept)) {
+          vm.inputs[i] = objDept[dept];
+        } else {
+          vm.dynFields[dept] = {
+            "fieldName": dept,
+            "type": "text",
+            "inputType": "textbox",
+            "glyphClass": "glyphicon glyphicon-list-alt"
+          };
+
+          vm.inputs[i] = objDept[dept];
+        }
+
+        i++;
+      }
+		}
+	
 		// Load Departments as select options
-		deptServ.getAllDepartments().then(function(depts) {
-			vm.depts = depts;
-		})
+		// deptServ.getAllDepartments().then(function(depts) {
+		// 	vm.depts = depts;
+		// })
 
 		function newDept () {
 			var i = 0;
@@ -44,7 +73,7 @@
 
       if (vm.editMode)
       {
-        deptServ.editUser(fields).then(function(response){
+        deptServ.editDept(fields).then(function(response){
           alert(response);
         });
       } else {
@@ -53,5 +82,14 @@
         });
       }
 		}
+
+		function newField() {
+      vm.dynFields[angular.lowercase(vm.newName)] = {
+        "fieldName": vm.newName,
+        "type": "text",
+        "inputType": "textbox",
+        "glyphClass": "glyphicon glyphicon-list-alt"
+      };
+    }
 	}
 })();

@@ -66,7 +66,6 @@
       vm.title = "Edit User Information"
 
       for (var field in objUser) {
-        $log.info(field);
         if(vm.dynFields.hasOwnProperty(field)) {
           vm.inputs[i] = objUser[field];
         } else {
