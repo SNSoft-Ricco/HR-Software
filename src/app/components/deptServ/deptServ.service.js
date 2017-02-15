@@ -10,6 +10,7 @@
     // Function Declaration
     this.getAllDepartments = getAllDepartments;
     this.addDept = addDept;
+    this.rmDept = rmDept;
 
     var DB_STORENAME = 'department';
 
@@ -44,7 +45,7 @@
 
     // Add New Department
     // Param - New Department JSON object
-    // Promise Return - Success Message
+    // Promise Resolve - Success Message
     function addDept (objDept) {
       var deferred = $q.defer();
 
@@ -64,6 +65,30 @@
       // Do something when all the data is added to the database.
       request.onsuccess = function() {
         deferred.resolve("Successfully added department.")
+      };
+
+      return deferred.promise;
+    }
+
+    // Remove Department
+    // Param - Department To Remove JSON object
+    // Promise Resolve - Success Message
+    function rmDept (objDept) {
+      var deferred = $q.defer();
+
+      var request = 
+        localdb.getObjectStore(DB_STORENAME, 'readwrite')
+        .delete(objDept.department);
+
+      request.onerror = function(event) {
+        // Remove department trasaction - Error
+        alert("Transaction error: " + event.target.errorCode);
+        deferred.reject();
+      }; 
+
+      // Remove department - Success
+      request.onsuccess = function() {
+        deferred.resolve("Successfully removed department.")
       };
 
       return deferred.promise;
