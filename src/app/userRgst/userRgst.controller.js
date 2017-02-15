@@ -6,7 +6,7 @@
     .controller('UserRgstController', UserRgstController);
 
   /** @ngInject */
-  function UserRgstController($log, $window, $cookies, $state, localdb) {
+  function UserRgstController($log, $window, $cookies, $state, localdb, deptServ) {
     var vm = this;
 
     var dynTemplate = {
@@ -52,6 +52,11 @@
     vm.back = back;
     vm.submit = submit;
     vm.newField = newField;
+
+    // Load Departments as select options
+    deptServ.getAllDepartments().then(function(depts) {
+      vm.depts = depts;
+    })
 
     if ($cookies.get('editUser')) {
       var objUser = angular.fromJson($cookies.get('editUser'));
@@ -115,7 +120,6 @@
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-list-alt"
       };
-      $log.info(vm.dynFields);
     }
   }
 })();

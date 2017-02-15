@@ -9,14 +9,14 @@
   function routerConfig($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('login', {
-        url: '/',
+        url: '/login',
         templateUrl: 'app/login/login.html',
         controller: 'LoginController',
         controllerAs: 'login'
       })
 
       .state('userMgmt', {
-        url: '/user-management',
+        url: '/',
         templateUrl: 'app/userMgmt/userMgmt.html',
         controller: 'UserMgmtController',
         controllerAs: 'userMgmt'

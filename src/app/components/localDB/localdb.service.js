@@ -8,7 +8,7 @@
   /** @ngInject */
   function localdb($log, $window, $q) {
     var DB_NAME = "snsofthrdb";
-    var DB_VERSION = 2;
+    var DB_VERSION = 3;
     var db;
 
     var service = {
@@ -17,7 +17,9 @@
       editUser: editUser,
       rmUser: rmUser,
       getUser: getUser,
-      getAllUsers: getAllUsers
+      getAllUsers: getAllUsers,
+
+      getObjectStore: getObjectStore
     };
 
     return service;
@@ -27,7 +29,7 @@
       var DB_STORENAME = 'user';
 
       // Let new user have active status
-      objUser.status = "active";
+      objUser.status = "Active";
 
       var request = 
         getObjectStore(DB_STORENAME, 'readwrite')
@@ -139,23 +141,15 @@
         else {
           deferred.resolve(users);
         }
-
-
       };
 
       return deferred.promise;
     }
 
     function openDb() {
-      $log.info("openDb ...");
       var req = indexedDB.open(DB_NAME, DB_VERSION);
-      req.onsuccess = function () {
-        // Better use "this" than "req" to get the result to avoid problems with
-        // garbage collection.
-        // db = req.result;
-        db = this.result;
-        $log.info("openDb DONE");
-      };
+      var justUpgraded = false;
+
       req.onerror = function (evt) {
         $log.info("openDb:", evt.target.errorCode);
       };
@@ -166,7 +160,26 @@
         evt.currentTarget.result
         .createObjectStore("user", { keyPath : "username", autoIncrement : true });
 
+        evt.currentTarget.result
+        .createObjectStore("department", { keyPath : "department"});
+
+        justUpgraded = true;
         // Create admin account for first time access
+      };
+
+      req.onsuccess = function () {
+        db = this.result;
+
+        if (justUpgraded) {
+          getObjectStore('department', 'readwrite')
+          .add({department: "IT Department"});
+
+          getObjectStore('department', 'readwrite')
+          .add({department: "HR Department"});
+
+          getObjectStore('department', 'readwrite')
+          .add({department: "R&D Department"});
+        }
       };
     }
 

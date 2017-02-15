@@ -1,6 +1,6 @@
 <div class="container">
 	<sns-navbar></sns-navbar>
-	<form class="well form-horizontal" id="contact_form">
+	<form class="well form-horizontal" id="contact_form" name="reg_form">
 		<fieldset>
 
 			<!-- Form Name -->
@@ -33,8 +33,7 @@
 			  			ng-show="value.inputType == 'selectbox' && key == 'department'"
 			  			class="form-control selectpicker">
 				      <option value=" ">Please select a department</option>
-				      <option>IT Department</option>
-				      <option>HR Department</option>
+				      <option ng-repeat="(key, value) in userRgst.depts track by $index">{{value.department}}</option>
 					  </select>
 			    </div>
 			  </div>
@@ -45,9 +44,18 @@
 			  <label class="col-md-4 control-label"></label>
 			  <div class="col-md-4">
 			  	<div class="input-group">
-					  <input ng-model="userRgst.newName" type="text" class="form-control" placeholder="Create a new form field">
+					  <input 
+					  	name="newName"
+					  	ng-model="userRgst.newName" 
+					  	type="text" 
+					  	class="form-control" 
+					  	placeholder="Create a new form field" 
+					  	required>
 					  <span class="input-group-btn">
-					    <button class="btn btn-default" ng-click="userRgst.newField()">Insert</button>
+					    <button 
+					    	class="btn btn-default" 
+					    	ng-disabled="reg_form.newName.$error.required"
+					    	ng-click="userRgst.newField()">Insert</button>
 					  </span>
 					</div>
 			  </div>
