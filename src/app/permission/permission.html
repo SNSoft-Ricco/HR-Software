@@ -1,0 +1,52 @@
+
+    
+    <div class="container" >
+      <h2>Manage Permission</h2><br><br>
+
+       <form>
+		    <label>Permission Code</label><br>
+		        <input type="text" name="code" ng-model="Permission.code"/><br>
+		    <label>Description</label> <br>
+		        <input type="text" name="desc" ng-model="Permission.desc"/><br>
+
+		    <br>
+		    <div ng-repeat="pmsName in Permission.PermissionChkBox">
+			  <input
+			    type="checkbox"
+			    name="pmsCheckBox[]"
+			    value="{{pmsName.id}}"
+			    ng-checked="Permission.selection.indexOf(pmsName.id) > -1"
+			    ng-click="Permission.toggleSelection(pmsName.id)"
+			  > {{pmsName.name}}
+			</div><br><br>
+
+		    <input type="hidden" ng-model="Permission.id" />
+		    <input type="button" value="Send" ng-click='Permission.AddPermission()' />
+		</form>
+
+		<br><br>
+		<table border="1">
+			<thead> 
+				<tr>
+				    <th>ID</th>
+				    <th>Code</th>
+				    <th>Description</th>
+				    <th>Permission</th>
+				    <th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="pms in Permission.pmsArray">
+					
+				    <td>{{ pms.id }}</td>
+				    <td>{{ pms.code }}</td>
+				    <td>{{ pms.desc }}</td>
+				    <td><div ng-repeat="pmsList in pms.array">{{ pmsList }}</div></td>
+				    <td>
+				        <a ng-click="Permission.EditPermission(pms.id)">edit</a> | 
+				        <a ng-click="Permission.DeletePermission(pms.id)">delete</a>
+				    </td>
+				 </tr>
+			</tbody>
+		</table>  
+    </div>
