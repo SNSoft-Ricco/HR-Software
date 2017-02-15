@@ -45,6 +45,15 @@
         controllerAs: 'deptReg',
         params: {myParam: null}
       })
+
+      // Department Detail View
+      .state('deptDetail', {
+        url: '/department-detail',
+        templateUrl: 'app/deptMgmt/deptDetail.html',
+        controller: 'DeptDetailController',
+        controllerAs: 'deptDetail',
+        params: {myParam: null}
+      })
       // Login Page
       // .state('login', {
       //   url: '/login',

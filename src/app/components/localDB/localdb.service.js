@@ -157,11 +157,14 @@
       req.onupgradeneeded = function (evt) {
         $log.info("openDb.onupgradeneeded");
 
-        evt.currentTarget.result
+        var usrObjStore = evt.currentTarget.result
         .createObjectStore("user", { keyPath : "username", autoIncrement : true });
 
         evt.currentTarget.result
         .createObjectStore("department", { keyPath : "department"});
+
+        // Create Index
+        usrObjStore.createIndex("userDepartment", "department", { unique: false });
 
         justUpgraded = true;
         // Create admin account for first time access

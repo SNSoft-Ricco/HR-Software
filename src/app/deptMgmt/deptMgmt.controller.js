@@ -13,6 +13,7 @@
 		vm.newDept = newDept;
 		vm.rmDept = rmDept;
 		vm.editDept = editDept;
+		vm.showDeptDetail = showDeptDetail;
 
 		// Load Departments Table
 		showAllDepts();
@@ -33,6 +34,10 @@
 		// Function - Edit Department
 		function editDept(objDept) {
 			$state.go("deptReg", {myParam: objDept});
+		}
+
+		function showDeptDetail(objDept) {
+			$state.go("deptDetail", {myParam: objDept});
 		}
 
 		//// Private Functions

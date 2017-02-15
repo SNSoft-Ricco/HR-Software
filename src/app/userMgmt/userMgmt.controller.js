@@ -15,7 +15,8 @@
     vm.rmUser = rmUser;
     vm.editUser = editUser;
 
-    vm.username = angular.fromJson($cookies.get("loggedInUser")).username;
+    vm.username = "";
+    //angular.fromJson($cookies.get("loggedInUser")).username;
 
     showUsers();
 
