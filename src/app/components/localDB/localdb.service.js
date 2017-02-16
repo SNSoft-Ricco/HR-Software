@@ -20,11 +20,13 @@
     
     //// Public Functions
     function openDb() {
+      var deferred = $q.defer();
       var req = indexedDB.open(DB_NAME, DB_VERSION);
       var justUpgraded = false;
 
       req.onerror = function (evt) {
         $log.info("openDb:", evt.target.errorCode);
+        deferred.reject();
       };
 
       req.onupgradeneeded = function (evt) {
@@ -56,7 +58,11 @@
           getObjectStore('department', 'readwrite')
           .add({department: "R&D Department"});
         }
+
+        deferred.resolve();
       };
+
+      return deferred.promise;
     }
 
     /**
@@ -64,8 +70,15 @@
      * @param {string} mode either "readonly" or "readwrite"
      */
     function getObjectStore(store_name, mode) {
-      var tx = db.transaction(store_name, mode);
-      return tx.objectStore(store_name);
+      if (db == null) {
+        openDb().then(function() {
+          var tx = db.transaction(store_name, mode);
+          return tx.objectStore(store_name);
+        });
+      } else {
+        var tx = db.transaction(store_name, mode);
+        return tx.objectStore(store_name);
+      }
     }
   }
 })();
