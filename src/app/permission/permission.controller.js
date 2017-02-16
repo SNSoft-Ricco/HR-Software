@@ -10,8 +10,34 @@
 
     PermissionController.$inject = ['PermissionService'];
 
-    function PermissionController(PermissionService,$scope) {
+    function PermissionController(PermissionService) {
         var vm = this;
+        
+        var dynTemplate = {
+            "code": {
+                "fieldName": "Permission Code",
+                "type": "text",
+                "inputType": "textbox",
+                "glyphClass": "glyphicon glyphicon-star",
+                "placeholder": "Enter a permission code",
+                "value": "test",
+                "forEdit": "false"
+            },
+            "desc": {
+                "fieldName": "Description",
+                "type": "text",
+                "inputType": "textbox",
+                "glyphClass": "glyphicon glyphicon-star",
+                "placeholder": "Enter a description",
+                "value": "test",
+                "forEdit": "false"
+            }
+        }
+        vm.dynFields = dynTemplate;
+        vm.editMode = false;
+        vm.inputs = [];
+        vm.title = "Permission Management";
+
         vm.AddPermission = AddPermission;
         vm.DeletePermission = DeletePermission;
         vm.EditPermission = EditPermission;
@@ -28,16 +54,30 @@
         vm.selection = [];
 
         function AddPermission() {
+            var i = 0;
+            var fields = {};
+            var obj = {};
+
+            // Get dynamic fields
+            for (var field in vm.dynFields) {
+                fields[field] = vm.inputs[i];
+                i++;
+            }
+
             if(vm.id == null || vm.id=="") //insert
             {
-                var promise = PermissionService.addPermission(vm.code,vm.desc,vm.id,vm.selection);
+                obj = { code: fields.code, desc: fields.desc, PermissionList:vm.selection };
+
+                var promise = PermissionService.addPermission(obj);
                 promise.then (function(){
                     refreshList();
                 });
             }
             else //update
             {
-                var promise = PermissionService.updatePermission(vm.code,vm.desc,vm.id,vm.selection);
+                obj = { id: vm.id, code: fields.code, desc: fields.desc, PermissionList:vm.selection };
+
+                var promise = PermissionService.updatePermission(obj);
                 promise.then (function(){
                     refreshList();
                 });
@@ -66,9 +106,14 @@
 
                 vm.pmsArray=tmpArray;
                 vm.id = "";
-                vm.code = "";
-                vm.desc = "";
                 vm.selection = [];
+                //vm.code = "";
+                //vm.desc = "";
+
+                for(var i=0; i<vm.inputs.length; i++)
+                {
+                    vm.inputs[i] = "";
+                }
             });
         }
 
@@ -82,11 +127,20 @@
         function EditPermission (id) {
             var promise = PermissionService.getPermission(id);
             promise.then (function(result){
+
                 vm.id = result.id;
-                vm.code = result.code;
-                vm.desc = result.desc;
                 vm.selection = [];
                 vm.selection = result.PermissionList;
+                //vm.code = result.code;
+                //vm.desc = result.desc;
+
+                for(var field in result)
+                {
+                    if(field == "code")
+                        vm.inputs[0] = result[field];
+                    else if(field == "desc")
+                        vm.inputs[1] = result[field];
+                }
             });
         }
 
@@ -105,10 +159,16 @@
             }
         }
 
-        var promise = PermissionService.openDb();
-        promise.then (function(){
+        var db = PermissionService.getDbConnection();
+
+        if(db){
             refreshList();
-        });
+        }else{
+            var promise = PermissionService.openDb();
+            promise.then (function(){
+                refreshList();
+            });
+        }
     }
 
 })();
