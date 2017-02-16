@@ -59,7 +59,11 @@
 
       request.onerror = function(event) {
         // Add department trasaction - Error
-        alert("Transaction error: " + event.target.errorCode);
+        if (event.isTrusted)
+          alert("Department has already exist.");
+        else
+          alert("Transaction error: " + event.target.errorCode);
+
         deferred.reject();
       }; 
 

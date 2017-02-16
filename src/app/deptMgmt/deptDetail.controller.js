@@ -10,10 +10,17 @@
 		var vm = this;
     var objDept = $stateParams.myParam;
 
-    vm.deptName = objDept.department;
-    vm.users = "";
+    // Refresh Page Handler
+    if (objDept == null) {
+      $state.go('deptMgmt');
+    }
+    else {
+      vm.deptName = objDept.department;
+      vm.headName = objDept.head;
+      vm.users = "";
 
-    showDeptUsers();
+      showDeptUsers();
+    }
 
     //// Private Functions
     function showDeptUsers () {

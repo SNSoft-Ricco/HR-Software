@@ -18,6 +18,15 @@
 					"placeholder": "Enter a department name",
 					"value": "test",
 					"forEdit": "false"
+				},
+        "head": {
+					"fieldName": "Head",
+					"type": "text",
+					"inputType": "textbox",
+					"glyphClass": "glyphicon glyphicon-user",
+					"placeholder": "",
+					"value": "test",
+					"forEdit": "true"
 				}
 			}
 
