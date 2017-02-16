@@ -6,8 +6,8 @@
 		.filter('capitalize', capitalize);
 
 	/** @ngInject */
-	function capitalize($log) {
-		return function(input, scope) {
+	function capitalize() {
+		return function(input) {
 			if (input!=null)
 				input = input.toLowerCase();
 

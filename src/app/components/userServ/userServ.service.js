@@ -169,10 +169,10 @@
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .put(objUser);
 
-      request.onerror = function(event) {
+      request.onerror = function() {
          deferred.reject("Edit User Failed!");
        };
-       request.onsuccess = function(event) {
+       request.onsuccess = function() {
          deferred.resolve("Successfully edited user information.")
        };
 

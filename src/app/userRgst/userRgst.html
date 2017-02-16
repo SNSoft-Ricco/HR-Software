@@ -8,7 +8,7 @@
 
 			<!-- Dynamic Fields Form -->
 			<div class="form-group" ng-repeat="(key, value) in userRgst.dynFields track by $index">
-				<label class="col-md-4 control-label">{{value.fieldName}}</label>
+				<label class="col-md-4 control-label">{{value.fieldName | capitalize}}</label>
 				<div class="col-md-4 inputGroupContainer">
 			  	<div class="input-group">
 			  		<span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
