@@ -19,7 +19,7 @@
                       <tr ng-repeat="user in userMgmt.users track by user.username">
                         <td> {{ user.username }}</td>
                         <td> {{ user.usergroup }}</td>
-                        <td> {{ user.department }}</td>
+                        <td ng-click="userMgmt.deptDetail(user.department)"> {{ user.department }}</td>
                         <td> {{ user.status }}</td>
                         <td> 
                         	<i class="glyphicon glyphicon-pencil" ng-click="userMgmt.editUser(user)"></i>

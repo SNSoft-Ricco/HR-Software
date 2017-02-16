@@ -12,6 +12,7 @@
     this.addDept = addDept;
     this.rmDept = rmDept;
     this.editDept = editDept;
+    this.getDept = getDept;
 
     var DB_STORENAME = 'department';
 
@@ -42,6 +43,33 @@
       };
 
       return deferred.promise;
+    }
+
+    // Get Department By Name
+    // Param    - deptName
+    // Resolve  - Department object
+    function getDept(deptName) {
+      var deferred = $q.defer();
+
+      var request = 
+        localdb.getObjectStore(DB_STORENAME, 'readonly')
+        .get(deptName);
+
+      request.onerror = function() {
+        $log.info("Open ObjectStore Error!");
+      };    
+      // Do something when all the data is added to the database.
+      request.onsuccess = function(event) {
+        var value = event.target.result;
+
+        if (value) {
+          deferred.resolve(value);
+        } else {
+          deferred.reject("Department not exist!");
+        }
+      };
+
+      return deferred.promise;  
     }
 
     // Add New Department
