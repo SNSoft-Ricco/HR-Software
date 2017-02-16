@@ -13,7 +13,8 @@
 
     var service = {
       openDb: openDb,
-      getObjectStore: getObjectStore
+      getObjectStore: getObjectStore,
+      getDbConn: getDbConn
     };
 
     return service;
@@ -41,12 +42,22 @@
         // Create Index
         usrObjStore.createIndex("userDepartment", "department", { unique: false });
 
+        //Permission object store
+        var store = evt.currentTarget.result
+        .createObjectStore("permission", { keyPath: 'id', autoIncrement: true });
+        store.createIndex('code', 'code', { unique: false });
+        store.createIndex('desc', 'desc', { unique: false });
+        store.createIndex('PermissionList', 'PermissionList', { unique: false });
+
         justUpgraded = true;
         // Create admin account for first time access
+        deferred.resolve();
       };
 
       req.onsuccess = function () {
+        $log.info("openDb");
         db = this.result;
+        deferred.resolve(db);
 
         if (justUpgraded) {
           getObjectStore('department', 'readwrite')
@@ -58,10 +69,7 @@
           getObjectStore('department', 'readwrite')
           .add({department: "R&D Department"});
         }
-
-        deferred.resolve();
       };
-
       return deferred.promise;
     }
 
@@ -70,8 +78,14 @@
      * @param {string} mode either "readonly" or "readwrite"
      */
     function getObjectStore(store_name, mode) {
-        var tx = db.transaction(store_name, mode);
-        return tx.objectStore(store_name);
+      var tx = db.transaction(store_name, mode);
+
+      return tx.objectStore(store_name);
+    }
+
+    function getDbConn()
+    {
+      return db;
     }
   }
 })();
