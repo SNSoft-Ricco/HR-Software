@@ -54,6 +54,14 @@
         controllerAs: 'deptDetail',
         params: {myParam: null}
       })
+
+      // Department Management View
+      .state('pmsMgmt', {
+        url: '/permission-management',
+        templateUrl: 'app/permission/permission.html',
+        controller: 'PermissionController',
+        controllerAs: 'Permission'
+      })
       // Login Page
       // .state('login', {
       //   url: '/login',
