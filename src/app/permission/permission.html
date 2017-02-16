@@ -1,9 +1,101 @@
 
-    
     <div class="container" >
-      <h2>Manage Permission</h2><br><br>
+      <sns-navbar></sns-navbar>
 
-       <form>
+      <!-- Page Body -->
+	  <div class="row">
+	    <div class="box col-md-12">
+	      <div class="box-inner">
+	        <div class="box-content">
+	          <!-- Starts Here -->
+	          <form class="well form-horizontal" id="pms_form" name="pms_form">
+	            <fieldset>
+	              <!-- Form Name -->
+	              <legend>{{ Permission.title }}</legend>
+	              <!-- Dynamic Fields Form -->
+	              <div class="form-group" ng-repeat="(key, value) in Permission.dynFields track by $index">
+	                <label class="col-md-4 control-label">{{value.fieldName | capitalize}}</label>
+	                <div class="col-md-4 inputGroupContainer">
+	                  <div class="input-group">
+	                    <span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
+	                    <input 
+	                      ng-model="Permission.inputs[$index]" 
+	                      ng-show="value.inputType == 'textbox'"
+	                      ng-disabled="Permission.editMode && value.forEdit"
+	                      placeholder="{{value.placeholder}}" 
+	                      class="form-control" 
+	                      type="{{value.type}}">	                    
+	                  </div>
+	                </div>
+	             </div>
+
+				  <div class="form-group">
+						<div class="col-md-4">
+							<div class="input-group">
+								<div ng-repeat="pmsName in Permission.PermissionChkBox">
+								  <input
+								    type="checkbox"
+								    name="pmsCheckBox[]"
+								    value="{{pmsName.id}}"
+								    ng-checked="Permission.selection.indexOf(pmsName.id) > -1"
+								    ng-click="Permission.toggleSelection(pmsName.id)"
+								  > {{pmsName.name}}
+							    </div>
+						    </div>
+						</div>
+				  </div>
+
+				  <!-- Button -->
+				  <div class="form-group">
+						<div class="col-md-4">
+							<div class="input-group">
+						   		<input type="hidden" ng-model="Permission.id" />
+		    					<input type="button" value="Send" ng-click='Permission.AddPermission()' />
+						  </div>
+						</div>
+					</div>
+	              </fieldset>
+	          </form>
+
+	          <div class="row">
+			    <div class="box col-md-12">
+			        <div class="box-inner">
+			            <div class="box-content">
+			                <table class="table table-bordered table-striped table-condensed">
+								<thead> 
+									<tr>
+									    <th>ID</th>
+									    <th>Code</th>
+									    <th>Description</th>
+									    <th>Permission</th>
+									    <th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="pms in Permission.pmsArray">
+										
+									    <td>{{ pms.id }}</td>
+									    <td>{{ pms.code }}</td>
+									    <td>{{ pms.desc }}</td>
+									    <td><div ng-repeat="pmsList in pms.array">{{ pmsList }}</div></td>
+									    <td>
+									        <i class="glyphicon glyphicon-pencil" ng-click="Permission.EditPermission(pms.id)"></i>
+                        					<i class="glyphicon glyphicon-remove" ng-click="Permission.DeletePermission(pms.id)"></i>
+									    </td>
+									 </tr>
+								</tbody>
+							</table>
+			            </div>
+			        </div>
+			    </div>
+			  </div>
+	        </div>
+	      </div>
+	    </div>
+	</div>
+</div>
+
+      <!-- <form>
 		    <label>Permission Code</label><br>
 		        <input type="text" name="code" ng-model="Permission.code"/><br>
 		    <label>Description</label> <br>
@@ -22,31 +114,7 @@
 
 		    <input type="hidden" ng-model="Permission.id" />
 		    <input type="button" value="Send" ng-click='Permission.AddPermission()' />
-		</form>
+		</form>-->
 
-		<br><br>
-		<table border="1">
-			<thead> 
-				<tr>
-				    <th>ID</th>
-				    <th>Code</th>
-				    <th>Description</th>
-				    <th>Permission</th>
-				    <th>Action</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="pms in Permission.pmsArray">
-					
-				    <td>{{ pms.id }}</td>
-				    <td>{{ pms.code }}</td>
-				    <td>{{ pms.desc }}</td>
-				    <td><div ng-repeat="pmsList in pms.array">{{ pmsList }}</div></td>
-				    <td>
-				        <a ng-click="Permission.EditPermission(pms.id)">edit</a> | 
-				        <a ng-click="Permission.DeletePermission(pms.id)">delete</a>
-				    </td>
-				 </tr>
-			</tbody>
-		</table>  
-    </div>
+		  
+    
