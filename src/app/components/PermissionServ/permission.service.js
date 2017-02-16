@@ -4,16 +4,16 @@
 		.module('snsoftHr')
 		.service('PermissionService',PermissionService);
 
-	function PermissionService($q){
+	function PermissionService($q,localdb){
 
 		const DB_NAME = 'snsofthrdb';
 	  	const DB_VERSION = 4; 
-	  	const DB_OBJ_STORE_NAME = 'permission_OBJ';
+	  	const DB_OBJ_STORE_NAME = 'permission';
 
-	  	var db;
+	  	//var db;
 	  	var permissionArray=[];
 
-		this.openDb=function () {
+		/*this.openDb=function () {
 			var deferred = $q.defer();
 
 		    console.log("openDb ...");
@@ -34,7 +34,7 @@
 		    };
 
 		    req.onupgradeneeded = function (evt) {
-		      console.log("openDb.onupgradeneeded");
+		      console.log("openDb.onupgradeneeded...");
 		      var store = evt.currentTarget.result.createObjectStore(
 		        DB_OBJ_STORE_NAME, { keyPath: 'id', autoIncrement: true });
 
@@ -45,13 +45,27 @@
 		      deferred.resolve();
 		    };
 		    return deferred.promise;
+		}*/
+
+		this.openDb=function () {
+			var deferred = $q.defer();
+
+			var promise = localdb.openDb();
+            promise.then (function(result){
+				if(result)
+					deferred.resolve();
+				else
+					deferred.reject();
+            });
+
+			return deferred.promise;
 		}
 
-		this.addPermission=function (code,desc,id,selectedChkBox)
+		this.addPermission=function (obj)
 		{
 			var deferred = $q.defer();
-			var obj = {};
-			obj = { code: code, desc: desc, PermissionList:selectedChkBox };
+
+			/*
 			var transaction = db.transaction([DB_OBJ_STORE_NAME], "readwrite");
 
 			console.log(obj);
@@ -68,20 +82,31 @@
 
 			var objectStore = transaction.objectStore(DB_OBJ_STORE_NAME);
 			var request = objectStore.add(obj);
+			*/
+
+			var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readwrite').add(obj);
 
 			request.onsuccess = function(event) {
 			    deferred.resolve();
 			    console.log("insert successfully");
 			};
+
+			request.onerror = function(event) {
+				deferred.reject();
+				console.log("insert error: " + event.target.errorCode);
+			};
+
 			return deferred.promise;
 		}
 
 		this.removePermission=function (id)
 		{
-			var deferred = $q.defer();
-			var request = db.transaction([DB_OBJ_STORE_NAME], "readwrite")
+			/*var request = db.transaction([DB_OBJ_STORE_NAME], "readwrite")
                 .objectStore(DB_OBJ_STORE_NAME)
-                .delete(id);
+                .delete(id);*/
+
+            var deferred = $q.defer();
+            var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readwrite').delete(id); 
 
 			request.onsuccess = function(event) {
 				deferred.resolve();
@@ -96,15 +121,15 @@
 			return deferred.promise;
 		}
 
-		this.updatePermission=function(code,desc,id,selectedChkBox)
+		this.updatePermission=function(obj)
 		{
 			var deferred = $q.defer();
-			var obj = {};
-			obj = { id: id, code: code, desc: desc, PermissionList:selectedChkBox };
-
-			var request = db.transaction([DB_OBJ_STORE_NAME], "readwrite")
+			
+			/*var request = db.transaction([DB_OBJ_STORE_NAME], "readwrite")
                 .objectStore(DB_OBJ_STORE_NAME)
-                .put(obj);
+                .put(obj);*/
+
+            var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readwrite').put(obj);
 
 			request.onsuccess = function(event) {
 				deferred.resolve();
@@ -122,8 +147,11 @@
 		this.getPermission=function(id)
 		{
 			var deferred = $q.defer();
-			var objectStore = db.transaction([DB_OBJ_STORE_NAME], "readwrite").objectStore(DB_OBJ_STORE_NAME);
-			var request = objectStore.get(id);
+
+			/*var objectStore = db.transaction([DB_OBJ_STORE_NAME], "readwrite").objectStore(DB_OBJ_STORE_NAME);
+			var request = objectStore.get(id);*/
+
+			var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readonly').get(id);
 
 			request.onerror = function(event) {
 				deferred.reject();
@@ -133,7 +161,7 @@
 			request.onsuccess = function(event) {
 				var data = event.target.result;
 			  	deferred.resolve(data);
-			  	console.log("get update data");
+			  	console.log("get data");
 			};
 
 			return deferred.promise;
@@ -144,8 +172,10 @@
 			permissionArray=[];
 
 			var deferred = $q.defer();
-			var objectStore = db.transaction(DB_OBJ_STORE_NAME).objectStore(DB_OBJ_STORE_NAME);
 
+			//var objectStore = db.transaction(DB_OBJ_STORE_NAME).objectStore(DB_OBJ_STORE_NAME);
+
+			var objectStore = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readonly');
 
 			objectStore.openCursor().onsuccess = function(event) {
 			  var cursor = event.target.result;
@@ -167,14 +197,13 @@
 			return deferred.promise;
 		}
 
-		this.getList=function()
+		this.getDbConnection=function()
 		{
-			return permissionArray;
+			var db = localdb.getDbConn();
+			return db;
 		}
 
-
 		//this.openDb();
-
 	}
 
 })();
