@@ -70,15 +70,8 @@
      * @param {string} mode either "readonly" or "readwrite"
      */
     function getObjectStore(store_name, mode) {
-      if (db == null) {
-        openDb().then(function() {
-          var tx = db.transaction(store_name, mode);
-          return tx.objectStore(store_name);
-        });
-      } else {
         var tx = db.transaction(store_name, mode);
         return tx.objectStore(store_name);
-      }
     }
   }
 })();

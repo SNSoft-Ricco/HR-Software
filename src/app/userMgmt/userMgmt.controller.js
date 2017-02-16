@@ -6,7 +6,7 @@
     .controller('UserMgmtController', UserMgmtController);
 
   /** @ngInject */
-  function UserMgmtController($log, $window, $cookies, $state, userServ, deptServ) {
+  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ) {
     var vm = this;
 
     vm.users = [];
@@ -19,7 +19,7 @@
     vm.username = "";
     //angular.fromJson($cookies.get("loggedInUser")).username;
 
-    showUsers();
+    $timeout(showUsers,500);
 
     function register() {
       $state.go("userRgst");
