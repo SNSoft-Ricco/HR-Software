@@ -6,7 +6,9 @@
     .controller('UserRgstController', UserRgstController);
 
   /** @ngInject */
-  function UserRgstController($log, $window, $cookies, $state, userServ, deptServ) {
+  function UserRgstController(
+    $log, $window, $cookies, $state, userServ, deptServ, PermissionService) {
+
     var vm = this;
 
     var dynTemplate = {
@@ -52,6 +54,11 @@
     vm.back = back;
     vm.submit = submit;
     vm.newField = newField;
+
+    // Load Permission as select options
+    PermissionService.getAllPermission().then(function(pms){
+      vm.pms = pms;
+    })
 
     // Load Departments as select options
     deptServ.getAllDepartments().then(function(depts) {
@@ -107,6 +114,7 @@
       } else {
         userServ.addUser(fields).then(function(response){
           alert(response);
+          back();
         });
       }
 

@@ -18,15 +18,12 @@
 			  			placeholder="{{value.placeholder}}" 
 			  			class="form-control" 
 			  			type="{{value.type}}">
-			  		<select 
+			  		<select
 			  			ng-model="userRgst.inputs[$index]" 
 			  			ng-show="value.inputType == 'selectbox' && key == 'usergroup'"
 			  			class="form-control selectpicker">
-				      <option value=" ">Please select the user group</option>
-				      <option>SysAdmin</option>
-				      <option>HR</option>
-				      <option>Department Head</option>
-				      <option>Normal Employee</option>      
+				      <option value=" ">Please select the permission group</option>
+							<option ng-repeat="(key, value) in userRgst.pms track by $index">{{value.code}}</option>
 					  </select>
 					  <select 
 			  			ng-model="userRgst.inputs[$index]" 
