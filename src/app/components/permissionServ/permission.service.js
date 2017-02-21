@@ -6,9 +6,9 @@
 
 	function PermissionService($q,localdb){
 
-		const DB_NAME = 'snsofthrdb';
-	  	const DB_VERSION = 4; 
-	  	const DB_OBJ_STORE_NAME = 'permission';
+		//const DB_NAME = 'snsofthrdb';
+	  	//const DB_VERSION = 4; 
+	  	var DB_OBJ_STORE_NAME = 'permission';
 
 	  	//var db;
 	  	var permissionArray=[];
