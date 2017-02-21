@@ -7,7 +7,7 @@
 
   /** @ngInject */
   function UserRgstController(
-    $log, $window, $cookies, $state, userServ, deptServ, PermissionService) {
+    $log, $window, $cookies, $state, $timeout, userServ, deptServ, PermissionService) {
 
     var vm = this;
 
@@ -37,6 +37,22 @@
         "inputType": "selectbox",
         "glyphClass": "glyphicon glyphicon-star"
       },
+      "position": {
+        "fieldName": "Position",
+        "inputType": "selectbox",
+        "glyphClass": "glyphicon glyphicon-briefcase"
+      },
+      "supervisor": {
+        "fieldName": "Supervisor",
+        "inputType": "selectbox",
+        "glyphClass": "glyphicon glyphicon-user"
+      },
+      "fullname": {
+        "fieldName": "Full Name",
+        "type": "text",
+        "inputType": "textbox",
+        "glyphClass": "glyphicon glyphicon-user"
+      },
       "contactno": {
         "fieldName": "Contact No.",
         "type": "text",
@@ -55,15 +71,23 @@
     vm.submit = submit;
     vm.newField = newField;
 
-    // Load Permission as select options
-    PermissionService.getAllPermission().then(function(pms){
-      vm.pms = pms;
-    })
+    setTimeout(function(){
+      // Load Permission as select options
+      PermissionService.getAllPermission().then(function(pms){
+        vm.pms = pms;
+      })
 
-    // Load Departments as select options
-    deptServ.getAllDepartments().then(function(depts) {
-      vm.depts = depts;
-    })
+      // Load Departments as select options
+      deptServ.getAllDepartments().then(function(depts) {
+        vm.depts = depts;
+      })
+
+      // Load users as select options
+      userServ.getAllUsers().then(function(users){
+        vm.users = users;
+      })
+    },500)
+    
 
     if ($cookies.get('editUser')) {
       var objUser = angular.fromJson($cookies.get('editUser'));

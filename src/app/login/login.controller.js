@@ -6,13 +6,19 @@
     .controller('LoginController', LoginController);
 
   /** @ngInject */
-  function LoginController($log, $cookies, $window, $state, localdb) {
+  function LoginController($log, $cookies, $window, $state, userServ) {
     var vm = this;
 
     vm.login = login;
 
+    // Check cookies
+    if ($cookies.get("loggedInUser")) {
+      var loggedInUser = angular.fromJson($cookies.get("loggedInUser"));
+      $state.go("userMgmt");
+    }
+
     function login() {
-      localdb
+      userServ
         .getUser(vm.userEmail)
         .then(function(data){
           // Verify success

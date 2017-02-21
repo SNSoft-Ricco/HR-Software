@@ -6,9 +6,12 @@
 		.controller('DeptDetailController', DeptDetailController);
 
 	/** @ngInject */
-	function DeptDetailController($log, $window, $cookies, $state, $stateParams, deptServ, userServ) {
+	function DeptDetailController($log, $window, $cookies, $state, $stateParams, $mdDialog, deptServ, userServ) {
 		var vm = this;
     var objDept = $stateParams.myParam;
+
+    // Function Declaration
+		vm.addPosition = addPosition;
 
     // Refresh Page Handler
     if (objDept == null) {
@@ -21,6 +24,27 @@
 
       showDeptUsers();
     }
+
+    // Function - show add position prompt
+		function addPosition(ev) {
+			var confirm = $mdDialog.prompt()
+				.title('What is the name of new position?')
+				//.textContent('Bowser is a common name.')
+				.placeholder('Position Name')
+				.ariaLabel('Position name')
+				//.initialValue('Buddy')
+				.targetEvent(ev)
+				.ok('Create')
+				.cancel('Cancel');
+
+			$mdDialog.show(confirm).then(function(result) {
+				//$scope.status = 'You decided to name your dog ' + result + '.';
+				$log.info(result)
+			}, function() {
+				//$scope.status = 'You didn\'t name your dog.';
+				$log.info("selected no")
+			});
+		}
 
     //// Private Functions
     function showDeptUsers () {
