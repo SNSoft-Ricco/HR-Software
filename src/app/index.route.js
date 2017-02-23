@@ -62,6 +62,14 @@
         controller: 'PermissionController',
         controllerAs: 'Permission'
       })
+
+      // Leave Management View
+      .state('leaveMgmt', {
+        url: '/leave-management',
+        templateUrl: 'app/leaveMgmt/leaveMgmt.html',
+        controller: 'LeaveMgmtController',
+        controllerAs: 'leaveMgmt'
+      })
       // Login Page
       // .state('login', {
       //   url: '/login',

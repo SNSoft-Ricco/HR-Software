@@ -5,7 +5,10 @@
     <div class="box col-md-12">
         <div class="box-inner">
             <div class="box-content">
-              <table class="table table-bordered table-striped table-condensed">
+              <div class="page-header">
+                <h1> Leave Management </h1>      
+              </div>
+          <!--    <table class="table table-bordered table-striped table-condensed">
                 <thead>
                     <tr>
                         <th>Username</th>
@@ -27,7 +30,7 @@
                         </td>
                     </tr> 
                     </tbody>
-                </table>
+                </table> -->
             </div>
         </div>
     </div>
@@ -37,7 +40,9 @@
     <div class="box col-md-12">
       <div class="box-inner">
         <div class="box-content">
-          <button ng-click="leaveMgmt.register()">Register Employee</button>
+          <md-button class="md-primary md-raised" ui-sref="deptMgmt">
+            Apply Leave
+          </md-button>
         </div>
       </div>
     </div>
