@@ -8,7 +8,12 @@
   /** @ngInject */
   function localdb($log, $window, $q) {
     var DB_NAME = "snsofthrdb";
-    var DB_VERSION = 3;
+    var DB_VERSION = 4;
+    /**
+     * IndexedDB Version Changelog
+     * 4 (Ricco): added leave table
+     *          : added department as leave table index
+     */
     var db;
 
     var service = {
@@ -33,43 +38,53 @@
       req.onupgradeneeded = function (evt) {
         $log.info("openDb.onupgradeneeded");
 
-        var usrObjStore = evt.currentTarget.result
-        .createObjectStore("user", { keyPath : "username", autoIncrement : true });
+        var dataBase = evt.target.result;
+        var txn = evt.target.transaction;
 
-        evt.currentTarget.result
-        .createObjectStore("department", { keyPath : "department"});
+        var leaveObjStore;
 
-        // Create Index
-        usrObjStore.createIndex("userDepartment", "department", { unique: false });
+        var storeCreateIndex = function (objectStore, name, options) {
+            if (!objectStore.indexNames.contains(name)) {
+                objectStore.createIndex(name, name, options);
+            }
+        }
 
-        //Permission object store
-        var store = evt.currentTarget.result
-        .createObjectStore("permission", { keyPath: 'id', autoIncrement: true });
-        store.createIndex('code', 'code', { unique: false });
-        store.createIndex('desc', 'desc', { unique: false });
-        store.createIndex('PermissionList', 'PermissionList', { unique: false });
+        switch(true) {
+          case (evt.oldVersion < 3):
+            $log.info("IndexedDB Version 3");
+            var usrObjStore = dataBase.createObjectStore("user", { keyPath : "username", autoIncrement : true });
 
-        justUpgraded = true;
-        // Create admin account for first time access
+            evt.currentTarget.result
+            .createObjectStore("department", { keyPath : "department"});
+
+            // Create Index
+            usrObjStore.createIndex("userDepartment", "department", { unique: false });
+
+            //Permission object store
+            var store = evt.currentTarget.result
+            .createObjectStore("permission", { keyPath: 'id', autoIncrement: true });
+            store.createIndex('code', 'code', { unique: false });
+            store.createIndex('desc', 'desc', { unique: false });
+            store.createIndex('PermissionList', 'PermissionList', { unique: false });
+
+            // default departments
+            txn.objectStore('department').add({department: "IT Department"});
+            txn.objectStore('department').add({department: "HR Department"});
+            txn.objectStore('department').add({department: "R&D Department"});
+          case (evt.oldVersion < 4):      
+            $log.info("IndexedDB Version 4");
+            leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "_id", autoIncrement : true });
+            storeCreateIndex(leaveObjStore, "department", { unique: false });
+        }
+
         deferred.resolve();
       };
 
       req.onsuccess = function () {
-        $log.info("openDb");
         db = this.result;
         deferred.resolve(db);
-
-        if (justUpgraded) {
-          getObjectStore('department', 'readwrite')
-          .add({department: "IT Department"});
-
-          getObjectStore('department', 'readwrite')
-          .add({department: "HR Department"});
-
-          getObjectStore('department', 'readwrite')
-          .add({department: "R&D Department"});
-        }
       };
+
       return deferred.promise;
     }
 
