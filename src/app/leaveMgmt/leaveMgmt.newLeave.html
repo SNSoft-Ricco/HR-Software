@@ -1,0 +1,72 @@
+<md-dialog aria-label="Apply Leave">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Apply Leave</h2>
+        <span flex></span>
+        <!-- Top bar right -->
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="assets/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <div layout="column" ng-cloak class="md-inline-form">
+        <md-content layout-padding>
+            <div>
+            <form name="leaveForm">
+
+                <div layout-gt-xs="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Leave Type</label>
+                        <md-select ng-model="dialog.leaveType">
+                            <md-option ng-repeat="(key, value) in dialog.leaveTypes" value="{{key}}">
+                                {{value}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+                <div layout-gt-xs="row">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>From Date</label>
+                        <md-datepicker ng-model="dialog.fromDate" ng-change="dialog.toDate = dialog.fromDate"></md-datepicker>
+                    </md-input-container>
+
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>To Date</label>
+                        <md-datepicker ng-model="dialog.toDate"></md-datepicker>
+                    </md-input-container>
+                </div>
+<!--
+                <div layout-gt-xs="row">
+                    <md-checkbox class="md-block" ng-model="data.cb1" aria-label="Checkbox 1" flex-gt-sm>
+                        Half Day
+                    </md-checkbox>
+                </div>
+-->                
+                <md-input-container class="md-block">
+                    <label>Description</label>
+                    <textarea ng-model="user.biography" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+                </md-input-container>
+
+            </form>
+            </div>
+        </md-content>
+
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <h4>Leave Balance: </h4>
+      <span flex></span>
+      <md-button ng-click="answer('not useful')">
+        Cancel
+      </md-button>
+      <md-button ng-click="answer('useful')">
+        Summit
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
