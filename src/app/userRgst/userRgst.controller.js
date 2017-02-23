@@ -70,6 +70,7 @@
     vm.back = back;
     vm.submit = submit;
     vm.newField = newField;
+    vm.loadNext = loadNext;
 
     setTimeout(function(){
       // Load Permission as select options
@@ -84,6 +85,7 @@
 
       // Load users as select options
       userServ.getAllUsers().then(function(users){
+        $log.info("getAllUsers",users);
         vm.users = users;
       })
     },500)
@@ -99,6 +101,8 @@
       for (var field in objUser) {
         if(vm.dynFields.hasOwnProperty(field)) {
           vm.inputs[i] = objUser[field];
+
+          loadNext(field, objUser[field]);
         } else {
           vm.dynFields[field] = {
             "fieldName": field,
@@ -151,6 +155,20 @@
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-list-alt"
       };
+    }
+
+    function loadNext(key, deptName) {
+      switch(key) {
+        case 'department':
+          deptServ.getDept(deptName).then(function(dept){
+            vm.positions = dept.position;
+          });
+          break;
+        case 'position':
+          break;
+        default:
+          break;
+      }
     }
   }
 })();

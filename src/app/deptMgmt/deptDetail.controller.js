@@ -38,8 +38,18 @@
 				.cancel('Cancel');
 
 			$mdDialog.show(confirm).then(function(result) {
-				//$scope.status = 'You decided to name your dog ' + result + '.';
-				$log.info(result)
+				if (!objDept.position) {
+					objDept.position = [];
+				}
+
+				objDept.position.push({
+					positionId: 1,
+					positionName: result
+				});
+				
+				deptServ.editDept(objDept).then(function(msg){
+					alert(msg);
+				})
 			}, function() {
 				//$scope.status = 'You didn\'t name your dog.';
 				$log.info("selected no")

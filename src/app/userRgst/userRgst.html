@@ -27,16 +27,28 @@
 					  </select>
 					  <select 
 			  			ng-model="userRgst.inputs[$index]" 
+							ng-disabled="!userRgst.inputs[$index-1]"
 			  			ng-show="value.inputType == 'selectbox' && key == 'department'"
+							ng-change="userRgst.loadNext(key, userRgst.inputs[$index])"
 			  			class="form-control selectpicker">
-				      <option value=" ">Please select a department</option>
+				      <option value=" ">{{userRgst.inputs[$index-1]}}</option>
 				      <option ng-repeat="(key, value) in userRgst.depts track by $index">{{value.department}}</option>
 					  </select>
 						<select 
 			  			ng-model="userRgst.inputs[$index]" 
+							ng-disabled="!userRgst.inputs[$index-1]"
+			  			ng-show="value.inputType == 'selectbox' && key == 'position'"
+							ng-change="userRgst.loadNext(key, userRgst.inputs[$index])"
+			  			class="form-control selectpicker">
+				      <option value=" ">Please assign a position in department</option>
+				      <option ng-repeat="(key, value) in userRgst.positions track by $index">{{value.positionName}}</option>
+					  </select>
+						<select 
+			  			ng-model="userRgst.inputs[$index]" 
+							ng-disabled="!userRgst.inputs[$index-1]"
 			  			ng-show="value.inputType == 'selectbox' && key == 'supervisor'"
 			  			class="form-control selectpicker">
-				      <option value=" ">Please assign a supervisor</option>
+				      <option value=" ">None</option>
 				      <option ng-repeat="(key, value) in userRgst.users track by $index">{{value.fullname}}</option>
 					  </select>
 			    </div>
@@ -54,7 +66,7 @@
 					  	type="text" 
 					  	class="form-control" 
 					  	placeholder="Create a new form field" 
-					  	required>
+					  	ng-required="!userRgst.newName.length">
 					  <span class="input-group-btn">
 					    <button 
 					    	class="btn btn-default" 
