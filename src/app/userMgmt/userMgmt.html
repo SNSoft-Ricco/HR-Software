@@ -4,22 +4,27 @@
   <div class="row">
     <div class="box col-md-12">
         <div class="box-inner">
+            <div class="page-header">
+              <h1> User Management </h1>      
+            </div>
             <div class="box-content">
               <table class="table table-bordered table-striped table-condensed">
                 <thead>
                     <tr>
-                        <th>Username</th>
+                        <th>Name</th>
                         <th>Group</th>
                         <th>Department</th>
+                        <th>Position</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
                       <tr ng-repeat="user in userMgmt.users track by user.username">
-                        <td> {{ user.username }}</td>
+                        <td> {{ user.fullname }}</td>
                         <td> {{ user.usergroup }}</td>
                         <td ng-click="userMgmt.deptDetail(user.department)"> {{ user.department }}</td>
+                        <td> {{ user.position }} </td>
                         <td> {{ user.status }}</td>
                         <td> 
                         	<i class="glyphicon glyphicon-pencil" ng-click="userMgmt.editUser(user)"></i>

@@ -15,6 +15,7 @@
 			  		<input 
 			  			ng-model="userRgst.inputs[$index]" 
 			  			ng-show="value.inputType == 'textbox'"
+							ng-disabled="userRgst.editMode && value.forEdit == 'false'"
 			  			placeholder="{{value.placeholder}}" 
 			  			class="form-control" 
 			  			type="{{value.type}}">
@@ -31,7 +32,7 @@
 			  			ng-show="value.inputType == 'selectbox' && key == 'department'"
 							ng-change="userRgst.loadNext(key, userRgst.inputs[$index])"
 			  			class="form-control selectpicker">
-				      <option value=" ">{{userRgst.inputs[$index-1]}}</option>
+				      <option value=" ">Please assign a department</option>
 				      <option ng-repeat="(key, value) in userRgst.depts track by $index">{{value.department}}</option>
 					  </select>
 						<select 

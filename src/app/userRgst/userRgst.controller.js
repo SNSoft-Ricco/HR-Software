@@ -18,14 +18,17 @@
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-user",
         "placeholder": "Enter an username",
-        "value": "test"
+        "value": "test",
+				"forEdit": "false"
       },
       "userpwd": {
         "fieldName": "Password",
         "type": "password",
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-lock",
-        "placeholder": "Enter a secure password"
+        "placeholder": "Enter a secure password",
+				"forEdit": "false"
+        
       },
       "usergroup": {
         "fieldName": "User Group",
