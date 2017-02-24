@@ -12,6 +12,9 @@
 		// Function Declaration
         vm.newLeave = newLeave;
 
+        // Variables
+        var curUser = $cookies.getObject('loggedInUser');
+
 		// Load current user leaves
         loadCurUserLeave();
 
