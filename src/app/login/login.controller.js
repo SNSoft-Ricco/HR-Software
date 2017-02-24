@@ -13,8 +13,8 @@
 
     // Check cookies
     if ($cookies.get("loggedInUser")) {
-      var loggedInUser = angular.fromJson($cookies.get("loggedInUser"));
-      $state.go("userMgmt");
+      //var loggedInUser = angular.fromJson($cookies.get("loggedInUser"));
+      $state.go("leaveMgmt");
     }
 
     function login() {
@@ -22,9 +22,8 @@
         .getUser(vm.userEmail)
         .then(function(data){
           // Verify success
-          $log.info("Verify success!");
-          $cookies.put("loggedInUser", angular.toJson(data));
-          $state.go("userMgmt");
+          $cookies.putObject("loggedInUser", data);
+          $state.go("leaveMgmt");
         }, function() {
           // Verify failed
           alert("Invalid credentials!");
