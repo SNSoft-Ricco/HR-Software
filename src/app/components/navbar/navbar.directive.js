@@ -26,9 +26,12 @@
 
       vm.logout = logout;
 
-      vm.curUserName = "ricco@snsoft.my";
-      if ($cookies.getObject('loggedInUser')){
-        $log.info('User Cookie', $cookies.getObject('loggedInUser'));
+      vm.loginStatus = "";
+
+      var curUser = $cookies.getObject('loggedInUser');
+
+      if (curUser){
+        vm.loginStatus = "Signed in as " + curUser.username;
       }
         
       function logout() {

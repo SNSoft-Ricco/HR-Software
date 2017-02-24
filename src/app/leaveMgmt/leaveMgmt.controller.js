@@ -6,13 +6,14 @@
 		.controller('LeaveMgmtController', LeaveMgmtController);
 
 	/** @ngInject */
-	function LeaveMgmtController($mdDialog, $document) {
+	function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ) {
 		var vm = this;
 
 		// Function Declaration
         vm.newLeave = newLeave;
 
-		// Load Departments Table
+		// Load current user leaves
+        loadCurUserLeave();
 
 		//// Public Functions
         function newLeave (ev) {
@@ -30,29 +31,44 @@
             }, function() {
                 vm.status = 'You cancelled the dialog.';
             });
+
+            function DialogController($log, $mdDialog, $cookies, systemServ, leaveServ) {
+                var vm = this;
+                vm.leaveTypes = ["Annual Leave", "Medical Leave", "Other Reason"];
+
+                vm.hide = function() {
+                    $mdDialog.hide();
+                };
+
+                vm.cancel = function() {
+                    $mdDialog.cancel();
+                };
+
+                vm.applyLeave = function() {
+                    var leave = {
+                        user: $cookies.getObject('loggedInUser').username,
+                        leaveType: vm.leaveType,
+                        fromDate: vm.fromDate,
+                        toDate: vm.toDate,
+                        description: vm.description
+                    };
+
+                    leaveServ.addLeave(leave).then(function(msg){
+                        loadCurUserLeave();
+                        alert(msg);
+                        vm.cancel();
+                    });
+                };
+            } 
         }
 
 		//// Private Functions
-        function DialogController($log, $mdDialog, systemServ) {
-            var vm = this;
-
-            vm.leaveTypes = {
-                1: "Annual Leave",
-                2: "Medical Leave",
-                99: "Other Reason"
-            }
-
-            vm.hide = function() {
-                $mdDialog.hide();
-            };
-
-            vm.cancel = function() {
-                $mdDialog.cancel();
-            };
-
-            vm.answer = function(answer) {
-                $mdDialog.hide(answer);
-            };
+        function loadCurUserLeave() {
+            $timeout(function() {
+                leaveServ.getLeaveByUsername(curUser.username).then(function(leaves) {
+                    vm.leaves = leaves;
+                });
+            },200);
         }
 
 	}

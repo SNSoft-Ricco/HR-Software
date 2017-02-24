@@ -8,32 +8,29 @@
               <div class="page-header">
                 <h1> Leave Management </h1>      
               </div>
-          <!--    <table class="table table-bordered table-striped table-condensed">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Group</th>
-                        <th>Department</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                      <tr ng-repeat="user in leaveMgmt.users track by user.username">
-                        <td> {{ user.username }}</td>
-                        <td> {{ user.usergroup }}</td>
-                        <td ng-click="leaveMgmt.deptDetail(user.department)"> {{ user.department }}</td>
-                        <td> {{ user.status }}</td>
-                        <td> 
-                        	<i class="glyphicon glyphicon-pencil" ng-click="leaveMgmt.editUser(user)"></i>
-                        	<i class="glyphicon glyphicon-remove" ng-click="leaveMgmt.rmUser(user)"></i>
-                        </td>
-                    </tr> 
-                    </tbody>
-                </table> -->
+              <h3> My Leave History </h3>
+              <table class="table table-bordered table-striped">
+                <thead class="thead-inverse">
+                <tr>
+                    <th>Leave Type</th>
+                    <th>Leave From</th>
+                    <th>Leave To</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="leave in leaveMgmt.leaves track by $index">
+                    <td> {{ leave.leaveType }} </td>
+                    <td> {{ leave.fromDate | date: 'dd/MM/yyyy' }} </td>
+                    <td> {{ leave.toDate | date: 'dd/MM/yyyy' }} </td>
+                    <td> {{ leave.status }} </td>
+                </tr> 
+                </tbody>
+              </table>
             </div>
         </div>
     </div>
+  </div>
 
   <!-- Page Actions -->
   <div ng-show="true">

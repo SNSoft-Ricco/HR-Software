@@ -5,7 +5,7 @@
         <h2>Apply Leave</h2>
         <span flex></span>
         <!-- Top bar right -->
-        <md-button class="md-icon-button" ng-click="cancel()">
+        <md-button class="md-icon-button" ng-click="dialog.cancel()">
           <md-icon md-svg-src="assets/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
         </md-button>
       </div>
@@ -17,17 +17,19 @@
             <div>
             <form name="leaveForm">
 
+                <!-- Leave Type -->
                 <div layout-gt-xs="row">
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>Leave Type</label>
                         <md-select ng-model="dialog.leaveType">
-                            <md-option ng-repeat="(key, value) in dialog.leaveTypes" value="{{key}}">
-                                {{value}}
+                            <md-option ng-repeat="leave in dialog.leaveTypes" value="{{leave}}">
+                                {{leave}}
                             </md-option>
                         </md-select>
                     </md-input-container>
                 </div>
 
+                <!-- Date Range -->
                 <div layout-gt-xs="row">
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>From Date</label>
@@ -46,9 +48,10 @@
                     </md-checkbox>
                 </div>
 -->                
+                <!-- Leave Description -->
                 <md-input-container class="md-block">
                     <label>Description</label>
-                    <textarea ng-model="user.biography" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+                    <textarea ng-model="dialog.description" md-maxlength="150" rows="5" md-select-on-focus></textarea>
                 </md-input-container>
 
             </form>
@@ -61,10 +64,10 @@
     <md-dialog-actions layout="row">
       <h4>Leave Balance: </h4>
       <span flex></span>
-      <md-button ng-click="answer('not useful')">
+      <md-button ng-click="dialog.cancel()">
         Cancel
       </md-button>
-      <md-button ng-click="answer('useful')">
+      <md-button ng-click="dialog.applyLeave()">
         Summit
       </md-button>
     </md-dialog-actions>

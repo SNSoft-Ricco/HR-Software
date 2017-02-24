@@ -8,7 +8,7 @@
   /** @ngInject */
   function localdb($log, $window, $q) {
     var DB_NAME = "snsofthrdb";
-    var DB_VERSION = 4;
+    var DB_VERSION = 9;
     /**
      * IndexedDB Version Changelog
      * 4 (Ricco): added leave table
@@ -41,7 +41,7 @@
         var dataBase = evt.target.result;
         var txn = evt.target.transaction;
 
-        var leaveObjStore;
+        var usrObjStore, deptObjStore, leaveObjStore, systemObjStore;
 
         var storeCreateIndex = function (objectStore, name, options) {
             if (!objectStore.indexNames.contains(name)) {
@@ -52,10 +52,9 @@
         switch(true) {
           case (evt.oldVersion < 3):
             $log.info("IndexedDB Version 3");
-            var usrObjStore = dataBase.createObjectStore("user", { keyPath : "username", autoIncrement : true });
 
-            evt.currentTarget.result
-            .createObjectStore("department", { keyPath : "department"});
+            usrObjStore = dataBase.createObjectStore("user", { keyPath : "username", autoIncrement : true });
+            deptObjStore= dataBase.createObjectStore("department", { keyPath : "department"});
 
             // Create Index
             usrObjStore.createIndex("userDepartment", "department", { unique: false });
@@ -75,6 +74,28 @@
             $log.info("IndexedDB Version 4");
             leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "_id", autoIncrement : true });
             storeCreateIndex(leaveObjStore, "department", { unique: false });
+          case (evt.oldVersion < 5): 
+            $log.info("IndexedDB Version 5");
+            systemObjStore = dataBase.createObjectStore("system", { keyPath : "_id", autoIncrement : true });
+            txn.objectStore('system').add({leaveTypes: { 1: "Annual Leave", 2: "Medical Leave", 99: "Other Reason" }});
+          case (evt.oldVersion < 6): 
+            $log.info("IndexedDB Version 6");
+            storeCreateIndex(leaveObjStore, "user.username", { unique: true });
+            storeCreateIndex(leaveObjStore, "user.department", { unique: false });
+          case (evt.oldVersion < 7): 
+            $log.info("IndexedDB Version 7");
+            leaveObjStore = txn.objectStore('leave');
+            storeCreateIndex(leaveObjStore, "user", { unique: true, multiEntry: true});
+          case (evt.oldVersion < 8):
+            $log.info("IndexedDB Version 8");
+            leaveObjStore = txn.objectStore('leave');
+            leaveObjStore.deleteIndex('user');
+            storeCreateIndex(leaveObjStore, "user", { unique: true, multiEntry: true});
+          case (evt.oldVersion < 9):
+            $log.info("IndexedDB Version 9");
+            leaveObjStore = txn.objectStore('leave');
+            leaveObjStore.deleteIndex('user');
+            storeCreateIndex(leaveObjStore, "user", { unique: false, multiEntry: true});
         }
 
         deferred.resolve();

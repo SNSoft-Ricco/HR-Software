@@ -16,7 +16,7 @@
         <li><a ui-sref="pmsMgmt">Permission</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <p class="navbar-text">Signed in as <a href="#" class="navbar-link"></a></p>
+        <p class="navbar-text">{{ vm.loginStatus }}</p>
         <li><a ng-click="vm.logout()">Logout</a></li>
       </ul>
     </div>
