@@ -6,7 +6,7 @@
 		.controller('DeptRegController', DeptRegController);
 
 	/** @ngInject */
-	function DeptRegController($log, $window, $cookies, $state, $stateParams, deptServ) {
+	function DeptRegController($log, $window, $cookies, $state, $stateParams, deptServ, userServ, toastr) {
 		var vm = this;
 		
 		var dynTemplate = {
@@ -22,7 +22,7 @@
         "head": {
 					"fieldName": "Head",
 					"type": "text",
-					"inputType": "textbox",
+					"inputType": "selectUser",
 					"glyphClass": "glyphicon glyphicon-user",
 					"placeholder": "",
 					"value": "test",
@@ -50,24 +50,27 @@
         if(vm.dynFields.hasOwnProperty(dept)) {
           vm.inputs[i] = objDept[dept];
         } else {
-          vm.dynFields[dept] = {
-            "fieldName": dept,
-            "type": "text",
-            "inputType": "textbox",
-            "glyphClass": "glyphicon glyphicon-list-alt"
-          };
+					if (dept !== "position") {
+						vm.dynFields[dept] = {
+							"fieldName": dept,
+							"type": "text",
+							"inputType": "textbox",
+							"glyphClass": "glyphicon glyphicon-list-alt"
+						};
 
-          vm.inputs[i] = objDept[dept];
+						vm.inputs[i] = objDept[dept];
+					}
         }
 
         i++;
       }
 		}
 	
-		// Load Departments as select options
-		// deptServ.getAllDepartments().then(function(depts) {
-		// 	vm.depts = depts;
-		// })
+		// Load users as select options
+		userServ.getAllUsers().then(function(users){
+			$log.info("getAllUsers",users);
+			vm.users = users;
+		})
 
 		function newDept () {
 			var i = 0;
@@ -82,12 +85,13 @@
       if (vm.editMode)
       {
         deptServ.editDept(fields).then(function(response){
-          alert(response);
+          toastr.success('Sucessfully edit department', 'Success');
           $state.go('deptMgmt');
         });
       } else {
         deptServ.addDept(fields).then(function(response){
-          alert(response);
+          toastr.success('Sucessfully added department', 'Success');
+					$state.go('deptMgmt');
         });
       }
 		}
