@@ -8,7 +8,7 @@
   /** @ngInject */
   function localdb($log, $window, $q) {
     var DB_NAME = "snsofthrdb";
-    var DB_VERSION = 9;
+    var DB_VERSION = 10;
     /**
      * IndexedDB Version Changelog
      * 4 (Ricco): added leave table
@@ -96,6 +96,10 @@
             leaveObjStore = txn.objectStore('leave');
             leaveObjStore.deleteIndex('user');
             storeCreateIndex(leaveObjStore, "user", { unique: false, multiEntry: true});
+          case (evt.oldVersion < 10):
+            $log.info("IndexedDB Version 10");
+            leaveObjStore = txn.objectStore('leave');
+            storeCreateIndex(leaveObjStore, "approvalBy", { unique: false, multiEntry: true});            
         }
 
         deferred.resolve();

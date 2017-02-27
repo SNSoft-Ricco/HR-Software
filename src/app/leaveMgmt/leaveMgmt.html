@@ -9,6 +9,9 @@
                 <div class="well">
                   <h1>Leave Management</h1>
                 </div>
+                <md-button style="margin-left: 2%" class="md-primary md-raised" ng-click="leaveMgmt.newLeave($event)">
+                  Apply Leave
+                </md-button>
                 <md-tabs md-dynamic-height md-border-bottom>
                     <md-tab label="My Leave History">
                       <md-content class="md-padding">
@@ -39,22 +42,35 @@
                       <md-content class="md-padding">
                         <table class="table table-bordered table-striped">
                           <thead class="thead-inverse">
-                          <tr>
-                              <th>Leave Type</th>
-                              <th>Leave From</th>
-                              <th>Leave To</th>
-                              <th>Status</th>
-                          </tr>
+                            <tr>
+                                <th></th>
+                                <th>Summitted By</th>
+                                <th>Leave Type</th>
+                                <th>Leave From</th>
+                                <th>Leave To</th>
+                                <th>Status</th>
+                            </tr>
                           </thead>
                           <tbody>
-                          <tr ng-repeat="leave in leaveMgmt.leavesPendingMyApprove track by $index">
+                            <tr dir-paginate="leave in leaveMgmt.leavesPendingMyApprove | itemsPerPage: 10 track by leave._id">
+                              <td> <input type="checkbox" ng-model="leaveMgmt.selectedApproval[leave._id]"> </td>
+                              <td> {{ leave.user }} </td>
                               <td> {{ leave.leaveType }} </td>
                               <td> {{ leave.fromDate | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.toDate | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.status }} </td>
-                          </tr> 
+                            </tr> 
+                            <div class="text-center">
+                              <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="app/components/dirPagination/dirPagination.tpl.html"></dir-pagination-controls>
+                            </div>
                           </tbody>
                         </table>
+                        <md-button class="md-primary md-raised" ng-click="leaveMgmt.approveLeave()">
+                          Approve
+                        </md-button>
+                        <md-button class="md-primary md-raised" ng-click="leaveMgmt.newLeave($event)">
+                          Reject
+                        </md-button>
                       </md-content>
                     </md-tab>
                     <md-tab label="three">
@@ -76,15 +92,7 @@
 
   <!-- Page Actions -->
   <div ng-show="true">
-    <div class="box col-md-12">
-      <div class="box-inner">
-        <div class="box-content">
-          <md-button class="md-primary md-raised" ng-click="leaveMgmt.newLeave($event)">
-            Apply Leave
-          </md-button>
-        </div>
-      </div>
-    </div>
+
   </div>
 
 </div>

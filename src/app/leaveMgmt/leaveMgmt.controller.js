@@ -11,12 +11,15 @@
 
 		// Function Declaration
         vm.newLeave = newLeave;
+        vm.approveLeave = approveLeave;
 
         // Variables
         var curUser = $cookies.getObject('loggedInUser');
+        vm.selectedApproval = [];
 
 		// Load current user leaves
         loadCurUserLeave();
+        loadPendingApprovalLeave();
 
 		//// Public Functions
         function newLeave (ev) {
@@ -50,6 +53,7 @@
                 vm.applyLeave = function() {
                     var leave = {
                         user: $cookies.getObject('loggedInUser').username,
+                        approvalBy: $cookies.getObject('loggedInUser').supervisor,
                         leaveType: vm.leaveType,
                         fromDate: vm.fromDate,
                         toDate: vm.toDate,
@@ -65,13 +69,29 @@
             } 
         }
 
+        function approveLeave() {
+            for (var leaveId in vm.selectedApproval) {
+                if (vm.selectedApproval[leaveId] == true) {
+                    leaveServ.approveLeave(leaveId);
+                }
+            }
+        }
+
 		//// Private Functions
         function loadCurUserLeave() {
             $timeout(function() {
                 leaveServ.getLeaveByUsername(curUser.username).then(function(leaves) {
                     vm.leaves = leaves;
                 });
-            },200);
+            },500);
+        }
+
+        function loadPendingApprovalLeave() {
+            $timeout(function() {
+                leaveServ.getPendingApprovalLeaveByUsername(curUser.username).then(function(leaves) {
+                    vm.leavesPendingMyApprove = leaves;
+                });
+            },500);
         }
 
 	}

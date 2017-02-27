@@ -10,6 +10,8 @@
     //// Function Declaration
     this.addLeave = addLeave;
     this.getLeaveByUsername = getLeaveByUsername;
+    this.getPendingApprovalLeaveByUsername = getPendingApprovalLeaveByUsername;
+    this.approveLeave = approveLeave;
 
     //// Local Variable Declaration
     var DB_STORENAME = 'leave';
@@ -67,6 +69,64 @@
       };
 
       return deferred.promise;
+    }
+
+    // get pending approval leave by username
+    // Param    - username
+    // Resolve  - leave objects array
+    function getPendingApprovalLeaveByUsername(username) {
+      var deferred = $q.defer();
+
+      var singleKeyRange = IDBKeyRange.only(username);
+      
+      var request = 
+        localdb.getObjectStore(DB_STORENAME, 'readonly')
+        .index('approvalBy')
+        .getAll(singleKeyRange);
+
+      request.onerror = function() {
+        $log.info("Open ObjectStore Error!");
+      };    
+      request.onsuccess = function(event) {
+        var value = event.target.result;
+
+        if (value) {
+          deferred.resolve(value);
+        } else {
+          deferred.reject("Leave not exist!");
+        }
+      };
+
+      return deferred.promise;  
+    }
+
+    // approve 
+    // Param    - username
+    // Resolve  - leave objects array
+    function approveLeave(leaveId) {
+      //var deferred = $q.defer();
+      $log.info("leaveId", leaveId)
+      // var singleKeyRange = IDBKeyRange.only(username);
+      
+      // var request = 
+      //   localdb.getObjectStore(DB_STORENAME, 'readonly')
+      //   .index('approvalBy')
+      //   .getAll(singleKeyRange);
+
+      // request.onerror = function() {
+      //   $log.info("Open ObjectStore Error!");
+      // };    
+      // request.onsuccess = function(event) {
+      //   var value = event.target.result;
+
+      //   if (value) {
+      //     deferred.resolve(value);
+      //   } else {
+      //     deferred.reject("Leave not exist!");
+      //   }
+      // };
+
+      //return deferred.promise;  
     }
   }
 })();
