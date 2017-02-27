@@ -11,6 +11,7 @@
       'ngAria', 
       'ui.router', 
       'toastr', 
-      'ngMaterial']);
+      'ngMaterial',
+      'angularUtils.directives.dirPagination']);
 
 })();

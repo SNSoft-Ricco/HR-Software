@@ -33,12 +33,12 @@
                 <div layout-gt-xs="row">
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>From Date</label>
-                        <md-datepicker ng-model="dialog.fromDate" ng-change="dialog.toDate = dialog.fromDate"></md-datepicker>
+                        <md-datepicker ng-model="dialog.fromDate" ng-change="dialog.toDate = dialog.fromDate" md-open-on-focus></md-datepicker>
                     </md-input-container>
 
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>To Date</label>
-                        <md-datepicker ng-model="dialog.toDate"></md-datepicker>
+                        <md-datepicker ng-model="dialog.toDate" md-open-on-focus></md-datepicker>
                     </md-input-container>
                 </div>
 <!--

@@ -35,7 +35,7 @@
                 vm.status = 'You cancelled the dialog.';
             });
 
-            function DialogController($log, $mdDialog, $cookies, systemServ, leaveServ) {
+            function DialogController($log, $mdDialog, $cookies, leaveServ, toastr) {
                 var vm = this;
                 vm.leaveTypes = ["Annual Leave", "Medical Leave", "Other Reason"];
 
@@ -57,8 +57,8 @@
                     };
 
                     leaveServ.addLeave(leave).then(function(msg){
+                        toastr.success('Your leave is now pending approval.', 'Success');
                         loadCurUserLeave();
-                        alert(msg);
                         vm.cancel();
                     });
                 };
