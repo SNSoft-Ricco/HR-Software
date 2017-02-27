@@ -45,12 +45,11 @@
 				      <option ng-repeat="(key, value) in userRgst.positions track by $index">{{value.positionName}}</option>
 					  </select>
 						<select 
-			  			ng-model="userRgst.inputs[$index]" 
-							ng-disabled="!userRgst.inputs[$index-1]"
+			  			ng-model="userRgst.inputs[$index]"
 			  			ng-show="value.inputType == 'selectbox' && key == 'supervisor'"
 			  			class="form-control selectpicker">
 				      <option value=" ">None</option>
-				      <option ng-repeat="(key, value) in userRgst.users track by $index">{{value.fullname}}</option>
+				      <option ng-repeat="(key, value) in userRgst.users track by $index" ng-value="value.username">{{value.fullname}}</option>
 					  </select>
 			    </div>
 			  </div>

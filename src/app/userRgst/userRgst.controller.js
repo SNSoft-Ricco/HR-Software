@@ -7,7 +7,7 @@
 
   /** @ngInject */
   function UserRgstController(
-    $log, $window, $cookies, $state, $timeout, userServ, deptServ, PermissionService) {
+    $log, $window, $cookies, $state, $timeout, userServ, deptServ, PermissionService, toastr) {
 
     var vm = this;
 
@@ -131,6 +131,8 @@
       var i = 0;
       var fields = {};
 
+      $log.info("input", vm.inputs);
+
       // Get dynamic fields
       for (var field in vm.dynFields) {
         fields[field] = vm.inputs[i];
@@ -139,12 +141,13 @@
 
       if (vm.editMode)
       {
-        userServ.editUser(fields).then(function(response){
-          alert(response);
+        userServ.editUser(fields).then(function(){
+          toastr.success("Successfully edited employee", "Success");
+          back();
         });
       } else {
-        userServ.addUser(fields).then(function(response){
-          alert(response);
+        userServ.addUser(fields).then(function(){
+          toastr.success("Successfully added employee", "Success");
           back();
         });
       }
