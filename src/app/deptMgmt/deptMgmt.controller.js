@@ -6,7 +6,7 @@
 		.controller('DeptMgmtController', DeptMgmtController);
 
 	/** @ngInject */
-	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ) {
+	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr) {
 		var vm = this;
 		
 		// Function Declaration
@@ -26,7 +26,7 @@
 		// Function - Remove Department
 		function rmDept(objDept) {
 			deptServ.rmDept(objDept).then(function(msg) {
-				alert(msg);
+				toastr.success('Successfully removed department', 'Success');
 				showAllDepts();
 			})
 		}
