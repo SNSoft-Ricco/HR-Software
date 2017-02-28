@@ -1,0 +1,73 @@
+<div class="container">
+	<sns-navbar></sns-navbar>
+	<form class="well form-horizontal" id="contact_form" name="reg_form">
+		<fieldset>
+
+			<!-- Form Name -->
+			<legend>{{ userRgst.title }}</legend>
+
+			<!-- Dynamic Fields Form -->
+			<div class="form-group" ng-repeat="(key, value) in userRgst.dynFields track by $index">
+				<label class="col-md-4 control-label">{{value.fieldName | capitalize}}</label>
+				<div class="col-md-4 inputGroupContainer">
+			  	<div class="input-group">
+			  		<span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
+			  		<input 
+			  			ng-model="userRgst.inputs[$index]" 
+			  			ng-show="value.inputType == 'textbox'"
+			  			placeholder="{{value.placeholder}}" 
+			  			class="form-control" 
+			  			type="{{value.type}}">
+			  		<select
+			  			ng-model="userRgst.inputs[$index]" 
+			  			ng-show="value.inputType == 'selectbox' && key == 'usergroup'"
+			  			class="form-control selectpicker">
+				      <option value=" ">Please select the permission group</option>
+							<option ng-repeat="(key, value) in userRgst.pms track by $index">{{value.code}}</option>
+					  </select>
+					  <select 
+			  			ng-model="userRgst.inputs[$index]" 
+			  			ng-show="value.inputType == 'selectbox' && key == 'department'"
+			  			class="form-control selectpicker">
+				      <option value=" ">Please select a department</option>
+				      <option ng-repeat="(key, value) in userRgst.depts track by $index">{{value.department}}</option>
+					  </select>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- New dynamic field -->
+			<div class="form-group">
+			  <label class="col-md-4 control-label"></label>
+			  <div class="col-md-4">
+			  	<div class="input-group">
+					  <input 
+					  	name="newName"
+					  	ng-model="userRgst.newName" 
+					  	type="text" 
+					  	class="form-control" 
+					  	placeholder="Create a new form field" 
+					  	required>
+					  <span class="input-group-btn">
+					    <button 
+					    	class="btn btn-default" 
+					    	ng-disabled="reg_form.newName.$error.required"
+					    	ng-click="userRgst.newField()">Insert</button>
+					  </span>
+					</div>
+			  </div>
+			</div>
+
+			<!-- Button -->
+			<div class="form-group">
+				<div class="col-md-4">
+					<div class="input-group">
+						<button class="btn" ng-click="userRgst.back()">Back</button>
+				    <button class="btn" ng-click="userRgst.submit()">Submit</button>
+				  </div>
+				</div>
+			</div>
+
+		</fieldset>
+	</form>
+</div>
