@@ -6,19 +6,24 @@
     .controller('LoginController', LoginController);
 
   /** @ngInject */
-  function LoginController($log, $cookies, $window, $state, localdb) {
+  function LoginController($log, $cookies, $window, $state, userServ) {
     var vm = this;
 
     vm.login = login;
 
+    // Check cookies
+    if ($cookies.get("loggedInUser")) {
+      //var loggedInUser = angular.fromJson($cookies.get("loggedInUser"));
+      $state.go("leaveMgmt");
+    }
+
     function login() {
-      localdb
+      userServ
         .getUser(vm.userEmail)
         .then(function(data){
           // Verify success
-          $log.info("Verify success!");
-          $cookies.put("loggedInUser", angular.toJson(data));
-          $state.go("userMgmt");
+          $cookies.putObject("loggedInUser", data);
+          $state.go("leaveMgmt");
         }, function() {
           // Verify failed
           alert("Invalid credentials!");

@@ -12,25 +12,44 @@
 				<div class="col-md-4 inputGroupContainer">
 			  	<div class="input-group">
 			  		<span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
-			  		<input 
-			  			ng-model="userRgst.inputs[$index]" 
+			  		<input
+			  			ng-model="userRgst.inputs[$index]"
 			  			ng-show="value.inputType == 'textbox'"
-			  			placeholder="{{value.placeholder}}" 
-			  			class="form-control" 
+							ng-disabled="userRgst.editMode && value.forEdit == 'false'"
+			  			placeholder="{{value.placeholder}}"
+			  			class="form-control"
 			  			type="{{value.type}}">
 			  		<select
-			  			ng-model="userRgst.inputs[$index]" 
+			  			ng-model="userRgst.inputs[$index]"
 			  			ng-show="value.inputType == 'selectbox' && key == 'usergroup'"
 			  			class="form-control selectpicker">
 				      <option value=" ">Please select the permission group</option>
 							<option ng-repeat="(key, value) in userRgst.pms track by $index">{{value.code}}</option>
 					  </select>
-					  <select 
-			  			ng-model="userRgst.inputs[$index]" 
+					  <select
+			  			ng-model="userRgst.inputs[$index]"
+							ng-disabled="!userRgst.inputs[$index-1]"
 			  			ng-show="value.inputType == 'selectbox' && key == 'department'"
+							ng-change="userRgst.loadNext(key, userRgst.inputs[$index])"
 			  			class="form-control selectpicker">
-				      <option value=" ">Please select a department</option>
+				      <option value=" ">Please assign a department</option>
 				      <option ng-repeat="(key, value) in userRgst.depts track by $index">{{value.department}}</option>
+					  </select>
+						<select
+			  			ng-model="userRgst.inputs[$index]"
+							ng-disabled="!userRgst.inputs[$index-1]"
+			  			ng-show="value.inputType == 'selectbox' && key == 'position'"
+							ng-change="userRgst.loadNext(key, userRgst.inputs[$index])"
+			  			class="form-control selectpicker">
+				      <option value=" ">Please assign a position in department</option>
+				      <option ng-repeat="(key, value) in userRgst.positions track by $index">{{value.positionName}}</option>
+					  </select>
+						<select
+			  			ng-model="userRgst.inputs[$index]"
+			  			ng-show="value.inputType == 'selectbox' && key == 'supervisor'"
+			  			class="form-control selectpicker">
+				      <option value=" ">None</option>
+				      <option ng-repeat="(key, value) in userRgst.users track by $index" ng-value="value.username">{{value.fullname}}</option>
 					  </select>
 			    </div>
 			  </div>
@@ -41,16 +60,16 @@
 			  <label class="col-md-4 control-label"></label>
 			  <div class="col-md-4">
 			  	<div class="input-group">
-					  <input 
+					  <input
 					  	name="newName"
-					  	ng-model="userRgst.newName" 
-					  	type="text" 
-					  	class="form-control" 
-					  	placeholder="Create a new form field" 
-					  	required>
+					  	ng-model="userRgst.newName"
+					  	type="text"
+					  	class="form-control"
+					  	placeholder="Create a new form field"
+					  	ng-required="!userRgst.newName.length">
 					  <span class="input-group-btn">
-					    <button 
-					    	class="btn btn-default" 
+					    <button
+					    	class="btn btn-default"
 					    	ng-disabled="reg_form.newName.$error.required"
 					    	ng-click="userRgst.newField()">Insert</button>
 					  </span>

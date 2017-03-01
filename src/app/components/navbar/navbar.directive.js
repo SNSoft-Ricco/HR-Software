@@ -21,15 +21,22 @@
     return directive;
 
     /** @ngInject */
-    function NavbarController($log, moment) {
+    function NavbarController($log, $state, $cookies) {
       var vm = this;
 
-      // "vm.creationDate" is available by directive option "bindToController: true"
-      vm.relativeDate = moment(vm.creationDate).fromNow();
       vm.logout = logout;
 
+      vm.loginStatus = "";
+
+      var curUser = $cookies.getObject('loggedInUser');
+
+      if (curUser){
+        vm.loginStatus = "Signed in as " + curUser.username;
+      }
+        
       function logout() {
-        $log.info("LOGOUT!!!");
+        $cookies.remove('loggedInUser');
+        $state.go('login');
       }
     }
   }

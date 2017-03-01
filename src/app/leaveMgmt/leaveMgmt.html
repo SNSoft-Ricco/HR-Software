@@ -1,0 +1,98 @@
+<div class="container">
+  <sns-navbar></sns-navbar>
+
+  <div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
+            <div class="box-content" ng-cloak>
+              <md-content>
+                <div class="well">
+                  <h1>Leave Management</h1>
+                </div>
+                <md-button style="margin-left: 2%" class="md-primary md-raised" ng-click="leaveMgmt.newLeave($event)">
+                  Apply Leave
+                </md-button>
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="My Leave History">
+                      <md-content class="md-padding">
+                        <table class="table table-bordered table-striped">
+                          <thead class="thead-inverse">
+                          <tr>
+                              <th>Leave Type</th>
+                              <th>Leave From</th>
+                              <th>Leave To</th>
+                              <th>Status</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr dir-paginate="leave in leaveMgmt.leaves | itemsPerPage: 10">
+                              <td> {{ leave.leaveType }} </td>
+                              <td> {{ leave.fromDate | date: 'dd/MM/yyyy' }} </td>
+                              <td> {{ leave.toDate | date: 'dd/MM/yyyy' }} </td>
+                              <td> {{ leave.status }} </td>
+                          </tr> 
+                          </tbody>
+                        </table>
+                        <div class="text-center">
+                          <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="app/components/dirPagination/dirPagination.tpl.html"></dir-pagination-controls>
+                        </div>
+                      </md-content>
+                    </md-tab>
+                    <md-tab label="Pending My Approval">
+                      <md-content class="md-padding">
+                        <table class="table table-bordered table-striped">
+                          <thead class="thead-inverse">
+                            <tr>
+                                <th></th>
+                                <th>Summitted By</th>
+                                <th>Leave Type</th>
+                                <th>Leave From</th>
+                                <th>Leave To</th>
+                                <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr dir-paginate="leave in leaveMgmt.leavesPendingMyApprove | itemsPerPage: 10 track by leave._id">
+                              <td> <input type="checkbox" ng-model="leaveMgmt.selectedApproval[leave._id]"> </td>
+                              <td> {{ leave.user }} </td>
+                              <td> {{ leave.leaveType }} </td>
+                              <td> {{ leave.fromDate | date: 'dd/MM/yyyy' }} </td>
+                              <td> {{ leave.toDate | date: 'dd/MM/yyyy' }} </td>
+                              <td> {{ leave.status }} </td>
+                            </tr> 
+                            <div class="text-center">
+                              <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="app/components/dirPagination/dirPagination.tpl.html"></dir-pagination-controls>
+                            </div>
+                          </tbody>
+                        </table>
+                        <md-button class="md-primary md-raised" ng-click="leaveMgmt.approveLeave()">
+                          Approve
+                        </md-button>
+                        <md-button class="md-primary md-raised" ng-click="leaveMgmt.newLeave($event)">
+                          Reject
+                        </md-button>
+                      </md-content>
+                    </md-tab>
+                    <md-tab label="three">
+                      <md-content class="md-padding">
+                        <h1 class="md-display-2">Tab Three</h1>
+                        <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                      </md-content>
+                    </md-tab>
+                  </md-tabs>
+                </md-content>
+
+
+              
+
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Page Actions -->
+  <div ng-show="true">
+
+  </div>
+
+</div>

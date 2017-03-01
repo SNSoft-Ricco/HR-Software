@@ -3,19 +3,20 @@
 
     <div class="navbar-header">
       <a class="navbar-brand" ng-href="#">
-        <span class="glyphicon glyphicon-home"></span> SNSoft 
+        <span class="glyphicon glyphicon-home"></span> SNSoft
       </a>
     </div>
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
       <ul class="nav navbar-nav">
         <li class="active"><a ng-href="#">Home</a></li>
+        <li><a ui-sref="leaveMgmt">Leave</a></li>
         <li><a ui-sref="userMgmt">User</a></li>
         <li><a ui-sref="deptMgmt">Department</a></li>
         <li><a ui-sref="pmsMgmt">Permission</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <p class="navbar-text">Signed in as <a href="#" class="navbar-link"></a></p>
+        <p class="navbar-text">{{ vm.loginStatus }}</p>
         <li><a ng-click="vm.logout()">Logout</a></li>
       </ul>
     </div>

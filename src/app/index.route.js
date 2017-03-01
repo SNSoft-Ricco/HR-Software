@@ -9,14 +9,14 @@
   function routerConfig($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('login', {
-        url: '/login',
+        url: '/',
         templateUrl: 'app/login/login.html',
         controller: 'LoginController',
         controllerAs: 'login'
       })
 
       .state('userMgmt', {
-        url: '/',
+        url: '/user-management',
         templateUrl: 'app/userMgmt/userMgmt.html',
         controller: 'UserMgmtController',
         controllerAs: 'userMgmt'
@@ -61,6 +61,14 @@
         templateUrl: 'app/permission/permission.html',
         controller: 'PermissionController',
         controllerAs: 'Permission'
+      })
+
+      // Leave Management View
+      .state('leaveMgmt', {
+        url: '/leave-management',
+        templateUrl: 'app/leaveMgmt/leaveMgmt.html',
+        controller: 'LeaveMgmtController',
+        controllerAs: 'leaveMgmt'
       })
       // Login Page
       // .state('login', {

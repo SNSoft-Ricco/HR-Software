@@ -7,7 +7,7 @@
 
   /** @ngInject */
   function UserRgstController(
-    $log, $window, $cookies, $state, userServ, deptServ, PermissionService) {
+    $log, $window, $cookies, $state, $timeout, userServ, deptServ, PermissionService, toastr) {
 
     var vm = this;
 
@@ -18,14 +18,17 @@
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-user",
         "placeholder": "Enter an username",
-        "value": "test"
+        "value": "test",
+				"forEdit": "false"
       },
       "userpwd": {
         "fieldName": "Password",
         "type": "password",
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-lock",
-        "placeholder": "Enter a secure password"
+        "placeholder": "Enter a secure password",
+				"forEdit": "false"
+        
       },
       "usergroup": {
         "fieldName": "User Group",
@@ -36,6 +39,22 @@
         "fieldName": "Department",
         "inputType": "selectbox",
         "glyphClass": "glyphicon glyphicon-star"
+      },
+      "position": {
+        "fieldName": "Position",
+        "inputType": "selectbox",
+        "glyphClass": "glyphicon glyphicon-briefcase"
+      },
+      "supervisor": {
+        "fieldName": "Supervisor",
+        "inputType": "selectbox",
+        "glyphClass": "glyphicon glyphicon-user"
+      },
+      "fullname": {
+        "fieldName": "Full Name",
+        "type": "text",
+        "inputType": "textbox",
+        "glyphClass": "glyphicon glyphicon-user"
       },
       "contactno": {
         "fieldName": "Contact No.",
@@ -54,16 +73,26 @@
     vm.back = back;
     vm.submit = submit;
     vm.newField = newField;
+    vm.loadNext = loadNext;
 
-    // Load Permission as select options
-    PermissionService.getAllPermission().then(function(pms){
-      vm.pms = pms;
-    })
+    setTimeout(function(){
+      // Load Permission as select options
+      PermissionService.getAllPermission().then(function(pms){
+        vm.pms = pms;
+      })
 
-    // Load Departments as select options
-    deptServ.getAllDepartments().then(function(depts) {
-      vm.depts = depts;
-    })
+      // Load Departments as select options
+      deptServ.getAllDepartments().then(function(depts) {
+        vm.depts = depts;
+      })
+
+      // Load users as select options
+      userServ.getAllUsers().then(function(users){
+        $log.info("getAllUsers",users);
+        vm.users = users;
+      })
+    },500)
+    
 
     if ($cookies.get('editUser')) {
       var objUser = angular.fromJson($cookies.get('editUser'));
@@ -75,6 +104,8 @@
       for (var field in objUser) {
         if(vm.dynFields.hasOwnProperty(field)) {
           vm.inputs[i] = objUser[field];
+
+          loadNext(field, objUser[field]);
         } else {
           vm.dynFields[field] = {
             "fieldName": field,
@@ -100,6 +131,8 @@
       var i = 0;
       var fields = {};
 
+      $log.info("input", vm.inputs);
+
       // Get dynamic fields
       for (var field in vm.dynFields) {
         fields[field] = vm.inputs[i];
@@ -108,12 +141,13 @@
 
       if (vm.editMode)
       {
-        userServ.editUser(fields).then(function(response){
-          alert(response);
+        userServ.editUser(fields).then(function(){
+          toastr.success("Successfully edited employee", "Success");
+          back();
         });
       } else {
-        userServ.addUser(fields).then(function(response){
-          alert(response);
+        userServ.addUser(fields).then(function(){
+          toastr.success("Successfully added employee", "Success");
           back();
         });
       }
@@ -127,6 +161,20 @@
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-list-alt"
       };
+    }
+
+    function loadNext(key, deptName) {
+      switch(key) {
+        case 'department':
+          deptServ.getDept(deptName).then(function(dept){
+            vm.positions = dept.position;
+          });
+          break;
+        case 'position':
+          break;
+        default:
+          break;
+      }
     }
   }
 })();

@@ -20,19 +20,19 @@
                   <table class="table table-bordered table-striped table-condensed">
                     <thead>
                       <tr>
-                        <th>Username</th>
-                        <th>Group</th>
+                        <th>Name</th>
+                        <th>Position</th>
                         <th>Department</th>
                         <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr ng-repeat="user in deptDetail.users track by user.username">
-                        <td> {{ user.username }}</td>
-                        <td> {{ user.usergroup }}</td>
+                        <td> {{ user.fullname }}</td>
+                        <td> {{ user.position }}</td>
                         <td> {{ user.department }}</td>
                         <td> {{ user.status }}</td>
-                      </tr> 
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -51,7 +51,12 @@
       <div class="box-inner">
         <div class="box-content">
           <!-- Starts Here -->
-          <button ui-sref="deptMgmt">Back To Department View</button>
+          <md-button class="md-primary md-raised" ui-sref="deptMgmt">
+            Back To Department View
+          </md-button>
+          <md-button class="md-primary md-raised" ng-click="deptDetail.addPosition($event)">
+            Add A Position
+          </md-button>
         </div>
       </div>
     </div>
