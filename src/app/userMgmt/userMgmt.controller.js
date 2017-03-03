@@ -6,7 +6,7 @@
     .controller('UserMgmtController', UserMgmtController);
 
   /** @ngInject */
-  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ) {
+  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, AuthService) {
     var vm = this;
 
     vm.users = [];
@@ -15,6 +15,7 @@
     vm.rmUser = rmUser;
     vm.editUser = editUser;
     vm.deptDetail = deptDetail;
+    vm.checkViewPermission = checkViewPermission;
 
     vm.username = "";
     //angular.fromJson($cookies.get("loggedInUser")).username;
@@ -48,6 +49,18 @@
       deptServ.getDept(deptName).then(function(objDept) {
         $state.go("deptDetail", {myParam: objDept});
       })
+    }
+    
+    function checkViewPermission(id)
+    {
+
+        if(document.cookie.indexOf('loggedInUser') > -1){
+            var username = $cookies.getObject('loggedInUser').username;
+            var isAllowed = AuthService.checkPermission(username,id);
+            return isAllowed;
+        }
+        else
+            console.log("cookies not exist");
     }
   }
 })();
