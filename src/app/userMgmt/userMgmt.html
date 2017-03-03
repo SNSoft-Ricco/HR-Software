@@ -1,7 +1,7 @@
 <div class="container">
   <sns-navbar></sns-navbar>
 
-  <div class="row">
+  <div class="row" ng-if="userMgmt.checkViewPermission(2)">
     <div class="box col-md-12">
         <div class="box-inner">
             <div class="page-header">
