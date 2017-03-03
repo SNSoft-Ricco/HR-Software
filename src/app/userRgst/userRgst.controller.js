@@ -7,7 +7,7 @@
 
   /** @ngInject */
   function UserRgstController(
-    $log, $window, $cookies, $state, $timeout, userServ, deptServ, PermissionService, toastr) {
+    $log, $window, $cookies, $state, $timeout, userServ, deptServ, PermissionService, toastr,AuthService) {
 
     var vm = this;
 
@@ -74,6 +74,7 @@
     vm.submit = submit;
     vm.newField = newField;
     vm.loadNext = loadNext;
+    vm.checkViewPermission = checkViewPermission;
 
     setTimeout(function(){
       // Load Permission as select options
@@ -88,7 +89,6 @@
 
       // Load users as select options
       userServ.getAllUsers().then(function(users){
-        $log.info("getAllUsers",users);
         vm.users = users;
       })
     },500)
@@ -130,8 +130,6 @@
     function submit() {
       var i = 0;
       var fields = {};
-
-      $log.info("input", vm.inputs);
 
       // Get dynamic fields
       for (var field in vm.dynFields) {
@@ -175,6 +173,17 @@
         default:
           break;
       }
+    }
+
+    function checkViewPermission(id)
+    {
+        if(document.cookie.indexOf('loggedInUser') > -1){
+            var username = $cookies.getObject('loggedInUser').username;
+            var isAllowed = AuthService.checkPermission(username,id);
+            return isAllowed;
+        }
+        else
+            console.log("cookies not exist");
     }
   }
 })();
