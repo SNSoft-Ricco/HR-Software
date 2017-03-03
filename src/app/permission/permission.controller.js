@@ -8,17 +8,17 @@
     .module('snsoftHr')
     .controller('PermissionController', PermissionController);
 
-    PermissionController.$inject = ['PermissionService'];
+    //PermissionController.$inject = ['PermissionService'];
 
-    function PermissionController(PermissionService) {
+    function PermissionController($timeout,$cookies,PermissionService,AuthService) {
         var vm = this;
-        
+
         var dynTemplate = {
             "code": {
                 "fieldName": "Permission Code",
                 "type": "text",
                 "inputType": "textbox",
-                "glyphClass": "glyphicon glyphicon-star",
+                "glyphClass": "glyphicon glyphicon-font",
                 "placeholder": "Enter a permission code",
                 "value": "test",
                 "forEdit": "false"
@@ -27,7 +27,7 @@
                 "fieldName": "Description",
                 "type": "text",
                 "inputType": "textbox",
-                "glyphClass": "glyphicon glyphicon-star",
+                "glyphClass": "glyphicon glyphicon-info-sign",
                 "placeholder": "Enter a description",
                 "value": "test",
                 "forEdit": "false"
@@ -43,15 +43,19 @@
         vm.EditPermission = EditPermission;
         vm.refreshList = refreshList;
         vm.toggleSelection=toggleSelection;
+        vm.checkViewPermission = checkViewPermission;
+        vm.ViewPermissionUser = ViewPermissionUser;
         vm.pmsArray = [];
+        vm.PermissionUser = [];
 
         vm.PermissionChkBox = [ {id:1, name:'View own details'},
                                 {id:2, name:'Manage User'},
-                                {id:3, name:'Manage Group'},
+                                {id:3, name:'Manage Leave'},
                                 {id:4, name:'Manage Department'},
                                 {id:5, name:'Manage Permission'}
                               ];
         vm.selection = [];
+        $timeout(refreshList,200);
 
         function AddPermission() {
             var i = 0;
@@ -159,6 +163,30 @@
             }
         }
 
+        function checkViewPermission(id)
+        {
+            if(document.cookie.indexOf('loggedInUser') > -1){
+                var username = $cookies.getObject('loggedInUser').username;
+                var isAllowed = AuthService.checkPermission(username,id);
+                return isAllowed;
+            }
+            else
+                console.log("cookies not exist");
+        }
+
+        function ViewPermissionUser(id)
+        {
+            vm.PermissionUser = [];
+
+            var promise = PermissionService.getPermissionUser(id);
+            promise.then(function(data){
+                vm.PermissionUser = data;
+            }, function(err) {
+              alert("Invalid user for this permission group!");
+            });
+        }
+
+        /*
         var db = PermissionService.getDbConnection();
 
         if(db){
@@ -168,7 +196,7 @@
             promise.then (function(){
                 refreshList();
             });
-        }
+        }*/
     }
 
 })();
