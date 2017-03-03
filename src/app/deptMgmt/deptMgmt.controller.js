@@ -6,7 +6,7 @@
 		.controller('DeptMgmtController', DeptMgmtController);
 
 	/** @ngInject */
-	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr) {
+	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr, AuthService) {
 		var vm = this;
 
 		// Function Declaration
@@ -14,6 +14,7 @@
 		vm.rmDept = rmDept;
 		vm.editDept = editDept;
 		vm.showDeptDetail = showDeptDetail;
+		vm.checkViewPermission = checkViewPermission;
 
 		// Load Departments Table
 		$timeout(showAllDepts,200);
@@ -46,5 +47,16 @@
 				vm.depts = depts;
 			})
 		}
+
+		function checkViewPermission(id)
+        {
+            if(document.cookie.indexOf('loggedInUser') > -1){
+                var username = $cookies.getObject('loggedInUser').username;
+                var isAllowed = AuthService.checkPermission(username,id);
+                return isAllowed;
+            }
+            else
+                console.log("cookies not exist");
+        }
 	}
 })();
