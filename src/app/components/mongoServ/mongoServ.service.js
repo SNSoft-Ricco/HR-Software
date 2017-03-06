@@ -8,10 +8,20 @@
   /** @ngInject */
   function mongoServ($q, $log, $http) {
 
-    this.departments = departments;
+    this.getAllDepartments = getAllDepartments;
     this.addDept = addDept;
-  	function departments(){
-        return $http({method: "GET", url:"/departments"});
+    this.editDept = editDept;
+    this.rmDept = rmDept;
+  	function getAllDepartments(lastSync){
+
+      if(!lastSync){
+        // if sent 0 , which means return all result
+        return $http({method: "GET", url:"/departments/0/"});
+      }else{
+        // if sent a number, only return the data after the last sync time
+        return $http({method: "GET", url:"/departments/"+lastSync+"/"})
+      }
+        
   	}
 
     function addDept(objDept,callback){

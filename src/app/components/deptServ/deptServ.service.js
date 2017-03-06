@@ -13,12 +13,14 @@
     this.rmDept = rmDept;
     this.editDept = editDept;
     this.getDept = getDept;
+    this.syncData = syncData;
 
     var DB_STORENAME = 'department';
 
-    function getAllDepartments() {
+    function getAllDepartments(collections) {
+      
+
       var deferred = $q.defer();
-    
       var departments = [];
 
       var request = 
@@ -44,6 +46,8 @@
 
       return deferred.promise;
     }
+
+
 
     // Get Department By Name
     // Param    - deptName
@@ -81,6 +85,7 @@
       // Let new department be active
       objDept.status = "Active";
       objDept.objectID = "";
+      objDept.serialId = "owner-" + new Date().getTime();
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .add(objDept);
@@ -128,10 +133,10 @@
       // Remove department - Success
       request.onsuccess = function() {
         deferred.resolve("Successfully removed department.")
-        mongoServ.rmDept(objDept, function(){
-          objDept.status = "x12345";
-          editDept(objDept);
-        });
+        // mongoServ.rmDept(objDept, function(){
+        //   objDept.status = "False";
+        //   editDept(objDept);
+        // });
       };
 
       return deferred.promise;
@@ -153,10 +158,66 @@
        request.onsuccess = function() {
          deferred.resolve("Successfully edited department information.")
          //after change the indexDB department name , update to mongodb too.
-         mongoServ.editDept(objDept);
+         mongoServ.editDept(objDept,function(){});
        };
 
        return deferred.promise;
     }
+
+    function syncData(){
+      var deferred = $q.defer();
+      // check lastSync in localdb , if null ,then fetch all the database
+      // if not null , fetch time only after lastSyncTime
+      var syncTime = localdb.getObjectStore('lastSync', 'readonly').openCursor();
+      console.log('Sync Data Start....!')
+
+      syncTime.onsuccess = function(event){
+        var result = event.target.result;
+        var dateNow = result.key;
+
+        // will uncomment when the api is ready.
+        // if(dateNow==null||dateNow==""){
+        //   mongoServ.getAllDepartments(0).success(function(collections){
+        //     updateAllDepartments(collections);
+        //   })
+
+        // }else{
+        //   mongoServ.getAllDepartments(dateNow).success(function(collections){
+        //     updateAllDepartments(collections);
+        //   })
+        // }
+
+      }
+      syncTime.onerror = function(){
+        $log.info("Sync data Error!")
+      }
+
+      return deferred.promise;
+    }
+
+    function updateAllDepartments(collections){
+      var request = localdb.getObjectStore(DB_STORENAME,'readonly').getAll();
+      request.onsuccess = function(event){
+        // sync data with db 
+        var result = event.target.result;
+        var unSyncData = []
+        for(var r in result){
+
+          if(result[r].objectID != ""){
+            // if objectID exist, then leave it.
+            console.log('it exist , dont create');
+          }else{
+            // if dont have objectID , then create a new record
+            unSyncData.push(result[r]);
+            console.log('create a new record');
+          }
+        }
+        console.log(unSyncData)
+      }
+      request.onerror = function(event){
+        console.log(event.target.result)
+      }
+    }
   }
 })();
+

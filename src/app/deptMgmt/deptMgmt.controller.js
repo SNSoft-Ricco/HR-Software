@@ -46,6 +46,7 @@
 			deptServ.getAllDepartments().then(function(depts) {
 				vm.depts = depts;
 			})
+			deptServ.syncData();
 		}
 
 		function checkViewPermission(id)
@@ -57,6 +58,7 @@
             }
             else
                 console.log("cookies not exist");
+            	return isAllowed;
         }
 	}
 })();
