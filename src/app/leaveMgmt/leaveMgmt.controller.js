@@ -41,6 +41,7 @@
 
             function DialogController($log, $mdDialog, $cookies, leaveServ, toastr) {
                 var vm = this;
+              vm.checkViewPermission = checkViewPermission;
                 vm.leaveTypes = ["Annual Leave", "Medical Leave", "Other Reason"];
 
                 vm.hide = function() {
@@ -67,7 +68,7 @@
                         vm.cancel();
                     });
                 };
-            } 
+            }
         }
 
         function approveLeave() {
@@ -95,7 +96,7 @@
             },500);
         }
 
-        
+
         function checkViewPermission(id)
         {
             if(document.cookie.indexOf('loggedInUser') > -1){
