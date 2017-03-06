@@ -6,7 +6,7 @@
     .factory('localdb', localdb);
 
   /** @ngInject */
-  function localdb($log, $window, $q) {
+  function localdb($log, $window, $q, mongoServ) {
     var DB_NAME = "snsofthrdb";
     var DB_VERSION = 10;
     /**
@@ -67,9 +67,9 @@
             store.createIndex('PermissionList', 'PermissionList', { unique: false });
 
             // default departments
-            txn.objectStore('department').add({department: "IT Department"});
-            txn.objectStore('department').add({department: "HR Department"});
-            txn.objectStore('department').add({department: "R&D Department"});
+            txn.objectStore('department').add({department: "IT Department", objectID:""});
+            txn.objectStore('department').add({department: "HR Department", objectID:""});
+            txn.objectStore('department').add({department: "R&D Department", objectID:""});
           case (evt.oldVersion < 4):      
             $log.info("IndexedDB Version 4");
             leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "_id", autoIncrement : true });

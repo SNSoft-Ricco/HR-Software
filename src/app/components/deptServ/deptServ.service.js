@@ -6,7 +6,7 @@
       .service('deptServ', deptServ);
 
   /** @ngInject */
-  function deptServ($q, $log, localdb) {
+  function deptServ($q, $log, localdb, mongoServ) {
     // Function Declaration
     this.getAllDepartments = getAllDepartments;
     this.addDept = addDept;
@@ -18,7 +18,7 @@
 
     function getAllDepartments() {
       var deferred = $q.defer();
-      
+    
       var departments = [];
 
       var request = 
@@ -80,7 +80,7 @@
 
       // Let new department be active
       objDept.status = "Active";
-
+      objDept.objectID = "";
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .add(objDept);
@@ -94,10 +94,16 @@
 
         deferred.reject();
       }; 
-
       // Do something when all the data is added to the database.
-      request.onsuccess = function() {
-        deferred.resolve("Successfully added department.")
+      request.onsuccess = function(event) {
+        deferred.resolve("Successfully added department.");
+
+        //create a department record in mongodb
+        mongoServ.addDept(objDept,function(udata){
+          //return the objectid created by mongodb
+          objDept.objectID = "x12345";
+          editDept(objDept);
+        })
       };
 
       return deferred.promise;
@@ -122,6 +128,10 @@
       // Remove department - Success
       request.onsuccess = function() {
         deferred.resolve("Successfully removed department.")
+        mongoServ.rmDept(objDept, function(){
+          objDept.status = "x12345";
+          editDept(objDept);
+        });
       };
 
       return deferred.promise;
@@ -142,6 +152,8 @@
        };
        request.onsuccess = function() {
          deferred.resolve("Successfully edited department information.")
+         //after change the indexDB department name , update to mongodb too.
+         mongoServ.editDept(objDept);
        };
 
        return deferred.promise;
