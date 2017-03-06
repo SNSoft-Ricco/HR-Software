@@ -1,209 +1,240 @@
 (function(){
 
-  angular
-    .module('snsoftHr')
-    .service('PermissionService',PermissionService);
+	angular
+		.module('snsoftHr')
+		.service('PermissionService',PermissionService);
 
-  function PermissionService($q, $log, localdb){
+	function PermissionService($q,localdb){
 
-    //const DB_NAME = 'snsofthrdb';
-    //const DB_VERSION = 4;
-    var DB_OBJ_STORE_NAME = 'permission';
+		//const DB_NAME = 'snsofthrdb';
+	  	//const DB_VERSION = 4; 
+	  	var DB_OBJ_PERMISSION = 'permission';
+	  	var DB_OBJ_USER = 'user';
 
-    //var db;
-    var permissionArray=[];
+	  	//var db;
+	  	var permissionArray=[];
+	  	var userList=[];
 
-    /*this.openDb=function () {
-     var deferred = $q.defer();
+		/*this.openDb=function () {
+			var deferred = $q.defer();
 
-     console.log("openDb ...");
-     var req = indexedDB.open(DB_NAME, DB_VERSION);
+		    console.log("openDb ...");
+		    var req = indexedDB.open(DB_NAME, DB_VERSION);
 
-     req.onsuccess = function (evt) {
-     // Better use "this" than "req" to get the result to avoid problems with
-     // garbage collection.
-     // db = req.result;
-     db = this.result;
-     deferred.resolve();
-     console.log("openDb DONE");
-     };
-     req.onerror = function (evt) {
-     //console.error("openDb:", evt.target.errorCode);
-     deferred.reject();
-     console.error("openDb error");
-     };
+		    req.onsuccess = function (evt) {
+		      // Better use "this" than "req" to get the result to avoid problems with
+		      // garbage collection.
+		      // db = req.result;
+		      db = this.result;
+		      deferred.resolve();
+		      console.log("openDb DONE");
+		    };
+		    req.onerror = function (evt) {
+		      //console.error("openDb:", evt.target.errorCode);
+		      deferred.reject();
+		      console.error("openDb error");
+		    };
 
-     req.onupgradeneeded = function (evt) {
-     console.log("openDb.onupgradeneeded...");
-     var store = evt.currentTarget.result.createObjectStore(
-     DB_OBJ_STORE_NAME, { keyPath: 'id', autoIncrement: true });
+		    req.onupgradeneeded = function (evt) {
+		      console.log("openDb.onupgradeneeded...");
+		      var store = evt.currentTarget.result.createObjectStore(
+		        DB_OBJ_PERMISSION, { keyPath: 'id', autoIncrement: true });
 
-     store.createIndex('code', 'code', { unique: false });
-     store.createIndex('desc', 'desc', { unique: false });
-     store.createIndex('PermissionList', 'PermissionList', { unique: false });
+		      store.createIndex('code', 'code', { unique: false });
+		      store.createIndex('desc', 'desc', { unique: false });
+		      store.createIndex('PermissionList', 'PermissionList', { unique: false });
 
-     deferred.resolve();
-     };
-     return deferred.promise;
-     }*/
+		      deferred.resolve();
+		    };
+		    return deferred.promise;
+		}*/
 
-    this.openDb=function () {
-      var deferred = $q.defer();
+		this.openDb=function () {
+			var deferred = $q.defer();
 
-      var promise = localdb.openDb();
-      promise.then (function(result){
-        if(result)
-          deferred.resolve();
-        else
-          deferred.reject();
-      });
+			var promise = localdb.openDb();
+            promise.then (function(result){
+				if(result)
+					deferred.resolve();
+				else
+					deferred.reject();
+            });
 
-      return deferred.promise;
-    };
+			return deferred.promise;
+		}
 
-    this.addPermission=function (obj)
-    {
-      var deferred = $q.defer();
+		this.addPermission=function (obj)
+		{
+			var deferred = $q.defer();
 
-      /*
-       var transaction = db.transaction([DB_OBJ_STORE_NAME], "readwrite");
+			/*
+			var transaction = db.transaction([DB_OBJ_PERMISSION], "readwrite");
 
-       console.log(obj);
+			console.log(obj);
 
-       transaction.oncomplete = function(event) {
-       deferred.resolve();
-       console.log("insert done");
-       };
+			transaction.oncomplete = function(event) {
+			  deferred.resolve();
+			  console.log("insert done");
+			};
 
-       transaction.onerror = function(event) {
-       deferred.reject();
-       console.log("insert error");
-       };
+			transaction.onerror = function(event) {
+			  deferred.reject();
+			  console.log("insert error");
+			};
 
-       var objectStore = transaction.objectStore(DB_OBJ_STORE_NAME);
-       var request = objectStore.add(obj);
-       */
+			var objectStore = transaction.objectStore(DB_OBJ_PERMISSION);
+			var request = objectStore.add(obj);
+			*/
 
-      var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readwrite').add(obj);
+			var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').add(obj);
 
-      request.onsuccess = function() {
-        deferred.resolve();
-        $log.info("insert successfully");
-      };
+			request.onsuccess = function(event) {
+			    deferred.resolve();
+			    console.log("insert successfully");
+			};
 
-      request.onerror = function(event) {
-        deferred.reject();
-        $log.info("insert error: " + event.target.errorCode);
-      };
+			request.onerror = function(event) {
+				deferred.reject();
+				console.log("insert error: " + event.target.errorCode);
+			};
 
-      return deferred.promise;
-    };
+			return deferred.promise;
+		}
 
-    this.removePermission=function (id)
-    {
-      /*var request = db.transaction([DB_OBJ_STORE_NAME], "readwrite")
-       .objectStore(DB_OBJ_STORE_NAME)
-       .delete(id);*/
+		this.removePermission=function (id)
+		{
+			/*var request = db.transaction([DB_OBJ_PERMISSION], "readwrite")
+                .objectStore(DB_OBJ_PERMISSION)
+                .delete(id);*/
 
-      var deferred = $q.defer();
-      var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readwrite').delete(id);
+            var deferred = $q.defer();
+            var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').delete(id); 
 
-      request.onsuccess = function() {
-        deferred.resolve();
-        $log.info("delete done");
-      };
+			request.onsuccess = function(event) {
+				deferred.resolve();
+				console.log("delete done");
+			};
 
-      request.onerror = function(event) {
-        deferred.reject();
-        $log.info("delete error: " + event.target.errorCode);
-      };
+			request.onerror = function(event) {
+				deferred.reject();
+				console.log("delete error: " + event.target.errorCode);
+			};
 
-      return deferred.promise;
-    };
+			return deferred.promise;
+		}
 
-    this.updatePermission=function(obj)
-    {
-      var deferred = $q.defer();
+		this.updatePermission=function(obj)
+		{
+			var deferred = $q.defer();
+			
+			/*var request = db.transaction([DB_OBJ_PERMISSION], "readwrite")
+                .objectStore(DB_OBJ_PERMISSION)
+                .put(obj);*/
 
-      /*var request = db.transaction([DB_OBJ_STORE_NAME], "readwrite")
-       .objectStore(DB_OBJ_STORE_NAME)
-       .put(obj);*/
+            var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').put(obj);
 
-      var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readwrite').put(obj);
+			request.onsuccess = function(event) {
+				deferred.resolve();
+				console.log("update done");
+			};
 
-      request.onsuccess = function() {
-        deferred.resolve();
-        $log.info("update done");
-      };
+			request.onerror = function(event) {
+				deferred.reject();
+				console.log("update error: " + event.target.errorCode);
+			};
 
-      request.onerror = function(event) {
-        deferred.reject();
-        $log.info("update error: " + event.target.errorCode);
-      };
+			return deferred.promise;
+		}
 
-      return deferred.promise;
-    };
+		this.getPermission=function(id)
+		{
+			var deferred = $q.defer();
 
-    this.getPermission=function(id)
-    {
-      var deferred = $q.defer();
+			/*var objectStore = db.transaction([DB_OBJ_PERMISSION], "readwrite").objectStore(DB_OBJ_PERMISSION);
+			var request = objectStore.get(id);*/
+			var pid = parseInt(id);
+			var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(pid);
 
-      /*var objectStore = db.transaction([DB_OBJ_STORE_NAME], "readwrite").objectStore(DB_OBJ_STORE_NAME);
-       var request = objectStore.get(id);*/
+			request.onerror = function(event) {
+				deferred.reject();
+				console.log("get error: " + event.target.errorCode);
+			};
 
-      var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readonly').get(id);
+			request.onsuccess = function(event) {
+				var data = event.target.result;
+			  	deferred.resolve(data);
+			};
+			return deferred.promise;
+		}
 
-      request.onerror = function(event) {
-        deferred.reject();
-        $log.info("get error: " + event.target.errorCode);
-      };
+		this.getAllPermission=function()
+		{
+			permissionArray=[];
+			var deferred = $q.defer();
 
-      request.onsuccess = function(event) {
-        var data = event.target.result;
-        deferred.resolve(data);
-        $log.info("get data");
-      };
+			//var objectStore = db.transaction(DB_OBJ_PERMISSION).objectStore(DB_OBJ_PERMISSION);
 
-      return deferred.promise;
-    };
+			var objectStore = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly');
 
-    this.getAllPermission=function()
-    {
-      permissionArray=[];
+			objectStore.openCursor().onsuccess = function(event) {
+			  var cursor = event.target.result;
+			  if (cursor) {
 
-      var deferred = $q.defer();
+			    var objPms = {};
+			    objPms = { id: cursor.key, code: cursor.value.code, desc: cursor.value.desc, array:cursor.value.PermissionList };
 
-      //var objectStore = db.transaction(DB_OBJ_STORE_NAME).objectStore(DB_OBJ_STORE_NAME);
+			    permissionArray.push(objPms);
+			    cursor.continue();
+			  }
+			  else {
+			    deferred.resolve(permissionArray);
+			    
+			  }
+			};
+			return deferred.promise;
+		}
 
-      var objectStore = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readonly');
+		this.getPermissionUser=function(id)
+		{
+			var deferred = $q.defer();
+			var rslt = localdb.getObjectStore(DB_OBJ_USER, 'readonly');
+			var index = rslt.index('usergroup');
+			var sID = id.toString();
+			userList = [];
 
-      objectStore.openCursor().onsuccess = function(event) {
-        var cursor = event.target.result;
-        if (cursor) {
+			var request = index.openCursor(IDBKeyRange.only(sID));
 
-          var objPms = {};
-          objPms = { id: cursor.key, code: cursor.value.code, desc: cursor.value.desc, array:cursor.value.PermissionList };
+			request.onerror = function() {
+		        console.log("Open ObjectStore Error!");
+		        deferred.reject(); 
+		      };    
 
-          $log.info("id: " + objPms.id + " ,code: " + objPms.code + " ,desc: " + objPms.desc+ " ,list: " + objPms.array);
+		    request.onsuccess = function(event) {
+		        var cursor = event.target.result;
+		        if (cursor) {
+		        	var objPms = {};
+				    objPms = { name: cursor.value.fullname, dept: cursor.value.department,  position: cursor.value.position };
+				    userList.push(objPms);
 
-          permissionArray.push(objPms);
-          cursor.continue();
-        }
-        else {
-          deferred.resolve(permissionArray);
+		        	cursor.continue();
+		        }
+				else {
+				   deferred.resolve(userList);
+				}
 
-        }
-      };
-      return deferred.promise;
-    };
+				if(userList)
+					deferred.resolve(userList);
+		    };
+			return deferred.promise;
+		}
 
-    this.getDbConnection=function()
-    {
-      var db = localdb.getDbConn();
-      return db;
-    };
+		this.getDbConnection=function()
+		{
+			var db = localdb.getDbConn();
+			return db;
+		}
 
-    //this.openDb();
-  }
+		//this.openDb();
+	}
 
 })();

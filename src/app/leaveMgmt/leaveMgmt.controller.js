@@ -6,12 +6,13 @@
 		.controller('LeaveMgmtController', LeaveMgmtController);
 
 	/** @ngInject */
-	function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ) {
+	function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService) {
 		var vm = this;
 
 		// Function Declaration
         vm.newLeave = newLeave;
         vm.approveLeave = approveLeave;
+        vm.checkViewPermission = checkViewPermission;
 
         // Variables
         var curUser = $cookies.getObject('loggedInUser');
@@ -92,6 +93,18 @@
                     vm.leavesPendingMyApprove = leaves;
                 });
             },500);
+        }
+
+        
+        function checkViewPermission(id)
+        {
+            if(document.cookie.indexOf('loggedInUser') > -1){
+                var username = $cookies.getObject('loggedInUser').username;
+                var isAllowed = AuthService.checkPermission(username,id);
+                return isAllowed;
+            }
+            else
+                console.log("cookies not exist");
         }
 
 	}

@@ -70,6 +70,14 @@
         controller: 'LeaveMgmtController',
         controllerAs: 'leaveMgmt'
       })
+
+      // Profile
+      .state('profile', {
+        url: '/profile-management',
+        templateUrl: 'app/profile/profile.html',
+        controller: 'ProfileController',
+        controllerAs: 'profile'
+      })
       // Login Page
       // .state('login', {
       //   url: '/login',

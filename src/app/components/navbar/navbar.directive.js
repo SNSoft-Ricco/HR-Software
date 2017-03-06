@@ -21,7 +21,7 @@
     return directive;
 
     /** @ngInject */
-    function NavbarController($log, $state, $cookies) {
+    function NavbarController($log, $state, $cookies, AuthService) {
       var vm = this;
 
       vm.logout = logout;
@@ -35,6 +35,7 @@
       }
         
       function logout() {
+        AuthService.clearList();
         $cookies.remove('loggedInUser');
         $state.go('login');
       }
