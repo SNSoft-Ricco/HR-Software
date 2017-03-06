@@ -6,9 +6,9 @@
 		.controller('DeptRegController', DeptRegController);
 
 	/** @ngInject */
-	function DeptRegController($log, $window, $cookies, $state, $stateParams, deptServ, userServ, toastr) {
+	function DeptRegController($log, $window, $cookies, $state, $stateParams, deptServ, userServ, toastr, AuthService) {
 		var vm = this;
-		
+
 		var dynTemplate = {
 				"department": {
 					"fieldName": "Department",
@@ -37,6 +37,7 @@
 
 		vm.newDept = newDept;
 		vm.newField = newField;
+		vm.checkViewPermission = checkViewPermission;
 
 		// Edit Mode
 		if (angular.isObject($stateParams.myParam)) {
@@ -65,7 +66,7 @@
         i++;
       }
 		}
-	
+
 		// Load users as select options
 		userServ.getAllUsers().then(function(users){
 			$log.info("getAllUsers",users);
@@ -103,6 +104,17 @@
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-list-alt"
       };
+     }
+     
+    function checkViewPermission(id)
+    {
+        if(document.cookie.indexOf('loggedInUser') > -1){
+            var username = $cookies.getObject('loggedInUser').username;
+            var isAllowed = AuthService.checkPermission(username,id);
+            return isAllowed;
+        }
+        else
+            console.log("cookies not exist");
     }
 	}
 })();

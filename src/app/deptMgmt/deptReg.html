@@ -8,7 +8,7 @@
   -->
 
   <!-- Page Body -->
-  <div class="row">
+  <div class="row" ng-if="deptReg.checkViewPermission(4)">
     <div class="box col-md-12">
       <div class="box-inner">
         <div class="box-content">
@@ -24,15 +24,15 @@
                 <div class="col-md-4 inputGroupContainer">
                   <div class="input-group">
                     <span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
-                    <input 
-                      ng-model="deptReg.inputs[$index]" 
+                    <input
+                      ng-model="deptReg.inputs[$index]"
                       ng-show="value.inputType == 'textbox'"
                       ng-disabled="deptReg.editMode && value.forEdit == 'false'"
-                      placeholder="{{value.placeholder}}" 
-                      class="form-control" 
+                      placeholder="{{value.placeholder}}"
+                      class="form-control"
                       type="{{value.type}}">
-                    <select 
-                      ng-model="deptReg.inputs[$index]" 
+                    <select
+                      ng-model="deptReg.inputs[$index]"
                       ng-show="value.inputType == 'selectUser'"
                       class="form-control selectpicker">
                       <option value=" ">None</option>
@@ -47,16 +47,16 @@
                 <label class="col-md-4 control-label"></label>
                 <div class="col-md-4">
                   <div class="input-group">
-                    <input 
+                    <input
                       name="newName"
-                      ng-model="deptReg.newName" 
-                      type="text" 
-                      class="form-control" 
-                      placeholder="Create a new form field" 
+                      ng-model="deptReg.newName"
+                      type="text"
+                      class="form-control"
+                      placeholder="Create a new form field"
                       required>
                     <span class="input-group-btn">
-                      <button 
-                        class="btn btn-default" 
+                      <button
+                        class="btn btn-default"
                         ng-disabled="reg_form.newName.$error.required"
                         ng-click="deptReg.newField()">Insert</button>
                     </span>

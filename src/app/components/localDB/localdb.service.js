@@ -54,6 +54,8 @@
             $log.info("IndexedDB Version 3");
 
             usrObjStore = dataBase.createObjectStore("user", { keyPath : "username", autoIncrement : true });
+            usrObjStore.createIndex('usergroup', 'usergroup', { unique: false });
+
             deptObjStore= dataBase.createObjectStore("department", { keyPath : "department"});
 
             // Create Index
@@ -67,9 +69,18 @@
             store.createIndex('PermissionList', 'PermissionList', { unique: false });
 
             // default departments
-            txn.objectStore('department').add({department: "IT Department", objectID:""});
-            txn.objectStore('department').add({department: "HR Department", objectID:""});
-            txn.objectStore('department').add({department: "R&D Department", objectID:""});
+
+            txn.objectStore('department').add({department: "IT Department"});
+            txn.objectStore('department').add({department: "HR Department"});
+            txn.objectStore('department').add({department: "R&D Department"});
+
+            // default admin user
+            txn.objectStore('user').add({username: "admin@snsoft.my",userpwd: "123",usergroup: "1",supervisor: "",status: "Active",position: "",fullname: "admin",department: "IT Department",contactno: "123"});
+
+            // default permission group
+            var list = [1,2,3,4,5];
+            txn.objectStore('permission').add({code: "P1",desc: "P1",PermissionList: list});
+
           case (evt.oldVersion < 4):      
             $log.info("IndexedDB Version 4");
             leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "_id", autoIncrement : true });
@@ -119,13 +130,12 @@
      */
     function getObjectStore(store_name, mode) {
       var tx = db.transaction(store_name, mode);
-
       return tx.objectStore(store_name);
     }
 
     function getDbConn()
     {
-      return db;
+      return Promise.resolve(db);
     }
   }
 })();
