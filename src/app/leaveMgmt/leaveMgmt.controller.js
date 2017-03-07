@@ -6,7 +6,7 @@
 		.controller('LeaveMgmtController', LeaveMgmtController);
 
 	/** @ngInject */
-	function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService) {
+	function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService, syncData) {
 		var vm = this;
 
 		// Function Declaration

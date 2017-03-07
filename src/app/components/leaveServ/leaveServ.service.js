@@ -54,6 +54,7 @@
 
       // Set Leave as Pending
       objLeave.status = "Pending";
+      objLeave.objectID = "";
 
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
@@ -66,6 +67,11 @@
       }; 
       request.onsuccess = function() {
         deferred.resolve("Leave applied.")
+        // Add leave to mongodb
+        // mongoServ.addLeave(objLeave)
+        // .success(function(data){
+        //   objLeave.objectID = data.objectID;
+        // });
       };
 
       return deferred.promise;
