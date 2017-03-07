@@ -13,7 +13,6 @@
     this.rmDept = rmDept;
     this.editDept = editDept;
     this.getDept = getDept;
-    this.syncData = syncData;
 
     var DB_STORENAME = 'department';
 
@@ -22,6 +21,7 @@
 
       var deferred = $q.defer();
       var departments = [];
+      var unSyncData = [];
 
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readonly')
@@ -34,12 +34,17 @@
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         var cursor = event.target.result;
-
+        
         if (cursor) {
+          if(cursor.value.objectID==""){
+            unSyncData.push(cursor.value);
+          }
           departments.push(cursor.value);
           cursor.continue();
         }
         else {
+          // without objectID will generate a new record in mongodb
+          mongoServ.syncDept(unSyncData);
           deferred.resolve(departments);
         }
       };
@@ -164,38 +169,8 @@
        return deferred.promise;
     }
 
-    function syncData(){
-      var deferred = $q.defer();
-      // check lastSync in localdb , if null ,then fetch all the database
-      // if not null , fetch time only after lastSyncTime
-      var syncTime = localdb.getObjectStore('lastSync', 'readonly').openCursor();
-      console.log('Sync Data Start....!')
 
-      syncTime.onsuccess = function(event){
-        var result = event.target.result;
-        var dateNow = result.key;
-
-        // will uncomment when the api is ready.
-        // if(dateNow==null||dateNow==""){
-        //   mongoServ.getAllDepartments(0).success(function(collections){
-        //     updateAllDepartments(collections);
-        //   })
-
-        // }else{
-        //   mongoServ.getAllDepartments(dateNow).success(function(collections){
-        //     updateAllDepartments(collections);
-        //   })
-        // }
-
-      }
-      syncTime.onerror = function(){
-        $log.info("Sync data Error!")
-      }
-
-      return deferred.promise;
-    }
-
-    function updateAllDepartments(collections){
+    function syncAllDepartments(collections){
       var request = localdb.getObjectStore(DB_STORENAME,'readonly').getAll();
       request.onsuccess = function(event){
         // sync data with db 
@@ -212,12 +187,16 @@
             console.log('create a new record');
           }
         }
-        console.log(unSyncData)
+        mongoServ.syncDept(unSyncData);
       }
       request.onerror = function(event){
         console.log(event.target.result)
       }
     }
+
+
+
   }
 })();
+
 

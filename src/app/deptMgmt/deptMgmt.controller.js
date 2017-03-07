@@ -6,7 +6,7 @@
 		.controller('DeptMgmtController', DeptMgmtController);
 
 	/** @ngInject */
-	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr, AuthService) {
+	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr, AuthService, syncData) {
 		var vm = this;
 
 		// Function Declaration
@@ -43,10 +43,13 @@
 
 		//// Private Functions
 		function showAllDepts () {
+
+			// syncData.sync().then(function(data){
+			// 	console.log(data);
+			// })
 			deptServ.getAllDepartments().then(function(depts) {
 				vm.depts = depts;
 			})
-			deptServ.syncData();
 		}
 
 		function checkViewPermission(id)

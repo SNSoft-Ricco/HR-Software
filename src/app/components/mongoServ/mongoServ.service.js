@@ -12,6 +12,7 @@
     this.addDept = addDept;
     this.editDept = editDept;
     this.rmDept = rmDept;
+    this.syncDept = syncDept;
   	function getAllDepartments(lastSync){
 
       if(!lastSync){
@@ -43,6 +44,14 @@
       //   data:{'data':objDept}
       // })
       callback();
+    }
+    function syncDept(objDepts,callback){
+      // return $http({method:"POST", url:"/syncDept/",
+      //   data{'data':objDept});
+
+    // })
+
+
     }
   }
 
