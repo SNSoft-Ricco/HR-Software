@@ -1,112 +1,124 @@
 (function() {
-	'use strict';
 
-	angular
-		.module('snsoftHr')
-		.controller('LeaveMgmtController', LeaveMgmtController);
+  'use strict';
 
-	/** @ngInject */
-	function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService, syncData) {
-		var vm = this;
+  angular
+    .module('snsoftHr')
+    .controller('LeaveMgmtController', LeaveMgmtController);
 
-		// Function Declaration
-        vm.newLeave = newLeave;
-        vm.approveLeave = approveLeave;
+  /** @ngInject */
+  function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService, syncData) {
+    var vm = this;
+
+    // Function Declaration
+    vm.newLeave = newLeave;
+    vm.approveLeave = approveLeave;
+    vm.checkViewPermission = checkViewPermission;
+
+    // Variables
+    var curUser = $cookies.getObject('loggedInUser');
+    vm.selectedApproval = [];
+
+    // Load current user leaves
+    loadCurUserLeave();
+    loadPendingApprovalLeave();
+
+    //// Public Functions
+    function newLeave (ev) {
+      $mdDialog.show({
+        controller: DialogController,
+        controllerAs: 'dialog',
+        templateUrl: '/app/leaveMgmt/leaveMgmt.newLeave.html',
+        parent: angular.element($document.body),
+        targetEvent: ev,
+        clickOutsideToClose:true,
+        fullscreen: vm.customFullscreen // Only for -xs, -sm breakpoints.
+      })
+        .then(function(answer) {
+          vm.status = 'You said the information was "' + answer + '".';
+        }, function() {
+          vm.status = 'You cancelled the dialog.';
+        });
+
+      function DialogController($log, $mdDialog, $cookies, leaveServ, toastr) {
+        var vm = this;
+
         vm.checkViewPermission = checkViewPermission;
+        vm.leaveTypes = ["Annual Leave", "Medical Leave", "Other Reason"];
 
-        // Variables
-        var curUser = $cookies.getObject('loggedInUser');
-        vm.selectedApproval = [];
+        vm.hide = function() {
+          $mdDialog.hide();
+        };
 
-		// Load current user leaves
-        loadCurUserLeave();
-        loadPendingApprovalLeave();
+        vm.cancel = function() {
+          $mdDialog.cancel();
+        };
 
-		//// Public Functions
-        function newLeave (ev) {
-            $mdDialog.show({
-                controller: DialogController,
-                controllerAs: 'dialog',
-                templateUrl: '/app/leaveMgmt/leaveMgmt.newLeave.html',
-                parent: angular.element($document.body),
-                targetEvent: ev,
-                clickOutsideToClose:true,
-                fullscreen: vm.customFullscreen // Only for -xs, -sm breakpoints.
-            })
-            .then(function(answer) {
-                vm.status = 'You said the information was "' + answer + '".';
-            }, function() {
-                vm.status = 'You cancelled the dialog.';
-            });
+        vm.applyLeave = function() {
+          var leave = {
+            user: $cookies.getObject('loggedInUser').username,
+            department: $cookies.getObject('loggedInUser').department,
+            approvalBy: $cookies.getObject('loggedInUser').supervisor,
+            leaveType: vm.leaveType,
+            fromDate: vm.fromDate,
+            toDate: vm.toDate,
+            description: vm.description
+          };
 
-            function DialogController($log, $mdDialog, $cookies, leaveServ, toastr) {
-                var vm = this;
-              vm.checkViewPermission = checkViewPermission;
-                vm.leaveTypes = ["Annual Leave", "Medical Leave", "Other Reason"];
+          leaveServ.addLeave(leave).then(function(msg){
+            toastr.success('Your leave is now pending approval.', 'Success');
+            loadCurUserLeave();
+            vm.cancel();
+          });
+        };
+      }
+    }
 
-                vm.hide = function() {
-                    $mdDialog.hide();
-                };
-
-                vm.cancel = function() {
-                    $mdDialog.cancel();
-                };
-
-                vm.applyLeave = function() {
-                    var leave = {
-                        user: $cookies.getObject('loggedInUser').username,
-                        approvalBy: $cookies.getObject('loggedInUser').supervisor,
-                        leaveType: vm.leaveType,
-                        fromDate: vm.fromDate,
-                        toDate: vm.toDate,
-                        description: vm.description
-                    };
-
-                    leaveServ.addLeave(leave).then(function(msg){
-                        toastr.success('Your leave is now pending approval.', 'Success');
-                        loadCurUserLeave();
-                        vm.cancel();
-                    });
-                };
-            }
+    function approveLeave() {
+      for (var leaveId in vm.selectedApproval) {
+        if (vm.selectedApproval[leaveId] == true) {
+          leaveServ.approveLeave(leaveId);
         }
+      }
+    }
 
-        function approveLeave() {
-            for (var leaveId in vm.selectedApproval) {
-                if (vm.selectedApproval[leaveId] == true) {
-                    leaveServ.approveLeave(leaveId);
+    //// Private Functions
+    function loadCurUserLeave() {
+      $timeout(function() {
+        leaveServ.getLeaveByUsername(curUser.username).then(function(leaves) {
+          vm.leaves = leaves;
+        });
+      },500);
+    }
+
+    function loadPendingApprovalLeave() {
+      $timeout(function() {
+        leaveServ.getPendingApprovalLeaveByUsername(curUser.username).then(function(leaves) {
+          vm.leavesPendingMyApprove = leaves;
+          if (curUser.position === "Department Head") {
+            leaveServ.getPendingApprovalLeaveByDepartment(curUser.department).then(function(leaves) {
+              leaves.forEach(function(leave) {
+                if (!vm.leavesPendingMyApprove.find(x => x._id === leave._id)) {
+                  vm.leavesPendingMyApprove.push(leave);
                 }
-            }
-        }
-
-		//// Private Functions
-        function loadCurUserLeave() {
-            $timeout(function() {
-                leaveServ.getLeaveByUsername(curUser.username).then(function(leaves) {
-                    vm.leaves = leaves;
-                });
-            },500);
-        }
-
-        function loadPendingApprovalLeave() {
-            $timeout(function() {
-                leaveServ.getPendingApprovalLeaveByUsername(curUser.username).then(function(leaves) {
-                    vm.leavesPendingMyApprove = leaves;
-                });
-            },500);
-        }
+              });
+            });
+          }
+        });
+      },500);
+    }
 
 
-        function checkViewPermission(id)
-        {
-            if(document.cookie.indexOf('loggedInUser') > -1){
-                var username = $cookies.getObject('loggedInUser').username;
-                var isAllowed = AuthService.checkPermission(username,id);
-                return isAllowed;
-            }
-            else
-                console.log("cookies not exist");
-        }
+    function checkViewPermission(id)
+    {
+      if(document.cookie.indexOf('loggedInUser') > -1){
+        var username = $cookies.getObject('loggedInUser').username;
+        var isAllowed = AuthService.checkPermission(username,id);
+        return isAllowed;
+      }
+      else
+        console.log("cookies not exist");
+    }
 
-	}
+  }
 })();

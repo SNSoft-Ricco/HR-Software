@@ -28,7 +28,7 @@
         "glyphClass": "glyphicon glyphicon-lock",
         "placeholder": "Enter a secure password",
 				"forEdit": "false"
-        
+
       },
       "usergroup": {
         "fieldName": "User Group",
@@ -92,14 +92,14 @@
         vm.users = users;
       })
     },500)
-    
+
 
     if ($cookies.get('editUser')) {
       var objUser = angular.fromJson($cookies.get('editUser'));
       var i = 0;
 
       vm.editMode = true;
-      vm.title = "Edit User Information"
+      vm.title = "Edit User Information";
 
       for (var field in objUser) {
         if(vm.dynFields.hasOwnProperty(field)) {
@@ -139,6 +139,7 @@
 
       if (vm.editMode)
       {
+        $log.info('fields',fields);
         userServ.editUser(fields).then(function(){
           toastr.success("Successfully edited employee", "Success");
           back();
