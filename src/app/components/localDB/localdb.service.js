@@ -6,7 +6,7 @@
     .factory('localdb', localdb);
 
   /** @ngInject */
-  function localdb($log, $window, $q) {
+  function localdb($log, $window, $q, mongoServ) {
     var DB_NAME = "snsofthrdb";
     var DB_VERSION = 10;
     /**
@@ -41,7 +41,7 @@
         var dataBase = evt.target.result;
         var txn = evt.target.transaction;
 
-        var usrObjStore, deptObjStore, leaveObjStore, systemObjStore;
+        var usrObjStore, deptObjStore, leaveObjStore, systemObjStore, lastSyncStore;
 
         var storeCreateIndex = function (objectStore, name, options) {
             if (!objectStore.indexNames.contains(name)) {
@@ -56,6 +56,8 @@
             usrObjStore = dataBase.createObjectStore("user", { keyPath : "username", autoIncrement : true });
             usrObjStore.createIndex('usergroup', 'usergroup', { unique: false });
 
+            lastSyncStore = dataBase.createObjectStore("lastSync",{keyPath:"time"});
+            lastSyncStore.put({'time':new Date().getTime()});
             deptObjStore= dataBase.createObjectStore("department", { keyPath : "department"});
 
             // Create Index
@@ -69,6 +71,7 @@
             store.createIndex('PermissionList', 'PermissionList', { unique: false });
 
             // default departments
+
             txn.objectStore('department').add({department: "IT Department"});
             txn.objectStore('department').add({department: "HR Department"});
             txn.objectStore('department').add({department: "R&D Department"});

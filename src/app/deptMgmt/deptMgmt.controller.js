@@ -6,7 +6,7 @@
 		.controller('DeptMgmtController', DeptMgmtController);
 
 	/** @ngInject */
-	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr, AuthService) {
+	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr, AuthService, syncData) {
 		var vm = this;
 
 		// Function Declaration
@@ -43,6 +43,10 @@
 
 		//// Private Functions
 		function showAllDepts () {
+
+			// syncData.sync().then(function(data){
+			// 	console.log(data);
+			// })
 			deptServ.getAllDepartments().then(function(depts) {
 				vm.depts = depts;
 			})
@@ -57,6 +61,7 @@
             }
             else
                 console.log("cookies not exist");
+            	return isAllowed;
         }
 	}
 })();

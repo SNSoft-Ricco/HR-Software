@@ -1,4 +1,5 @@
 (function() {
+
   'use strict';
 
   angular
@@ -6,7 +7,7 @@
     .controller('LeaveMgmtController', LeaveMgmtController);
 
   /** @ngInject */
-  function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService) {
+  function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService, syncData) {
     var vm = this;
 
     // Function Declaration
@@ -41,6 +42,7 @@
 
       function DialogController($log, $mdDialog, $cookies, leaveServ, toastr) {
         var vm = this;
+
         vm.checkViewPermission = checkViewPermission;
         vm.leaveTypes = ["Annual Leave", "Medical Leave", "Other Reason"];
 
