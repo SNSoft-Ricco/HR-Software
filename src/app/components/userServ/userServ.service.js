@@ -1,9 +1,9 @@
- (function() {
+(function () {
   'use strict';
 
   angular
-      .module('snsoftHr')
-      .service('userServ', userServ);
+    .module('snsoftHr')
+    .service('userServ', userServ);
 
   /** @ngInject */
   function userServ($q, $log, localdb) {
@@ -25,15 +25,15 @@
       var deferred = $q.defer();
       var users = [];
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
-        .openCursor();
+          .openCursor();
 
-      request.onerror = function() {
+      request.onerror = function () {
         $log.info("Open Cursor Error!");
         deferred.reject();
       };
-      request.onsuccess = function(event) {
+      request.onsuccess = function (event) {
         var cursor = event.target.result;
 
         if (cursor) {
@@ -54,15 +54,15 @@
     function getUser(username) {
       var deferred = $q.defer();
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
-        .get(username);
+          .get(username);
 
-      request.onerror = function() {
+      request.onerror = function () {
         $log.info("Open ObjectStore Error!");
-      };    
+      };
       // Do something when all the data is added to the database.
-      request.onsuccess = function(event) {
+      request.onsuccess = function (event) {
         var value = event.target.result;
 
         if (value) {
@@ -74,7 +74,7 @@
         }
       };
 
-      return deferred.promise;  
+      return deferred.promise;
     }
 
     // Get Users By Index
@@ -86,16 +86,16 @@
 
       var singleKeyRange = IDBKeyRange.only(key);
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
-        .index(index)
-        .openCursor(singleKeyRange);
+          .index(index)
+          .openCursor(singleKeyRange);
 
-      request.onerror = function() {
+      request.onerror = function () {
         $log.info("Open ObjectStore Error!");
-      };    
+      };
       // Do something when all the data is added to the database.
-      request.onsuccess = function(event) {
+      request.onsuccess = function (event) {
         var cursor = event.target.result;
 
         if (cursor) {
@@ -107,7 +107,7 @@
         }
       };
 
-      return deferred.promise;  
+      return deferred.promise;
     }
 
 
@@ -120,16 +120,16 @@
       // Let new user have active status
       objUser.status = "Active";
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
-        .add(objUser);
+          .add(objUser);
 
-      request.onerror = function(event) {
+      request.onerror = function (event) {
         // Add user trasaction - Error
         alert("Transaction error: " + event.target.errorCode);
         deferred.reject();
-      }; 
-      request.onsuccess = function() {
+      };
+      request.onsuccess = function () {
         deferred.resolve("Successfully added user.")
       };
 
@@ -142,17 +142,17 @@
     function rmUser(objUser) {
       var deferred = $q.defer();
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
-        .delete(objUser.username);
+          .delete(objUser.username);
 
-      request.onerror = function(event) {
+      request.onerror = function (event) {
         // Remove user trasaction - Error
         alert("Transaction error: " + event.target.errorCode);
         deferred.reject();
-      }; 
+      };
 
-      request.onsuccess = function() {
+      request.onsuccess = function () {
         deferred.resolve("Successfully removed user.")
       };
 
@@ -165,18 +165,18 @@
     function editUser(objUser) {
       var deferred = $q.defer();
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
-        .put(objUser);
+          .put(objUser);
 
-      request.onerror = function() {
-         deferred.reject("Edit User Failed!");
-       };
-       request.onsuccess = function() {
-         deferred.resolve("Successfully edited user information.")
-       };
+      request.onerror = function () {
+        deferred.reject("Edit User Failed!");
+      };
+      request.onsuccess = function () {
+        deferred.resolve("Successfully edited user information.")
+      };
 
-       return deferred.promise;
+      return deferred.promise;
     }
 
   }
