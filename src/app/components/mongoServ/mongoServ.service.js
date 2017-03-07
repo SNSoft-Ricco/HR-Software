@@ -86,7 +86,6 @@
       // })
       // .success(function(){
           getAllDepartments().then(function(data){
-            console.log(evens);
             // data from mongodb
             for(var d in data){
               // data from indexDB
@@ -124,24 +123,32 @@
          
           var modifyCollection = {
             // need to update in both side -- PUT
-            'timeNotMatching':[],
+            'timeNotMatchings':[],
             // need to create in both side -- ADD
             'indexDBNotExist':[]
           }
           // data from mongodb
           for(var d in data){
             // data from indexDB
+            var evens = _.find(collections, function(num){ return num.ObjectId == data[d].ObjectID });
+            if(!evens){
+              modifyCollection['indexDBNotExist'].push(data[d]);
+            }
+
             for(var collection in collections){
-              
-              
-              // var evens = _.find(data, function(num){ return num.ObjectId == collections[collection].ObjectID });
+
+              if(data[d].lastModified!=collections[collection].lastModified){
+                // console.log(data[d].lastModified+'!=');
+                // console.log(collections[collection].lastModified);
+                modifyCollection['timeNotMatchings'].push(collections[collection]);
+              }
               // //if the lastModified dont match , update this record to mongo
               // if(evens[0] && evens[0].lastModified != collections[collection].lastModified){
               //   addLeave(collections[collection]);
               // }
             }
           }
-          deferred.resolve(data);
+          deferred.resolve(modifyCollection);
         })
       
       return deferred.promise;
@@ -173,8 +180,8 @@
           description:"Apply for Medical Leave",
           leaveStatus:"Pending",
           approvalBy:"logan@snsoft.my",
-          createdTime:"2017-03-07T16:00:00.000Z",
-          lastModified:"2017-03-07T16:00:00.000Z",
+          createdTime:"2017-03-07T18:00:00.000Z",
+          lastModified:"2017-03-07T18:00:00.000Z",
           status:1
         },
         {
@@ -185,10 +192,26 @@
           description:"Apply for emo Leave",
           leaveStatus:"Pending",
           approvalBy:"logan@snsoft.my",
-          createdTime:"2017-03-07T16:00:00.000Z",
-          lastModified:"2017-03-07T16:00:00.000Z",
+          createdTime:"2017-03-07T18:00:00.000Z",
+          lastModified:"2017-03-07T18:00:00.000Z",
           status:1
-        }]
+        },
+        {
+          user:"mark@snsoft.my",
+          leaveType:"Medical Leave",
+          fromDate:"2017-04-01T16:00:00.000Z",
+          toDate:"2017-04-02T16:00:00.000Z",
+          description:"Apply for emo Leave",
+          leaveStatus:"Pending",
+          approvalBy:"kenny@snsoft.my",
+          createdTime:"2017-03-07T18:00:00.000Z",
+          lastModified:"2017-03-07T18:00:00.000Z",
+          status:1
+        },
+
+
+
+        ]
 
       deferred.resolve(leaves);
       return deferred.promise;

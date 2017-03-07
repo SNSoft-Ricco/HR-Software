@@ -98,9 +98,9 @@
           if (curUser.position === "Department Head") {
             leaveServ.getPendingApprovalLeaveByDepartment(curUser.department).then(function(leaves) {
               leaves.forEach(function(leave) {
-                if (!vm.leavesPendingMyApprove.find(x => x._id === leave._id)) {
-                  vm.leavesPendingMyApprove.push(leave);
-                }
+                // if (!vm.leavesPendingMyApprove.find(x => x._id === leave._id)) {
+                //   vm.leavesPendingMyApprove.push(leave);
+                // }
               });
             });
           }

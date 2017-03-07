@@ -36,7 +36,7 @@
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         var value = event.target.result;
-
+        console.log(value);
         if (value) {
           // logic-> update data without objectid,
           // then fetch the latest data into it.
@@ -44,12 +44,20 @@
           // mongoServ.addLeaves(leaveData)
           // .success(function(data){
           // });
+
           mongoServ.syncLeaveByUsername([], value)
           .then(function(data){
+            console.log(data);
               for(var d in data){
+                // if the data is array , then split it to save to indexBs
+                var records = data[d];
+                if(Array.isArray(records)){
+                  for(var r in records){
+                    addLeave(records[r]);
+                  }
+                }
                 //return data from mongodb
                 //if dont exist in indexDB, then create it.
-                addLeave(data[d]);
               }
             });
           deferred.resolve(value);
