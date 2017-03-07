@@ -6,7 +6,7 @@
     .controller('DeptDetailController', DeptDetailController);
 
   /** @ngInject */
-  function DeptDetailController($log, $window, $cookies, $state, $stateParams, $mdDialog, deptServ, userServ) {
+  function DeptDetailController($log, $window, $cookies, $state, $stateParams, $mdDialog, deptServ, userServ, AuthService) {
     var vm = this;
     var objDept = $stateParams.myParam;
 
