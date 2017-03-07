@@ -6,7 +6,7 @@
       .service('userServ', userServ);
 
   /** @ngInject */
-  function userServ($q, $log, localdb) {
+  function userServ($q, $log, localdb, mongoServ) {
     //// Function Declaration
     this.getAllUsers = getAllUsers;
     this.addUser = addUser;
@@ -24,6 +24,7 @@
     function getAllUsers() {
       var deferred = $q.defer();
       var users = [];
+      var userData = [];
 
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readonly')
@@ -37,10 +38,15 @@
         var cursor = event.target.result;
 
         if (cursor) {
+          // if(cursor.value.objectID==""){
+          //   userData.push(cursor.value)
+          // }
           users.push(cursor.value);
           cursor.continue();
         }
         else {
+
+          // mongoServ.addUser(userData).then(mongoServ.getAllUsers());
           deferred.resolve(users);
         }
       };
@@ -119,7 +125,7 @@
 
       // Let new user have active status
       objUser.status = "Active";
-
+      objUser.objectID = "";
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .add(objUser);
@@ -130,9 +136,11 @@
         deferred.reject();
       }; 
       request.onsuccess = function() {
+        // mongoServ.addUser(objUser).success(function(data){
+        //   objectUser.objectID = data.objectID;
+        // })
         deferred.resolve("Successfully added user.")
       };
-
       return deferred.promise;
     }
 
@@ -153,7 +161,10 @@
       }; 
 
       request.onsuccess = function() {
-        deferred.resolve("Successfully removed user.")
+        // mongoServ.rmUser(objUser).success(function(data){
+        // console.log(data);
+        // })
+        deferred.resolve("Successfully removed user.");
       };
 
       return deferred.promise;
@@ -173,6 +184,9 @@
          deferred.reject("Edit User Failed!");
        };
        request.onsuccess = function() {
+        // mongoServ.editUser(objUser).success(function(data){
+        // console.log(data);
+        // })
          deferred.resolve("Successfully edited user information.")
        };
 

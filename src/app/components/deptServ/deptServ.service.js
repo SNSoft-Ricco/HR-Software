@@ -23,6 +23,8 @@
       var departments = [];
       var unSyncData = [];
 
+      
+
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readonly')
         .openCursor();
@@ -44,7 +46,16 @@
         }
         else {
           // without objectID will generate a new record in mongodb
-          mongoServ.syncDept(unSyncData);
+          mongoServ.syncDept(unSyncData,departments).
+          then(function(){
+            // fetch all the department data back, and compare it.
+            // mongoServ.getAllDepartments().then(function(data){
+            //   var dbResult = data;
+
+
+
+            // })
+          })
           deferred.resolve(departments);
         }
       };

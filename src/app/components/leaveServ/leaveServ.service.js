@@ -6,7 +6,7 @@
       .service('leaveServ', leaveServ);
 
   /** @ngInject */
-  function leaveServ($q, $log, localdb) {
+  function leaveServ($q, $log, localdb, mongoServ) {
     //// Function Declaration
     this.addLeave = addLeave;
     this.getLeaveByUsername = getLeaveByUsername;
@@ -37,6 +37,20 @@
         var value = event.target.result;
 
         if (value) {
+          // logic-> update data without objectid,
+          // then fetch the latest data into it.
+          
+          // mongoServ.addLeaves(leaveData)
+          // .success(function(data){
+          // });
+          mongoServ.syncLeaveByUsername([], value)
+          .then(function(data){
+              for(var d in data){
+                //return data from mongodb
+                //if dont exist in indexDB, then create it.
+                addLeave(data[d]);
+              }
+            });
           deferred.resolve(value);
         } else {
           deferred.reject("Leave not exist!");
@@ -84,7 +98,6 @@
       var deferred = $q.defer();
 
       var singleKeyRange = IDBKeyRange.only(username);
-      
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readonly')
         .index('approvalBy')
@@ -95,8 +108,8 @@
       };    
       request.onsuccess = function(event) {
         var value = event.target.result;
-
         if (value) {
+          // mongoServ.getPendingApprovalLeaveByUsername(username)
           deferred.resolve(value);
         } else {
           deferred.reject("Leave not exist!");
