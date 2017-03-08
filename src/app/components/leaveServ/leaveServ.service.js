@@ -6,7 +6,7 @@
       .service('leaveServ', leaveServ);
 
   /** @ngInject */
-  function leaveServ($q, $log, localdb, mongoServ) {
+  function leaveServ($q, $log, $cookies, localdb, mongoServ) {
     //// Function Declaration
     this.addLeave = addLeave;
     this.getLeaveByUsername = getLeaveByUsername;
@@ -36,7 +36,7 @@
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         var value = event.target.result;
-        console.log(value);
+        console.log('leaveServ run 1 times');
         if (value) {
           // logic-> update data without objectid,
           // then fetch the latest data into it.
@@ -44,21 +44,22 @@
           // mongoServ.addLeaves(leaveData)
           // .success(function(data){
           // });
-
           mongoServ.syncLeaveByUsername([], value)
           .then(function(data){
-            console.log(data);
-              for(var d in data){
-                // if the data is array , then split it to save to indexBs
-                var records = data[d];
-                if(Array.isArray(records)){
-                  for(var r in records){
-                    addLeave(records[r]);
-                  }
-                }
-                //return data from mongodb
-                //if dont exist in indexDB, then create it.
+ 
+              var indexDBNotExist = data.indexDBNotExist;
+              var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+
+              for(var idb in indexDBNotExist){
+                // insert no exist record(from mongo) to indexDB
+                addLeave(indexDBNotExist[idb]);
               }
+
+              for(var tnm in mongoDBtimeNotMatch){
+                //update indexDB data, because the lastmodified date is different(compared to mongodb)
+                editLeave(mongoDBtimeNotMatch[tnm]);
+              }
+
             });
           deferred.resolve(value);
         } else {
@@ -77,7 +78,8 @@
 
       // Set Leave as Pending
       objLeave.status = "Pending";
-      objLeave.objectID = "";
+      var username = $cookies.getObject('loggedInUser').username;
+      objLeave.indexID = username+"-"+new Date().getTime();
 
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
@@ -99,6 +101,31 @@
 
       return deferred.promise;
     }
+
+    function editLeave(objLeave){
+      var deferred = $q.defer();
+      var indexID = objLeave.indexID;
+
+      var request = localdb.getObjectStore(DB_STORENAME, 'readwrite')
+        .put(objLeave);
+
+      request.onerror = function(event) {
+        // Add leave trasaction - Error
+        $log.debug("Transaction error: ", event);
+        deferred.reject();
+      };
+      request.onsuccess = function() {
+        deferred.resolve("Leave applied.")
+        // Add leave to mongodb
+        // mongoServ.addLeave(objLeave)
+        // .success(function(data){
+        //   objLeave.objectID = data.objectID;
+        // });
+      };
+      return deferred.promise; 
+    }
+
+
 
     // get pending approval leave by username
     // Param    - username

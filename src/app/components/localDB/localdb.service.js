@@ -85,7 +85,7 @@
 
           case (evt.oldVersion < 4):      
             $log.info("IndexedDB Version 4");
-            leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "_id", autoIncrement : true });
+            leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "indexID" });
             storeCreateIndex(leaveObjStore, "department", { unique: false });
           case (evt.oldVersion < 5): 
             $log.info("IndexedDB Version 5");
