@@ -6,7 +6,7 @@
       .service('deptServ', deptServ);
 
   /** @ngInject */
-  function deptServ($q, $log, localdb, mongoServ) {
+  function deptServ($q, $log, localdb, mongoServ, syncData) {
     // Function Declaration
     this.getAllDepartments = getAllDepartments;
     this.addDept = addDept;
@@ -38,23 +38,30 @@
         var cursor = event.target.result;
         
         if (cursor) {
-          if(cursor.value.objectID==""){
-            unSyncData.push(cursor.value);
-          }
           departments.push(cursor.value);
           cursor.continue();
         }
         else {
-          // without objectID will generate a new record in mongodb
-          mongoServ.syncDept(unSyncData,departments).
-          then(function(){
-            // fetch all the department data back, and compare it.
-            // mongoServ.getAllDepartments().then(function(data){
-            //   var dbResult = data;
 
+          // compare the file between indexDB & mongoDB , then sync it
+          syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)
+          .then(function(data){
 
+              mongoServ.addDept(data);
+              mongoServ.editDept(data['indexDBtimeNotMatch']);
 
-            // })
+              var indexDBNotExist = data.indexDBNotExist;
+              var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+
+              for(var idb in indexDBNotExist){
+                // insert no exist record(from mongo) to indexDB
+                addDept(indexDBNotExist[idb]);
+              }
+
+              for(var tnm in mongoDBtimeNotMatch){
+                //update indexDB data, because the lastmodified date is different(compared to mongodb)
+                editDept(mongoDBtimeNotMatch[tnm]);
+              }
           })
           deferred.resolve(departments);
         }
@@ -101,7 +108,8 @@
       // Let new department be active
       objDept.status = "Active";
       objDept.objectID = "";
-      objDept.serialId = "owner-" + new Date().getTime();
+      objDept.indexID = syncData.generateIndexID();
+
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .add(objDept);

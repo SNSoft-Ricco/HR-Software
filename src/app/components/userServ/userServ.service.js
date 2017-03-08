@@ -6,7 +6,7 @@
     .service('userServ', userServ);
 
   /** @ngInject */
-  function userServ($q, $log, localdb, mongoServ) {
+  function userServ($q, $log, localdb, mongoServ, syncData) {
     //// Function Declaration
     this.getAllUsers = getAllUsers;
     this.addUser = addUser;
@@ -38,15 +38,30 @@
         var cursor = event.target.result;
 
         if (cursor) {
-          // if(cursor.value.objectID==""){
-          //   userData.push(cursor.value)
-          // }
           users.push(cursor.value);
           cursor.continue();
         }
         else {
+          // compare the file between indexDB & mongoDB , then sync it
+          syncData.compare(users, mongoServ.addUser, mongoServ.getAllUsers)
+          .then(function(data){
 
-          // mongoServ.addUser(userData).then(mongoServ.getAllUsers());
+              mongoServ.addUser(data);
+              mongoServ.editUser(data['indexDBtimeNotMatch']);
+
+              var indexDBNotExist = data.indexDBNotExist;
+              var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+
+              for(var idb in indexDBNotExist){
+                // insert no exist record(from mongo) to indexDB
+                addUser(indexDBNotExist[idb]);
+              }
+
+              for(var tnm in mongoDBtimeNotMatch){
+                //update indexDB data, because the lastmodified date is different(compared to mongodb)
+                editUser(mongoDBtimeNotMatch[tnm]);
+              }
+          })
           deferred.resolve(users);
         }
       };
@@ -126,6 +141,8 @@
       // Let new user have active status
       objUser.status = "Active";
       objUser.objectID = "";
+      objUser.indexID = syncData.generateIndexID();
+
       var request = 
 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')

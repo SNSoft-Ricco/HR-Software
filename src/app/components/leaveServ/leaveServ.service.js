@@ -6,7 +6,7 @@
       .service('leaveServ', leaveServ);
 
   /** @ngInject */
-  function leaveServ($q, $log, $cookies, localdb, mongoServ) {
+  function leaveServ($q, $log, $cookies, localdb, mongoServ, syncData) {
     //// Function Declaration
     this.addLeave = addLeave;
     this.getLeaveByUsername = getLeaveByUsername;
@@ -38,15 +38,14 @@
         var value = event.target.result;
         console.log('leaveServ run 1 times');
         if (value) {
-          // logic-> update data without objectid,
-          // then fetch the latest data into it.
-          
-          // mongoServ.addLeaves(leaveData)
-          // .success(function(data){
-          // });
-          mongoServ.syncLeaveByUsername([], value)
+
+          // compare the file between indexDB & mongoDB , then sync it
+          syncData.compare(value, mongoServ.addLeave, mongoServ.getLeaveByUsername)
           .then(function(data){
- 
+
+              mongoServ.addLeave(data);
+              mongoServ.editLeave(data['indexDBtimeNotMatch']);
+
               var indexDBNotExist = data.indexDBNotExist;
               var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
 
@@ -60,7 +59,8 @@
                 editLeave(mongoDBtimeNotMatch[tnm]);
               }
 
-            });
+          })
+
           deferred.resolve(value);
         } else {
           deferred.reject("Leave not exist!");
@@ -78,8 +78,7 @@
 
       // Set Leave as Pending
       objLeave.status = "Pending";
-      var username = $cookies.getObject('loggedInUser').username;
-      objLeave.indexID = username+"-"+new Date().getTime();
+      objLeave.indexID = syncData.generateIndexID();
 
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
