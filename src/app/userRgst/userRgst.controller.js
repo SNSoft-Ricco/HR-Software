@@ -62,11 +62,12 @@
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-earphone"
       }
-    }
+    };
 
+    vm.userStatusList = ['Active', 'Disabled'];
     vm.dynFields = dynTemplate;
     vm.editMode = false;
-    vm.title = "New User Registration"
+    vm.title = "New User Registration";
 
     vm.inputs = [];
 
@@ -114,6 +115,10 @@
             "glyphClass": "glyphicon glyphicon-list-alt"
           };
 
+          if (field == 'status') {
+            vm.dynFields[field].inputType = "selectBox";
+          }
+
           vm.inputs[i] = objUser[field];
         }
 
@@ -139,7 +144,6 @@
 
       if (vm.editMode)
       {
-        $log.info('fields',fields);
         userServ.editUser(fields).then(function(){
           toastr.success("Successfully edited employee", "Success");
           back();
