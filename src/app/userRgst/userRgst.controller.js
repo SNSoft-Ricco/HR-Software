@@ -77,7 +77,7 @@
     vm.loadNext = loadNext;
     vm.checkViewPermission = checkViewPermission;
 
-    setTimeout(function(){
+    $timeout(function(){
       // Load Permission as select options
       PermissionService.getAllPermission().then(function(pms){
         vm.pms = pms;
@@ -92,7 +92,7 @@
       userServ.getAllUsers().then(function(users){
         vm.users = users;
       })
-    },500)
+    },500);
 
 
     if ($cookies.get('editUser')) {
@@ -140,6 +140,17 @@
       for (var field in vm.dynFields) {
         fields[field] = vm.inputs[i];
         i++;
+      }
+
+      // Special handling to set user as department head
+      if (fields['position'] === 'Department Head') {
+        $log.info("Department Head");
+        deptServ.getDept(fields['department']).then(function(objDept){
+          objDept.head = fields['username'];
+          deptServ.editDept(objDept).then(function(){
+            toastr.success("Successfully set department head", "Success");
+          })
+        })
       }
 
       if (vm.editMode)
