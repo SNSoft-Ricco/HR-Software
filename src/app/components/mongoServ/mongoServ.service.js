@@ -23,6 +23,11 @@
     this.addUser = addUser;
     this.rmUser = rmUser;
     this.editUser = editUser;
+    //permission
+    this.addPermission = addPermission;
+    this.removePermission = removePermission;
+    this.updatePermission = updatePermission;
+    this.getAllPermission = getAllPermission;
 
     //////////
     ///   Departments
@@ -400,6 +405,73 @@
       console.log('Mongo editUser');
       // return $http({method:"POST", url:"/editUser/",
       //   data{'data':username});
+      // })
+    }
+
+
+    //////////////
+    // PERMISSION
+    //////////////
+
+    function addPermission(){
+      var deferred = $q.defer();
+      var permission = [];
+      
+      deferred.resolve(permission);
+      return deferred.promise;
+      // return $http({method:"POST", url:"/addPermission/",
+      //   data{'data':username});
+      // })
+    }
+
+    function removePermission(){
+      var deferred = $q.defer();
+      var permission = [];
+      
+      deferred.resolve(permission);
+      return deferred.promise;
+      // return $http({method:"POST", url:"/removePermission/",
+      //   data{'data':username});
+      // })
+    }
+
+    function updatePermission(){
+      var deferred = $q.defer();
+      var permission = [];
+      
+      deferred.resolve(permission);
+      return deferred.promise;
+      // return $http({method:"POST", url:"/updatePermission/",
+      //   data{'data':username});
+      // })
+    }
+
+    function getAllPermission(){
+      var deferred = $q.defer();
+      var permission = [];
+
+      // var permission=[
+      //   {
+      //     PermissionList:[1,2,3,4,5],
+      //     code:"Operators",
+      //     desc:"Operators",
+      //     id:1,
+      //     objectID:"a12345",
+      //     lastModified:"1488326400"
+
+      //   },
+      //   {
+      //     PermissionList:[1,5],
+      //     code:"Shopkeeper",
+      //     desc:"Shopkeeper",
+      //     id:2,
+      //     objectID:"b12345",
+      //     lastModified:"1488326400"
+      //   }
+      // ]  
+      deferred.resolve(permission);
+      return deferred.promise;
+      // return $http({method:"GET", url:"/getAllPermission/"});
       // })
     }
 

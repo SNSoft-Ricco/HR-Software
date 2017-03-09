@@ -4,7 +4,7 @@
 		.module('snsoftHr')
 		.service('PermissionService',PermissionService);
 
-	function PermissionService($q,localdb){
+	function PermissionService($q,localdb, mongoServ, syncData){
 
 		//const DB_NAME = 'snsofthrdb';
 	  	//const DB_VERSION = 4; 
@@ -14,7 +14,7 @@
 	  	//var db;
 	  	var permissionArray=[];
 	  	var userList=[];
-
+	  	var vm = this;
 		/*this.openDb=function () {
 			var deferred = $q.defer();
 
@@ -66,7 +66,7 @@
 		this.addPermission=function (obj)
 		{
 			var deferred = $q.defer();
-
+			obj.indexID = syncData.generateIndexID();
 			/*
 			var transaction = db.transaction([DB_OBJ_PERMISSION], "readwrite");
 
@@ -167,7 +167,7 @@
 			return deferred.promise;
 		}
 
-		this.getAllPermission=function()
+		this.getAllPermission=function(sync)
 		{
 			permissionArray=[];
 			var deferred = $q.defer();
@@ -187,8 +187,29 @@
 			    cursor.continue();
 			  }
 			  else {
+		          if(sync){
+		              // compare the file between indexDB & mongoDB , then sync it
+		              syncData.compare(permissionArray, mongoServ.addPermission, mongoServ.getAllPermission)
+		              .then(function(data){
+
+		                  mongoServ.addPermission(data['mongoDBNotExist']);
+		                  mongoServ.updatePermission(data['indexDBtimeNotMatch']);
+
+		                  var indexDBNotExist = data.indexDBNotExist;
+		                  var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+
+		                  for(var idb in indexDBNotExist){
+		                    // insert no exist record(from mongo) to indexDB
+		                    vm.addPermission(indexDBNotExist[idb]);
+		                  }
+
+		                  for(var tnm in mongoDBtimeNotMatch){
+		                    //update indexDB data, because the lastmodified date is different(compared to mongodb)
+		                    vm.updatePermission(mongoDBtimeNotMatch[tnm]);
+		                  }
+		              })
+		          }
 			    deferred.resolve(permissionArray);
-			    
 			  }
 			};
 			return deferred.promise;
