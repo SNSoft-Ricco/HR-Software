@@ -23,7 +23,7 @@
     $timeout(showUsers,500);
 
     function register() {
-      $state.go("userRgst");
+      $state.go("userRgst", {isRegister: true});
     }
 
     function showUsers() {

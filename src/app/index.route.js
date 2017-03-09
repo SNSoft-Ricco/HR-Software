@@ -28,7 +28,7 @@
         templateUrl: 'app/userRgst/userRgst.html',
         controller: 'UserRgstController',
         controllerAs: 'userRgst',
-        params: {myParam: null}
+        params: {myParam: null, isRegister: false}
       })
 
       // Department Management View
