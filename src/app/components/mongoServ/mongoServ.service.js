@@ -450,25 +450,74 @@
       var deferred = $q.defer();
       var permission = [];
 
+      // test data 1 -- test for the first data insert
+      // *** need to have objectID , or it will create everytime ***
       // var permission=[
       //   {
-      //     PermissionList:[1,2,3,4,5],
-      //     code:"Operators",
-      //     desc:"Operators",
-      //     id:1,
+      //     PermissionList:[1,2,5],
+      //     code:"Operators 1",
+      //     desc:"Operators 1",
+      //     id:2,
       //     objectID:"a12345",
-      //     lastModified:"1488326400"
-
+      //     lastModified:"14883264307"
       //   },
       //   {
       //     PermissionList:[1,5],
       //     code:"Shopkeeper",
       //     desc:"Shopkeeper",
-      //     id:2,
+      //     id:3,
       //     objectID:"b12345",
       //     lastModified:"1488326400"
       //   }
       // ]  
+
+      // test data 2 -- test if the objectID is same
+      // ***** need to copy indexID , or it will create new record *****
+      // var permission=[
+      //   {
+      //     PermissionList:[1,2,5],
+      //     code:"Operators 1",
+      //     desc:"Operators 1",
+      //     id:2,
+      //     objectID:"a12345",
+      //     lastModified:"14883264307"
+      //   },
+      //   {
+      //     PermissionList:[1,5],
+      //     code:"Cleaner",
+      //     desc:"Cleaner",
+      //     id:4,
+      //     objectID:"d12345",
+      //     lastModified:"1488326400"
+      //   }
+      // ]  
+
+      // test data 3 - test if the date is bigger than indexdb -> save to indexeddb
+      // ***** need to copy indexID , or it will create new record *****
+      // var permission=[
+      //   {
+      //     PermissionList:[1,2,5],
+      //     code:"Operators 1",
+      //     desc:"Operators 1",
+      //     id:2,
+      //     objectID:"a12345",
+      //     lastModified:"1504224000"
+      //   }
+      // ]
+      
+      // test data 4 - test if the data is smaller than indexdb -> save to mongodb
+      // ***** need to copy indexID , or it will create new record *****
+      // var permission=[
+      //   {
+      //     PermissionList:[1,2,5],
+      //     code:"Operators 1",
+      //     desc:"Operators 1",
+      //     id:2,
+      //     objectID:"a12345",
+      //     lastModified:"1483228800"
+      //   }
+      // ]
+
       deferred.resolve(permission);
       return deferred.promise;
       // return $http({method:"GET", url:"/getAllPermission/"});

@@ -65,7 +65,7 @@
 
             //Permission object store
             var store = evt.currentTarget.result
-            .createObjectStore("permission", { keyPath:"indexID" });
+            .createObjectStore("permission", { keyPath:"id" , autoIncrement:true});
             store.createIndex('code', 'code', { unique: false });
             store.createIndex('desc', 'desc', { unique: false });
             store.createIndex('PermissionList', 'PermissionList', { unique: false });
