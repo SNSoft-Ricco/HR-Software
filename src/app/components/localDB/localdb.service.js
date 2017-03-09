@@ -23,7 +23,7 @@
     };
 
     return service;
-    
+
     //// Public Functions
     function openDb() {
       var deferred = $q.defer();
@@ -72,31 +72,36 @@
 
             // default departments
 
-            var department_id = 'admin@snsoft.my-1931993199319232';
-            txn.objectStore('department').add({indexID:department_id+"1", department: "IT Department"});
-            txn.objectStore('department').add({indexID:department_id+"2", department: "HR Department"});
-            txn.objectStore('department').add({indexID:department_id+"3", department: "R&D Department"});
+            txn.objectStore('department')
+              .add({indexID:'admin@snsoft.my-1931993199319231',  department: "IT Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+            txn.objectStore('department')
+              .add({indexID:'admin@snsoft.my-1931993199319232',  department: "HR Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+            txn.objectStore('department')
+              .add({indexID:'admin@snsoft.my-1931993199319233',  department: "R&D Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
 
             // default admin user
-            txn.objectStore('user').add({username: "admin@snsoft.my",userpwd: "123",usergroup: "1",supervisor: "",status: "Active",position: "",fullname: "admin",department: "IT Department",contactno: "123"});
+            txn.objectStore('user')
+              .add({username: "admin@snsoft.my",userpwd: "123",usergroup: "1",supervisor: "",status: "Active",
+                position: "",fullname: "admin",department: "",contactno: "123"});
 
             // default permission group
             var list = [1,2,3,4,5];
-            txn.objectStore('permission').add({code: "P1",desc: "P1",PermissionList: list});
+            txn.objectStore('permission').add({code: "System Administrator",desc: "System Administrator",
+              PermissionList: list});
 
-          case (evt.oldVersion < 4):      
+          case (evt.oldVersion < 4):
             $log.info("IndexedDB Version 4");
             leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "indexID" });
             storeCreateIndex(leaveObjStore, "department", { unique: false });
-          case (evt.oldVersion < 5): 
+          case (evt.oldVersion < 5):
             $log.info("IndexedDB Version 5");
             systemObjStore = dataBase.createObjectStore("system", { keyPath : "_id", autoIncrement : true });
             txn.objectStore('system').add({leaveTypes: { 1: "Annual Leave", 2: "Medical Leave", 99: "Other Reason" }});
-          case (evt.oldVersion < 6): 
+          case (evt.oldVersion < 6):
             $log.info("IndexedDB Version 6");
             storeCreateIndex(leaveObjStore, "user.username", { unique: true });
             storeCreateIndex(leaveObjStore, "user.department", { unique: false });
-          case (evt.oldVersion < 7): 
+          case (evt.oldVersion < 7):
             $log.info("IndexedDB Version 7");
             leaveObjStore = txn.objectStore('leave');
             storeCreateIndex(leaveObjStore, "user", { unique: true, multiEntry: true});
@@ -113,7 +118,7 @@
           case (evt.oldVersion < 10):
             $log.info("IndexedDB Version 10");
             leaveObjStore = txn.objectStore('leave');
-            storeCreateIndex(leaveObjStore, "approvalBy", { unique: false, multiEntry: true});            
+            storeCreateIndex(leaveObjStore, "approvalBy", { unique: false, multiEntry: true});
         }
 
         deferred.resolve();

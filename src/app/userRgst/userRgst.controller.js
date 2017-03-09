@@ -7,9 +7,12 @@
 
   /** @ngInject */
   function UserRgstController(
-    $log, $window, $cookies, $state, $timeout, userServ, deptServ, PermissionService, toastr,AuthService) {
+    $log, $cookies, $state, $timeout, $stateParams,
+    userServ, deptServ, PermissionService, toastr,AuthService) {
 
     var vm = this;
+    var objUser = $stateParams.myParam;
+    var isRegister = $stateParams.isRegister;
 
     var dynTemplate = {
       "username": {
@@ -77,7 +80,7 @@
     vm.loadNext = loadNext;
     vm.checkViewPermission = checkViewPermission;
 
-    setTimeout(function(){
+    $timeout(function(){
       // Load Permission as select options
       PermissionService.getAllPermission().then(function(pms){
         vm.pms = pms;
@@ -92,39 +95,44 @@
       userServ.getAllUsers().then(function(users){
         vm.users = users;
       })
-    },500)
+    },500);
 
+    // Refresh Page Handler
+    if (!isRegister) {
+      if (objUser == null) {
+        $state.go('userMgmt');
+      }
+      else {
+        var i = 0;
 
-    if ($cookies.get('editUser')) {
-      var objUser = angular.fromJson($cookies.get('editUser'));
-      var i = 0;
+        vm.editMode = true;
+        vm.title = "Edit User Information";
 
-      vm.editMode = true;
-      vm.title = "Edit User Information";
+        for (var field in objUser) {
+          if(vm.dynFields.hasOwnProperty(field)) {
+            vm.inputs[i] = objUser[field];
 
-      for (var field in objUser) {
-        if(vm.dynFields.hasOwnProperty(field)) {
-          vm.inputs[i] = objUser[field];
+            loadNext(field, objUser[field]);
+          } else {
+            vm.dynFields[field] = {
+              "fieldName": field,
+              "type": "text",
+              "inputType": "textbox",
+              "glyphClass": "glyphicon glyphicon-list-alt"
+            };
 
-          loadNext(field, objUser[field]);
-        } else {
-          vm.dynFields[field] = {
-            "fieldName": field,
-            "type": "text",
-            "inputType": "textbox",
-            "glyphClass": "glyphicon glyphicon-list-alt"
-          };
+            if (field == 'status') {
+              vm.dynFields[field].inputType = "selectBox";
+            }
 
-          if (field == 'status') {
-            vm.dynFields[field].inputType = "selectBox";
+            vm.inputs[i] = objUser[field];
           }
 
-          vm.inputs[i] = objUser[field];
+          i++;
         }
-
-        i++;
       }
     }
+
 
     function back() {
       vm.editMode = false;
@@ -140,6 +148,17 @@
       for (var field in vm.dynFields) {
         fields[field] = vm.inputs[i];
         i++;
+      }
+
+      // Special handling to set user as department head
+      if (fields['position'] === 'Department Head') {
+        $log.info("Department Head");
+        deptServ.getDept(fields['department']).then(function(objDept){
+          objDept.head = fields['fullname'];
+          deptServ.editDept(objDept).then(function(){
+            toastr.success("Successfully set department head", "Success");
+          })
+        })
       }
 
       if (vm.editMode)
@@ -171,6 +190,7 @@
         case 'department':
           deptServ.getDept(deptName).then(function(dept){
             vm.positions = dept.position;
+            $log.info('vm.positions',vm.positions);
           });
           break;
         case 'position':
