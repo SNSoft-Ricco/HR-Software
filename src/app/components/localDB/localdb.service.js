@@ -56,9 +56,9 @@
             usrObjStore = dataBase.createObjectStore("user", { keyPath : "username", autoIncrement : true });
             usrObjStore.createIndex('usergroup', 'usergroup', { unique: false });
 
-            lastSyncStore = dataBase.createObjectStore("lastSync",{keyPath:"time"});
-            lastSyncStore.put({'time':new Date().getTime()});
-            deptObjStore= dataBase.createObjectStore("department", { keyPath : "department"});
+            lastSyncStore = dataBase.createObjectStore("lastSync", {keyPath : "sync"});
+            lastSyncStore.put({'sync':'syncDB','lastSync':null});
+            deptObjStore= dataBase.createObjectStore("department", { keyPath : "indexID"});
 
             // Create Index
             usrObjStore.createIndex("userDepartment", "department", { unique: false });
@@ -71,12 +71,13 @@
             store.createIndex('PermissionList', 'PermissionList', { unique: false });
 
             // default departments
+
             txn.objectStore('department')
-              .add({department: "IT Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319231',  department: "IT Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
             txn.objectStore('department')
-              .add({department: "HR Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319232',  department: "HR Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
             txn.objectStore('department')
-              .add({department: "R&D Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319233',  department: "R&D Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
 
             // default admin user
             txn.objectStore('user')
@@ -90,7 +91,7 @@
 
           case (evt.oldVersion < 4):
             $log.info("IndexedDB Version 4");
-            leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "_id", autoIncrement : true });
+            leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "indexID" });
             storeCreateIndex(leaveObjStore, "department", { unique: false });
           case (evt.oldVersion < 5):
             $log.info("IndexedDB Version 5");

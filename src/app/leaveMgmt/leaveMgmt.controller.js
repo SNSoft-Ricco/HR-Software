@@ -9,7 +9,7 @@
   /** @ngInject */
   function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService, syncData) {
     var vm = this;
-
+    vm.leaves;
     // Function Declaration
     vm.newLeave = newLeave;
     vm.approveLeave = approveLeave;
@@ -85,10 +85,14 @@
     //// Private Functions
     function loadCurUserLeave() {
       $timeout(function() {
-        leaveServ.getLeaveByUsername(curUser.username).then(function(leaves) {
-          vm.leaves = leaves;
-        });
-      },500);
+        syncData.sync()
+        .then(function(result){
+          syncData.mergeLeaveData(result, leaveServ.getLeaveByUsername, curUser.username)
+          .then(function(leaves){
+            vm.leaves = leaves;
+          })
+        })
+      },500)
     }
 
     function loadPendingApprovalLeave() {
@@ -98,9 +102,9 @@
           if (curUser.position === "Department Head") {
             leaveServ.getPendingApprovalLeaveByDepartment(curUser.department).then(function(leaves) {
               leaves.forEach(function(leave) {
-                if (!vm.leavesPendingMyApprove.find(x => x._id === leave._id)) {
-                  vm.leavesPendingMyApprove.push(leave);
-                }
+                // if (!vm.leavesPendingMyApprove.find(x => x._id === leave._id)) {
+                //   vm.leavesPendingMyApprove.push(leave);
+                // }
               });
             });
           }

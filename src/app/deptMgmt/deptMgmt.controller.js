@@ -43,12 +43,12 @@
 
 		//// Private Functions
 		function showAllDepts () {
-
-			// syncData.sync().then(function(data){
-			// 	console.log(data);
-			// })
-			deptServ.getAllDepartments().then(function(depts) {
-				vm.depts = depts;
+			syncData.sync()
+			.then(function(result){
+				syncData.mergeData(result, deptServ.getAllDepartments)
+				.then(function(depts){
+					vm.depts = depts;
+				})
 			})
 		}
 
