@@ -22,11 +22,13 @@
         controllerAs: 'userMgmt'
       })
 
+      // User Registration/Edit View
       .state('userRgst', {
         url: '/user-registration',
         templateUrl: 'app/userRgst/userRgst.html',
         controller: 'UserRgstController',
-        controllerAs: 'userRgst'
+        controllerAs: 'userRgst',
+        params: {myParam: null}
       })
 
       // Department Management View

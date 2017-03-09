@@ -7,9 +7,11 @@
 
   /** @ngInject */
   function UserRgstController(
-    $log, $window, $cookies, $state, $timeout, userServ, deptServ, PermissionService, toastr,AuthService) {
+    $log, $cookies, $state, $timeout, $stateParams,
+    userServ, deptServ, PermissionService, toastr,AuthService) {
 
     var vm = this;
+    var objUser = $stateParams.myParam;
 
     var dynTemplate = {
       "username": {
@@ -94,9 +96,11 @@
       })
     },500);
 
-
-    if ($cookies.get('editUser')) {
-      var objUser = angular.fromJson($cookies.get('editUser'));
+    // Refresh Page Handler
+    if (objUser == null) {
+      $state.go('userMgmt');
+    }
+    else {
       var i = 0;
 
       vm.editMode = true;

@@ -41,8 +41,7 @@
     }
 
     function editUser(objUser) {
-      $cookies.put('editUser', angular.toJson(objUser));
-      $state.go("userRgst");
+      $state.go("userRgst", {myParam: objUser});
     }
 
     function deptDetail(deptName) {
@@ -50,7 +49,7 @@
         $state.go("deptDetail", {myParam: objDept});
       })
     }
-    
+
     function checkViewPermission(id)
     {
 
