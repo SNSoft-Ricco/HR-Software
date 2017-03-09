@@ -16,14 +16,10 @@
 
     var DB_STORENAME = 'department';
 
-    function getAllDepartments(collections) {
+    function getAllDepartments(sync) {
       
-
       var deferred = $q.defer();
       var departments = [];
-      var unSyncData = [];
-
-      
 
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readonly')
@@ -42,27 +38,28 @@
           cursor.continue();
         }
         else {
+          if(sync){
+            // compare the file between indexDB & mongoDB , then sync it
+            syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)
+            .then(function(data){
 
-          // compare the file between indexDB & mongoDB , then sync it
-          syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)
-          .then(function(data){
-            
-              mongoServ.addDept(data);
-              mongoServ.editDept(data['indexDBtimeNotMatch']);
+                mongoServ.addDept(data['mongoDBNotExist']);
+                mongoServ.editDept(data['indexDBtimeNotMatch']);
 
-              var indexDBNotExist = data.indexDBNotExist;
-              var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+                var indexDBNotExist = data.indexDBNotExist;
+                var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
 
-              for(var idb in indexDBNotExist){
-                // insert no exist record(from mongo) to indexDB
-                addDept(indexDBNotExist[idb]);
-              }
+                for(var idb in indexDBNotExist){
+                  // insert no exist record(from mongo) to indexDB
+                  addDept(indexDBNotExist[idb]);
+                }
 
-              for(var tnm in mongoDBtimeNotMatch){
-                //update indexDB data, because the lastmodified date is different(compared to mongodb)
-                editDept(mongoDBtimeNotMatch[tnm]);
-              }
-          })
+                for(var tnm in mongoDBtimeNotMatch){
+                  //update indexDB data, because the lastmodified date is different(compared to mongodb)
+                  editDept(mongoDBtimeNotMatch[tnm]);
+                }
+            })
+          }
           deferred.resolve(departments);
         }
       };
@@ -188,29 +185,6 @@
     }
 
 
-    function syncAllDepartments(collections){
-      var request = localdb.getObjectStore(DB_STORENAME,'readonly').getAll();
-      request.onsuccess = function(event){
-        // sync data with db 
-        var result = event.target.result;
-        var unSyncData = []
-        for(var r in result){
-
-          if(result[r].objectID != ""){
-            // if objectID exist, then leave it.
-            console.log('it exist , dont create');
-          }else{
-            // if dont have objectID , then create a new record
-            unSyncData.push(result[r]);
-            console.log('create a new record');
-          }
-        }
-        mongoServ.syncDept(unSyncData);
-      }
-      request.onerror = function(event){
-        console.log(event.target.result)
-      }
-    }
 
 
 

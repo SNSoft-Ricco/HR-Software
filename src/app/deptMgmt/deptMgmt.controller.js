@@ -43,15 +43,12 @@
 
 		//// Private Functions
 		function showAllDepts () {
-
-			// syncData.sync().then(function(data){
-			// 	console.log(data);
-			// })
-			// check anything missing update
-			// get the data again...
-			// compare them with last-modified time.
-			deptServ.getAllDepartments().then(function(depts) {
-				vm.depts = depts;
+			syncData.sync()
+			.then(function(result){
+				syncData.mergeData(result, deptServ.getAllDepartments)
+				.then(function(depts){
+					vm.depts = depts;
+				})
 			})
 		}
 

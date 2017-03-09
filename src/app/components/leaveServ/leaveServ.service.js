@@ -20,7 +20,7 @@
     // Get Leaves By Username
     // Param    - Username
     // Resolve  - Users object
-    function getLeaveByUsername(username) {
+    function getLeaveByUsername(username, sync) {
       var deferred = $q.defer();
 
       var singleKeyRange = IDBKeyRange.only(username);
@@ -39,28 +39,28 @@
         console.log('leaveServ run 1 times');
         if (value) {
 
-          // compare the file between indexDB & mongoDB , then sync it
-          syncData.compare(value, mongoServ.addLeave, mongoServ.getLeaveByUsername)
-          .then(function(data){
+          if(sync){
+            // compare the file between indexDB & mongoDB , then sync it
+            syncData.compare(value, mongoServ.addLeave, mongoServ.getLeaveByUsername)
+            .then(function(data){
 
-              mongoServ.addLeave(data);
-              mongoServ.editLeave(data['indexDBtimeNotMatch']);
+                mongoServ.addLeave(data['mongoDBNotExist']);
+                mongoServ.editLeave(data['indexDBtimeNotMatch']);
 
-              var indexDBNotExist = data.indexDBNotExist;
-              var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+                var indexDBNotExist = data.indexDBNotExist;
+                var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
 
-              for(var idb in indexDBNotExist){
-                // insert no exist record(from mongo) to indexDB
-                addLeave(indexDBNotExist[idb]);
-              }
+                for(var idb in indexDBNotExist){
+                  // insert no exist record(from mongo) to indexDB
+                  addLeave(indexDBNotExist[idb]);
+                }
 
-              for(var tnm in mongoDBtimeNotMatch){
-                //update indexDB data, because the lastmodified date is different(compared to mongodb)
-                editLeave(mongoDBtimeNotMatch[tnm]);
-              }
-
-          })
-
+                for(var tnm in mongoDBtimeNotMatch){
+                  //update indexDB data, because the lastmodified date is different(compared to mongodb)
+                  editLeave(mongoDBtimeNotMatch[tnm]);
+                }
+            })
+          }
           deferred.resolve(value);
         } else {
           deferred.reject("Leave not exist!");

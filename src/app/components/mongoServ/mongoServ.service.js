@@ -42,7 +42,7 @@
       //   },
       //   {
       //     department:"Oversea Department",
-      //     objectID:"b12345",
+      //     objectID:"c12345",
       //     lastModified:"1488326400",
       //     // indexID:,
       //   }]
@@ -55,7 +55,7 @@
       //     department:"Logistic Department",
       //     objectID:"a12345",
       //     lastModified:"1488326400",
-      //     indexID:"admin@snsoft.my-1489022445616",
+      //     indexID:"admin@snsoft.my-1489031111072",
       //   },
       //   {
       //     department:"Global Department",
@@ -71,7 +71,7 @@
       //     department:"Logistic xXx Department",
       //     objectID:"a12345",
       //     lastModified:"1504224000",
-      //     indexID:"admin@snsoft.my-1489023164730",
+      //     indexID:"admin@snsoft.my-1489034768347",
       //     // indexID:,
       //   }]
 
@@ -83,7 +83,7 @@
       //     department:"Logistic Department",
       //     objectID:"a12345",
       //     lastModified:"1483228800",
-      //     indexID:"admin@snsoft.my-1489023164730",
+      //     indexID:"admin@snsoft.my-1489034768347",
       //     // indexID:,
       //   }]
       // return result
@@ -145,6 +145,7 @@
 
     function getLeaveByUsername(username){
       var deferred = $q.defer();
+      var leaves = [];
 
       // test data 1 -- test for the first data insert
       // *** need to have objectID , or it will create everytime ***
@@ -245,7 +246,6 @@
       //     status:1
       //   }]
 
-      var leaves = [];
 
       deferred.resolve(leaves);
       return deferred.promise;

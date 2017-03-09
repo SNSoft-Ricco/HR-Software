@@ -21,7 +21,7 @@
     // Get All Users
     // Param    - None
     // Resolve  - Users object
-    function getAllUsers() {
+    function getAllUsers(sync) {
       var deferred = $q.defer();
       var users = [];
       var userData = [];
@@ -42,26 +42,29 @@
           cursor.continue();
         }
         else {
-          // compare the file between indexDB & mongoDB , then sync it
-          syncData.compare(users, mongoServ.addUser, mongoServ.getAllUsers)
-          .then(function(data){
+          if(sync){
+              // compare the file between indexDB & mongoDB , then sync it
+              syncData.compare(users, mongoServ.addUser, mongoServ.getAllUsers)
+              .then(function(data){
 
-              mongoServ.addUser(data);
-              mongoServ.editUser(data['indexDBtimeNotMatch']);
+                  mongoServ.addUser(data['mongoDBNotExist']);
+                  mongoServ.editUser(data['indexDBtimeNotMatch']);
 
-              var indexDBNotExist = data.indexDBNotExist;
-              var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+                  var indexDBNotExist = data.indexDBNotExist;
+                  var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
 
-              for(var idb in indexDBNotExist){
-                // insert no exist record(from mongo) to indexDB
-                addUser(indexDBNotExist[idb]);
-              }
+                  for(var idb in indexDBNotExist){
+                    // insert no exist record(from mongo) to indexDB
+                    addUser(indexDBNotExist[idb]);
+                  }
 
-              for(var tnm in mongoDBtimeNotMatch){
-                //update indexDB data, because the lastmodified date is different(compared to mongodb)
-                editUser(mongoDBtimeNotMatch[tnm]);
-              }
-          })
+                  for(var tnm in mongoDBtimeNotMatch){
+                    //update indexDB data, because the lastmodified date is different(compared to mongodb)
+                    editUser(mongoDBtimeNotMatch[tnm]);
+                  }
+              })
+          }
+
           deferred.resolve(users);
         }
       };

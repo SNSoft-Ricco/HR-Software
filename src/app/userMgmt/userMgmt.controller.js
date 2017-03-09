@@ -6,7 +6,7 @@
     .controller('UserMgmtController', UserMgmtController);
 
   /** @ngInject */
-  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, AuthService) {
+  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, AuthService, syncData) {
     var vm = this;
 
     vm.users = [];
@@ -27,9 +27,14 @@
     }
 
     function showUsers() {
-      userServ.getAllUsers().then(function(users){
-        vm.users = users;
-      });
+
+      syncData.sync()
+      .then(function(result){
+        syncData.mergeData(result, userServ.getAllUsers)
+        .then(function(users){
+          vm.users = users;
+        })
+      })
     }
 
     function rmUser(objUser) {
