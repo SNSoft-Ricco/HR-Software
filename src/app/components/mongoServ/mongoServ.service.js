@@ -29,19 +29,34 @@
     /////////
   	function getAllDepartments(lastSync){
       var deferred = $q.defer();
-      var result =[ 
-          {
-            "_id" : 'ObjectId("58be48f79dc3a9cf9e086a1b")',
-            "name" : "Operation Department",
-            "status" : "True",
-            "lastModified" : "2017-03-06T16:00:00.000Z"
-          },
-          {
-            "_id" : 'ObjectId("58be48f79dc3a9cf9e086c1b")',
-            "name" : "Logistic Department",
-            "status" : "True",
-            "lastModified" : "2017-03-06T19:00:00.000Z"
-          }]
+      // var result =[ 
+      //     {
+      //       "_id" : 'ObjectId("58be48f79dc3a9cf9e086a1b")',
+      //       "name" : "Operation Department",
+      //       "status" : "True",
+      //       "lastModified" : "2017-03-06T16:00:00.000Z"
+      //     },
+      //     {
+      //       "_id" : 'ObjectId("58be48f79dc3a9cf9e086c1b")',
+      //       "name" : "Logistic Department",
+      //       "status" : "True",
+      //       "lastModified" : "2017-03-06T19:00:00.000Z"
+      //     }]
+
+      var result = [
+        {
+          department:"Logistic Department",
+          objectID:"",
+          lastModified:"1488326400",
+          // indexID:,
+        },
+        {
+          department:"Oversea Department",
+          objectID:"",
+          lastModified:"1488326400",
+          // indexID:,
+        }]
+
       // return result
 
       deferred.resolve(result);
@@ -220,36 +235,36 @@
       var deferred = $q.defer();
 
       // test data 1 -- test for the first data insert
-      var users = [
-        {
-          contactno:"011288299292",
-          department:"IT Department",
-          fullname:"Cindy",
-          objectID:"a123456",
-          position:" ",
-          status:"Active",
-          supervisor:" ",
-          usergroup:"1",
-          username:"cindy@snsoft.my",
-          userpwd:"9999",
-          lastModified:"1488326400"
-        },
-        {
-          contactno:"013288299292",
-          department:"IT Department",
-          fullname:"Evonne",
-          objectID:"x123456",
-          position:" ",
-          status:"Active",
-          supervisor:" ",
-          usergroup:"1",
-          username:"evonne@snsoft.my",
-          userpwd:"9999",
-          lastModified:"1488326400"
-        }
-
-        // need tp see the indexeId first
-      ]
+      // need tp see the indexeId first
+      // var users = [];
+      // var users = [
+      //   {
+      //     contactno:"011288299292",
+      //     department:"IT Department",
+      //     fullname:"Cindy",
+      //     objectID:"a123456",
+      //     position:" ",
+      //     status:"Active",
+      //     supervisor:" ",
+      //     usergroup:"1",
+      //     username:"cindy@snsoft.my",
+      //     userpwd:"9999",
+      //     lastModified:"1488326400"
+      //   },
+      //   {
+      //     contactno:"013288299292",
+      //     department:"IT Department",
+      //     fullname:"Evonne",
+      //     objectID:"x123456",
+      //     position:" ",
+      //     status:"Active",
+      //     supervisor:" ",
+      //     usergroup:"1",
+      //     username:"evonne@snsoft.my",
+      //     userpwd:"9999",
+      //     lastModified:"1488326400"
+      //   }
+      // ]
       // test data 2 -- test if the objectID is same
       // var users = [
       //   {
