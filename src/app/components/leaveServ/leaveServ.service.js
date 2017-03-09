@@ -6,7 +6,7 @@
       .service('leaveServ', leaveServ);
 
   /** @ngInject */
-  function leaveServ($q, $log, $cookies, localdb, mongoServ, syncData) {
+  function leaveServ($q, $log, localdb, mongoServ, syncData) {
     //// Function Declaration
     this.addLeave = addLeave;
     this.getLeaveByUsername = getLeaveByUsername;
