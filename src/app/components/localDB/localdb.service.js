@@ -58,7 +58,7 @@
 
             lastSyncStore = dataBase.createObjectStore("lastSync",{keyPath:"time"});
             lastSyncStore.put({'time':new Date().getTime()});
-            deptObjStore= dataBase.createObjectStore("department", { keyPath : "department"});
+            deptObjStore= dataBase.createObjectStore("department", { keyPath : "indexID"});
 
             // Create Index
             usrObjStore.createIndex("userDepartment", "department", { unique: false });
@@ -72,9 +72,10 @@
 
             // default departments
 
-            txn.objectStore('department').add({department: "IT Department"});
-            txn.objectStore('department').add({department: "HR Department"});
-            txn.objectStore('department').add({department: "R&D Department"});
+            var department_id = 'admin@snsoft.my-1931993199319232';
+            txn.objectStore('department').add({indexID:department_id+"1", department: "IT Department"});
+            txn.objectStore('department').add({indexID:department_id+"2", department: "HR Department"});
+            txn.objectStore('department').add({indexID:department_id+"3", department: "R&D Department"});
 
             // default admin user
             txn.objectStore('user').add({username: "admin@snsoft.my",userpwd: "123",usergroup: "1",supervisor: "",status: "Active",position: "",fullname: "admin",department: "IT Department",contactno: "123"});

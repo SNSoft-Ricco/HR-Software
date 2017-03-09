@@ -140,7 +140,6 @@
 
       // Let new user have active status
       objUser.status = "Active";
-      objUser.objectID = "";
       objUser.indexID = syncData.generateIndexID();
 
       var request = 

@@ -63,7 +63,7 @@
             for(var d in data){
               // data from indexDB
               var evens = _.find(collections, function(num){ return (num.objectID&&num.objectID!=""&&num.ObjectID == data[d].ObjectID) });
-              if(!evens||data[d].objectID==""){
+              if(!evens||data[d].objectID==""||!data[d].objectID){
                 modifyCollection['indexDBNotExist'].push(data[d]);
               }
               for(var collection in collections){

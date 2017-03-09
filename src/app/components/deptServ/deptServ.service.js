@@ -46,7 +46,7 @@
           // compare the file between indexDB & mongoDB , then sync it
           syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)
           .then(function(data){
-
+            
               mongoServ.addDept(data);
               mongoServ.editDept(data['indexDBtimeNotMatch']);
 
@@ -107,7 +107,6 @@
 
       // Let new department be active
       objDept.status = "Active";
-      objDept.objectID = "";
       objDept.indexID = syncData.generateIndexID();
 
       var request = 
@@ -116,10 +115,10 @@
 
       request.onerror = function(event) {
         // Add department trasaction - Error
-        if (event.isTrusted)
-          alert("Department has already exist.");
-        else
-          alert("Transaction error: " + event.target.errorCode);
+        // if (event.isTrusted)
+        //   alert("Department has already exist.");
+        // else
+        //   alert("Transaction error: " + event.target.errorCode);
 
         deferred.reject();
       }; 

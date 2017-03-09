@@ -29,34 +29,63 @@
     /////////
   	function getAllDepartments(lastSync){
       var deferred = $q.defer();
-      // var result =[ 
-      //     {
-      //       "_id" : 'ObjectId("58be48f79dc3a9cf9e086a1b")',
-      //       "name" : "Operation Department",
-      //       "status" : "True",
-      //       "lastModified" : "2017-03-06T16:00:00.000Z"
-      //     },
-      //     {
-      //       "_id" : 'ObjectId("58be48f79dc3a9cf9e086c1b")',
-      //       "name" : "Logistic Department",
-      //       "status" : "True",
-      //       "lastModified" : "2017-03-06T19:00:00.000Z"
-      //     }]
+      var result = [];
 
-      var result = [
-        {
-          department:"Logistic Department",
-          objectID:"",
-          lastModified:"1488326400",
-          // indexID:,
-        },
-        {
-          department:"Oversea Department",
-          objectID:"",
-          lastModified:"1488326400",
-          // indexID:,
-        }]
+      // test data 1 -- test for the first data insert
+      // *** need to have objectID , or it will create everytime ***
+      // var result = [
+      //   {
+      //     department:"Logistic Department",
+      //     objectID:"a12345",
+      //     lastModified:"1488326400",
+      //     // indexID:,
+      //   },
+      //   {
+      //     department:"Oversea Department",
+      //     objectID:"b12345",
+      //     lastModified:"1488326400",
+      //     // indexID:,
+      //   }]
 
+
+      // test data 2 -- test if the objectID is same 
+      // ***** need to copy indexID , or it will create new record *****
+      // var result = [
+      //   {
+      //     department:"Logistic Department",
+      //     objectID:"a12345",
+      //     lastModified:"1488326400",
+      //     indexID:"admin@snsoft.my-1489022445616",
+      //   },
+      //   {
+      //     department:"Global Department",
+      //     lastModified:"1488326400",
+      //     // indexID:,
+      //   }]
+
+
+      // test data 3 - test if the date is bigger than indexdb -> save to indexeddb
+      // ***** need to copy indexID , or it will create new record *****
+      // var result = [
+      //   {
+      //     department:"Logistic xXx Department",
+      //     objectID:"a12345",
+      //     lastModified:"1504224000",
+      //     indexID:"admin@snsoft.my-1489023164730",
+      //     // indexID:,
+      //   }]
+
+
+      // test data 4 - test if the data is smaller than indexdb -> save to mongodb
+      // ***** need to copy indexID , or it will create new record *****
+      // var result = [
+      //   {
+      //     department:"Logistic Department",
+      //     objectID:"a12345",
+      //     lastModified:"1483228800",
+      //     indexID:"admin@snsoft.my-1489023164730",
+      //     // indexID:,
+      //   }]
       // return result
 
       deferred.resolve(result);
@@ -76,13 +105,13 @@
       // return $http({method:"POST", url:"/addDept/",
       //   data:{'data':objDept}
       // })
-
     }
 
-    function editDept(objDept,callback){
+    function editDept(objDept){
       // return $http({method:"POST", url:"/editDept/",
       //   data:{'data':objDept}
       // })
+      console.log('editDept');
     }
     function rmDept(objDept){
       // return $http({method:"POST", url:"/editDept/",
@@ -118,6 +147,7 @@
       var deferred = $q.defer();
 
       // test data 1 -- test for the first data insert
+      // *** need to have objectID , or it will create everytime ***
       // var leaves =[
       //   {
       //     user:"mark@snsoft.my",
@@ -148,6 +178,7 @@
       //   ]
 
         // test data 2 -- test if the objectID is same
+      // ***** need to copy indexID , or it will create new record *****
       // var leaves = [
       //   {
       //     user:"mark@snsoft.my",
@@ -178,7 +209,8 @@
 
 
 
-        // test data 3 - test if the date is bigger than indexdb -> save to indexeddb
+      // test data 3 - test if the date is bigger than indexdb -> save to indexeddb
+      // ***** need to copy indexID , or it will create new record *****
       // var leaves = [
       //   {
       //     user:"mark@snsoft.my",
@@ -196,6 +228,7 @@
       //   }]
 
       // test data 4 - test if the data is smaller than indexdb -> save to mongodb
+      // ***** need to copy indexID , or it will create new record *****
       // var leaves = [
       //   {
       //     user:"mark@snsoft.my",
@@ -235,8 +268,9 @@
       var deferred = $q.defer();
 
       // test data 1 -- test for the first data insert
+      // *** need to have objectID , or it will create everytime ***
       // need tp see the indexeId first
-      // var users = [];
+      var users = [];
       // var users = [
       //   {
       //     contactno:"011288299292",
@@ -265,7 +299,9 @@
       //     lastModified:"1488326400"
       //   }
       // ]
+
       // test data 2 -- test if the objectID is same
+      // ***** need to copy indexID , or it will create new record *****
       // var users = [
       //   {
       //     contactno:"011288299292",
@@ -279,15 +315,29 @@
       //     username:"cindy@snsoft.my",
       //     userpwd:"9999",
       //     lastModified:"1488326400"
+      //   },
+      //   {
+      //     contactno:"0118288191199",
+      //     department:"IT Department",
+      //     fullname:"cecilia",
+      //     // objectID:"a123456",
+      //     position:" ",
+      //     status:"Active",
+      //     supervisor:" ",
+      //     usergroup:"1",
+      //     username:"cecilia@snsoft.my",
+      //     userpwd:"9999",
+      //     lastModified:"1488326400"
       //   }
       // ]
-      // test data 3 - test if the date is bigger than indexdb -> save to indexeddb
 
+      // test data 3 - test if the date is bigger than indexdb -> save to indexeddb
+      // ***** need to copy indexID , or it will create new record *****
       // var users = [
       //   {
       //     contactno:"011288299292",
       //     department:"IT Department",
-      //     fullname:"Cindy",
+      //     fullname:"Cindy Crow",
       //     objectID:"a123456",
       //     position:" ",
       //     status:"Active",
@@ -299,7 +349,9 @@
 
       //   }
       // ]
+
       // test data 4 - test if the data is smaller than indexdb -> save to mongodb
+      // ***** need to copy indexID , or it will create new record *****
       // var users = [
       //   {
       //     contactno:"011288299292",
@@ -345,6 +397,7 @@
       // })
     }
     function editUser(){
+      console.log('Mongo editUser');
       // return $http({method:"POST", url:"/editUser/",
       //   data{'data':username});
       // })
