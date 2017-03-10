@@ -93,23 +93,37 @@
       //   }]
       // return result
 
+      var result =  $http({method: "GET", url:"http://localhost:3003/departments/"});
+
+
+
       deferred.resolve(result);
 
       return deferred.promise;
 
-      // if(!lastSync){
-      //   // if sent 0 , which means return all result
-      //   return $http({method: "GET", url:"/departments/0/"});
-      // }else{
-      //   // if sent a number, only return the data after the last sync time
-      //   return $http({method: "GET", url:"/departments/"+lastSync+"/"})
-      // }
+
   	}
 
-    function addDept(objDept){
-      // return $http({method:"POST", url:"/addDept/",
-      //   data:{'data':objDept}
-      // })
+    function addDept(objDepts,callback){
+      var deferred = $q.defer();
+
+      if(Array.isArray(objDepts)){
+        for(var objDept in objDepts){
+          var result = $http({method:"POST", url:"http://localhost:3003/addDept/",
+            data:{'data':objDepts[objDept]}
+          }).then( function(results){ callback(results) })
+        }
+      }else{
+          var result = $http({method:"POST", url:"http://localhost:3003/addDept/",
+            data:{'data':objDepts}
+          }).then(function(results){ 
+
+           callback(results) 
+          })
+      }
+
+      // deferred.resolve(result);
+      return deferred.promise;
     }
 
     function editDept(objDept){

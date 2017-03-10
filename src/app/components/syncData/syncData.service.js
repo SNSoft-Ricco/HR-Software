@@ -49,6 +49,7 @@
 
         getFn().then(function(data){
             console.log(data);
+            var data = data.data;
             var modifyCollection = {
               'mongoDBNotExist':[],
               // need to create in both side -- ADD
@@ -113,7 +114,7 @@
       var deferred = $q.defer();
 
       if(sync){
-        fn(true)
+        fn(false)
         .then(fn)
         .then(function(data){
             deferred.resolve(data);
@@ -131,7 +132,7 @@
       var deferred = $q.defer();
 
       if(sync){
-        fn(param1,true)
+        fn(param1,false)
         .then(fn(param1))
         .then(function(data){
             deferred.resolve(data);

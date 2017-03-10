@@ -20,7 +20,7 @@
                     </tr>
                     </thead>
                     <tbody>
-										<tr ng-repeat="dept in deptMgmt.depts track by dept.department">
+										<tr ng-repeat="dept in deptMgmt.depts track by dept.indexID">
                         <td><div ng-if="!dept.objectID"><span class="glyphicon glyphicon-plus glyphicon-exclamation-sign"></span></div></td>
                         <td ng-click="deptMgmt.showDeptDetail(dept)"> {{ dept.department }}</td>
                         <td> 
