@@ -14,12 +14,14 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <thead>
                     <tr>
+                        <th></th>
                         <th>Department</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
 										<tr ng-repeat="dept in deptMgmt.depts track by dept.department">
+                        <td><div ng-if="!dept.objectID"><span class="glyphicon glyphicon-plus glyphicon-exclamation-sign"></span></div></td>
                         <td ng-click="deptMgmt.showDeptDetail(dept)"> {{ dept.department }}</td>
                         <td> 
                         	<i class="glyphicon glyphicon-pencil" ng-click="deptMgmt.editDept(dept)"></i>

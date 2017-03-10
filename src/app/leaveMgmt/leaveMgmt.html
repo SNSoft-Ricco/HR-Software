@@ -18,6 +18,7 @@
                         <table class="table table-bordered table-striped">
                           <thead class="thead-inverse">
                           <tr>
+                              <th></th>
                               <th>Leave Type</th>
                               <th>Leave From</th>
                               <th>Leave To</th>
@@ -26,6 +27,7 @@
                           </thead>
                           <tbody>
                           <tr dir-paginate="leave in leaveMgmt.leaves | itemsPerPage: 10">
+                              <td> <div ng-if="!leave.objectID"><span class="glyphicon glyphicon-plus glyphicon-exclamation-sign"></span></div></td>
                               <td> {{ leave.leaveType }} </td>
                               <td> {{ leave.fromDate | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.toDate | date: 'dd/MM/yyyy' }} </td>
