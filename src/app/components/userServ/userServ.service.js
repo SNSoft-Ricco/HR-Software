@@ -24,7 +24,6 @@
     function getAllUsers(sync) {
       var deferred = $q.defer();
       var users = [];
-      var userData = [];
 
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
@@ -176,7 +175,7 @@
       request.onerror = function (event) {
         // Add user trasaction - Error
         // alert("Transaction error: " + event.target.errorCode);
-        console.log(event.target.error.message);
+        $log.info(event.target.error.message);
         deferred.reject();
 
       };
@@ -205,7 +204,7 @@
 
       request.onsuccess = function() {
         mongoServ.editUser(objUser).then(function(data){
-          console.log(data)
+          $log.info(data);
           editUser(data);
         })
         deferred.resolve("Successfully removed user.");
