@@ -67,7 +67,7 @@
 		{
 			var deferred = $q.defer();
 			obj.indexID = syncData.generateIndexID();
-			obj.lastModified = new Date().getTime();
+			obj.lastModified = parseInt((new Date().getTime())/1000);
 			/*
 			var transaction = db.transaction([DB_OBJ_PERMISSION], "readwrite");
 
