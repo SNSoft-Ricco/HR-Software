@@ -65,7 +65,7 @@
 
             //Permission object store
             var store = evt.currentTarget.result
-            .createObjectStore("permission", { keyPath:"id" , autoIncrement:true});
+            .createObjectStore("permission", { keyPath:"indexID"});
             store.createIndex('code', 'code', { unique: false });
             store.createIndex('desc', 'desc', { unique: false });
             store.createIndex('PermissionList', 'PermissionList', { unique: false });
@@ -81,7 +81,7 @@
 
             // default admin user
             txn.objectStore('user')
-              .add({username: "admin@snsoft.my",userpwd: "123",usergroup: "1",supervisor: "",status: "Active",
+              .add({username: "admin@snsoft.my",userpwd: "123",usergroup: "admin@snsoft.my-1931993199319233",supervisor: "",status: "Active",
                 position: "",fullname: "admin",department: "",contactno: "123"});
 
             // default permission group

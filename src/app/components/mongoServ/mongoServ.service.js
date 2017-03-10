@@ -417,6 +417,7 @@
       var deferred = $q.defer();
       var permission = [];
       
+      console.log('add permission record to mongodb')
       deferred.resolve(permission);
       return deferred.promise;
       // return $http({method:"POST", url:"/addPermission/",
@@ -454,10 +455,9 @@
       // *** need to have objectID , or it will create everytime ***
       // var permission=[
       //   {
-      //     PermissionList:[1,2,5],
+      //     PermissionList:[1,2,3],
       //     code:"Operators 1",
       //     desc:"Operators 1",
-      //     id:2,
       //     objectID:"a12345",
       //     lastModified:"14883264307"
       //   },
@@ -465,7 +465,6 @@
       //     PermissionList:[1,5],
       //     code:"Shopkeeper",
       //     desc:"Shopkeeper",
-      //     id:3,
       //     objectID:"b12345",
       //     lastModified:"1488326400"
       //   }
@@ -478,7 +477,6 @@
       //     PermissionList:[1,2,5],
       //     code:"Operators 1",
       //     desc:"Operators 1",
-      //     id:2,
       //     objectID:"a12345",
       //     lastModified:"14883264307"
       //   },
@@ -486,7 +484,6 @@
       //     PermissionList:[1,5],
       //     code:"Cleaner",
       //     desc:"Cleaner",
-      //     id:4,
       //     objectID:"d12345",
       //     lastModified:"1488326400"
       //   }
@@ -497,11 +494,11 @@
       // var permission=[
       //   {
       //     PermissionList:[1,2,5],
-      //     code:"Operators 1",
-      //     desc:"Operators 1",
-      //     id:2,
+      //     code:"Operators 399",
+      //     desc:"Operators 399",
+      //     indexID:"admin@snsoft.my-1489113382465",
       //     objectID:"a12345",
-      //     lastModified:"1504224000"
+      //     lastModified:"1504224002"
       //   }
       // ]
       
@@ -512,8 +509,8 @@
       //     PermissionList:[1,2,5],
       //     code:"Operators 1",
       //     desc:"Operators 1",
-      //     id:2,
       //     objectID:"a12345",
+      //     indexID:"admin@snsoft.my-1489113382465",
       //     lastModified:"1483228800"
       //   }
       // ]

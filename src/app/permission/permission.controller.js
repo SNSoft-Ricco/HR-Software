@@ -10,10 +10,13 @@
 
     //PermissionController.$inject = ['PermissionService'];
 
-    function PermissionController($timeout,$cookies,PermissionService,AuthService) {
+    function PermissionController($timeout,$cookies,PermissionService,AuthService, syncData) {
         var vm = this;
 
         var dynTemplate = {
+
+
+
             "code": {
                 "fieldName": "Permission Code",
                 "type": "text",
@@ -31,7 +34,19 @@
                 "placeholder": "Enter a description",
                 "value": "test",
                 "forEdit": "false"
+            },
+            "indexID": {
+                "fieldName": "indexID",
+                "type": "text",
+                "inputType": "textbox",
+                "glyphClass": "glyphicon glyphicon-info-sign",
+                "placeholder": "Enter a description",
+                "value": "test",
+                "forEdit": "false"
             }
+
+
+
         }
         vm.dynFields = dynTemplate;
         vm.editMode = false;
@@ -61,7 +76,7 @@
             var i = 0;
             var fields = {};
             var obj = {};
-
+            var indexID = syncData.generateIndexID();
             // Get dynamic fields
             for (var field in vm.dynFields) {
                 fields[field] = vm.inputs[i];
@@ -70,7 +85,7 @@
 
             if(vm.id == null || vm.id=="") //insert
             {
-                obj = { code: fields.code, desc: fields.desc, PermissionList:vm.selection };
+                obj = { indexID:indexID, code: fields.code, desc: fields.desc, PermissionList:vm.selection };
 
                 var promise = PermissionService.addPermission(obj);
                 promise.then (function(){
@@ -79,7 +94,7 @@
             }
             else //update
             {
-                obj = { id: vm.id, code: fields.code, desc: fields.desc, PermissionList:vm.selection };
+                obj = { indexID:fields.indexID , code: fields.code, desc: fields.desc, PermissionList:vm.selection };
 
                 var promise = PermissionService.updatePermission(obj);
                 promise.then (function(){
@@ -132,7 +147,7 @@
             var promise = PermissionService.getPermission(id);
             promise.then (function(result){
 
-                vm.id = result.id;
+                vm.id = result.indexID;
                 vm.selection = [];
                 vm.selection = result.PermissionList;
                 //vm.code = result.code;
@@ -144,7 +159,8 @@
                         vm.inputs[0] = result[field];
                     else if(field == "desc")
                         vm.inputs[1] = result[field];
-                }
+                    else if(field == "indexID")
+                        vm.inputs[2] = result[field];                }
             });
         }
 

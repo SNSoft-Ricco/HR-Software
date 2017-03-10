@@ -67,6 +67,7 @@
 		{
 			var deferred = $q.defer();
 			obj.indexID = syncData.generateIndexID();
+			obj.lastModified = new Date().getTime();
 			/*
 			var transaction = db.transaction([DB_OBJ_PERMISSION], "readwrite");
 
@@ -152,7 +153,8 @@
 
 			/*var objectStore = db.transaction([DB_OBJ_PERMISSION], "readwrite").objectStore(DB_OBJ_PERMISSION);
 			var request = objectStore.get(id);*/
-			var pid = parseInt(id);
+			// var pid = parseInt(id);
+			var pid = id;
 			var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(pid);
 
 			request.onerror = function(event) {
@@ -181,7 +183,7 @@
 			  if (cursor) {
 
 			    var objPms = {};
-			    objPms = { id: cursor.key, code: cursor.value.code, desc: cursor.value.desc, array:cursor.value.PermissionList };
+			    objPms = { id: cursor.value.indexID, code: cursor.value.code, desc: cursor.value.desc, array:cursor.value.PermissionList, objectID:cursor.value.objectID, lastModified:cursor.value.lastModified };
 
 			    permissionArray.push(objPms);
 			    cursor.continue();
