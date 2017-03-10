@@ -6,7 +6,7 @@
     .controller('UserMgmtController', UserMgmtController);
 
   /** @ngInject */
-  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, AuthService) {
+  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, AuthService, syncData) {
     var vm = this;
 
     vm.users = [];
@@ -23,13 +23,18 @@
     $timeout(showUsers,500);
 
     function register() {
-      $state.go("userRgst");
+      $state.go("userRgst", {isRegister: true});
     }
 
     function showUsers() {
-      userServ.getAllUsers().then(function(users){
-        vm.users = users;
-      });
+
+      syncData.sync()
+      .then(function(result){
+        syncData.mergeData(result, userServ.getAllUsers)
+        .then(function(users){
+          vm.users = users;
+        })
+      })
     }
 
     function rmUser(objUser) {
@@ -41,8 +46,7 @@
     }
 
     function editUser(objUser) {
-      $cookies.put('editUser', angular.toJson(objUser));
-      $state.go("userRgst");
+      $state.go("userRgst", {myParam: objUser});
     }
 
     function deptDetail(deptName) {
@@ -50,7 +54,7 @@
         $state.go("deptDetail", {myParam: objDept});
       })
     }
-    
+
     function checkViewPermission(id)
     {
 

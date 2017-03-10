@@ -1,5 +1,5 @@
 <md-dialog aria-label="Apply Leave">
-  <form ng-cloak ng-if="leaveMgmt.checkViewPermission(3)">
+  <form ng-cloak ng-if="dialog.checkViewPermission(3)">
     <md-toolbar>
       <div class="md-toolbar-tools">
         <h2>Apply Leave</h2>
@@ -47,7 +47,7 @@
                         Half Day
                     </md-checkbox>
                 </div>
--->                
+-->
                 <!-- Leave Description -->
                 <md-input-container class="md-block">
                     <label>Description</label>

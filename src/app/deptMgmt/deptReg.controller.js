@@ -113,8 +113,9 @@
             var isAllowed = AuthService.checkPermission(username,id);
             return isAllowed;
         }
-        else
+        else{
             console.log("cookies not exist");
+        }
     }
 	}
 })();
