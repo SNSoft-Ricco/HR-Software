@@ -43,7 +43,19 @@
             syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)
             .then(function(data){
 
-                mongoServ.addDept(data['mongoDBNotExist']);
+                mongoServ.addDept(data['mongoDBNotExist'] , function(udata){
+                    console.log(udata);
+                    console.log('update departments with objectID');
+
+                    getDept(udata.config.data.data.indexID)
+                      .then(function(indexData){
+                        indexData.objectID = udata.data.insertedIds[0];
+                        console.log(indexData);
+                        // objDept.objectID = "x12345";
+                        editDept(indexData);
+                      });
+                });
+                
                 mongoServ.editDept(data['indexDBtimeNotMatch']);
 
                 var indexDBNotExist = data.indexDBNotExist;
@@ -51,7 +63,9 @@
 
                 for(var idb in indexDBNotExist){
                   // insert no exist record(from mongo) to indexDB
-                  addDept(indexDBNotExist[idb]);
+                  addDept(indexDBNotExist[idb], function(data){
+
+                  });
                 }
 
                 for(var tnm in mongoDBtimeNotMatch){
@@ -104,7 +118,9 @@
 
       // Let new department be active
       objDept.status = "Active";
-      objDept.indexID = syncData.generateIndexID();
+      if(!objDept.indexID){
+        objDept.indexID = syncData.generateIndexID();
+      }
 
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
@@ -121,14 +137,20 @@
       }; 
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
+        // deferred.resolve("Successfully added department.");
         deferred.resolve("Successfully added department.");
 
         //create a department record in mongodb
-        mongoServ.addDept(objDept,function(udata){
-          //return the objectid created by mongodb
-          objDept.objectID = "x12345";
-          editDept(objDept);
-        })
+        // mongoServ.addDept(objDept,function(udata){
+        //   //return the objectid created by mongodb
+        //   console.log(udata);
+        //   console.log('update departments with objectID');
+        //   objDept.objectID = udata.data.insertedIds[0];
+        //   console.log(objDept);
+
+        //   // objDept.objectID = "x12345";
+        //   editDept(objDept);
+        // })
       };
 
       return deferred.promise;
