@@ -53,7 +53,7 @@
           case (evt.oldVersion < 3):
             $log.info("IndexedDB Version 3");
 
-            usrObjStore = dataBase.createObjectStore("user", { keyPath : "username", autoIncrement : true });
+            usrObjStore = dataBase.createObjectStore("user", { keyPath : "username" });
             usrObjStore.createIndex('usergroup', 'usergroup', { unique: false });
 
             lastSyncStore = dataBase.createObjectStore("lastSync", {keyPath : "sync"});
@@ -82,7 +82,7 @@
             // default admin user
             txn.objectStore('user')
               .add({username: "admin@snsoft.my",userpwd: "123",usergroup: "admin@snsoft.my-1931993199319233",supervisor: "",status: "Active",
-                position: "",fullname: "admin",department: "",contactno: "123"});
+                position: "",fullname: "admin",department: "",contactno: "123", _id:" "});
 
             // default permission group
             var list = [1,2,3,4,5];

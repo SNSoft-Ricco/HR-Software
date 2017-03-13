@@ -50,24 +50,18 @@
                 // mongoServ.addUser(data['mongoDBNotExist']);
                 mongoServ.addUser(data['mongoDBNotExist'] , function(udata){
                     // assign objectID to departments
-
-                    var objectIDs = udata.data.insertedIds;
-
-                    objectIDs.forEach(function(objectID){
-                      // only use for recreate a field name "objectID"
-                      mongoServ.editUserObjectID(objectID).then(function(eData){
-                        
+                    if(udata.length==0){ return }
+                    var _id = udata.data._id;
                         udata.config.data.data.forEach(function(userRecord){
 
                           getUser(userRecord.username)
                             .then(function(indexData){
-                              indexData._id = eData.config.data.data;
+                              indexData._id = _id;
                               editUser(indexData);
                             });
-
                         });
-                      })
-                    })
+                      
+                    // })
                 });
 
 
@@ -165,7 +159,7 @@
       var deferred = $q.defer();
 
       // Let new user have active status
-      objUser.status = "Active";
+      // objUser.status = "Active";
       objUser.indexID = syncData.generateIndexID();
 
       var request = 

@@ -174,7 +174,7 @@
       var deferred = $q.defer();
 
       var result = $http({method:"POST", url:"http://localhost:3003/addLeave/",
-        data:{'data':objectID}
+        data:{'data':objLeave}
       }).then(function(results){ 
 
         callback(results)
@@ -464,14 +464,22 @@
 
 
       var deferred = $q.defer();
-      // $http({method:"POST", url:"http://localhost:3003/addUser/",
-      var result = $http({method:"POST", url:"http://localhost:3003/user/",
-        data:{'data':objUser}
-      }).then(function(results){ 
 
-       callback(results) 
-      })
-      console.log('addUser');
+      if(objUser.length!=0){
+
+          // $http({method:"POST", url:"http://localhost:3003/addUser/",
+          var result = $http({method:"POST", url:"http://localhost:3003/user/",
+            data:{'data':objUser}
+          }).then(function(results){ 
+
+           callback(results) 
+          })
+          console.log('addUser');
+
+      }else{
+          callback([])
+      }
+
       return deferred.promise;
 
       // return $http({method:"POST", url:"/addUser/",
