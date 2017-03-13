@@ -44,16 +44,19 @@
             .then(function(data){
 
                 mongoServ.addDept(data['mongoDBNotExist'] , function(udata){
-                    console.log(udata);
-                    console.log('update departments with objectID');
+                    // assign objectID to departments
 
-                    getDept(udata.config.data.data.indexID)
-                      .then(function(indexData){
-                        indexData.objectID = udata.data.insertedIds[0];
-                        console.log(indexData);
-                        // objDept.objectID = "x12345";
-                        editDept(indexData);
-                      });
+                    var objectID = udata.data.insertedIds[0];
+                      // only use for recreate a field name "objectID"
+                    mongoServ.editDeptObjectID(objectID).then(function(eData){
+                      
+                      getDept(udata.config.data.data.indexID)
+                        .then(function(indexData){
+                          indexData.objectID = eData.config.data.data;
+                          editDept(indexData);
+                        });
+
+                    })
                 });
                 
                 mongoServ.editDept(data['indexDBtimeNotMatch']);
@@ -139,18 +142,6 @@
       request.onsuccess = function(event) {
         // deferred.resolve("Successfully added department.");
         deferred.resolve("Successfully added department.");
-
-        //create a department record in mongodb
-        // mongoServ.addDept(objDept,function(udata){
-        //   //return the objectid created by mongodb
-        //   console.log(udata);
-        //   console.log('update departments with objectID');
-        //   objDept.objectID = udata.data.insertedIds[0];
-        //   console.log(objDept);
-
-        //   // objDept.objectID = "x12345";
-        //   editDept(objDept);
-        // })
       };
 
       return deferred.promise;
@@ -200,7 +191,7 @@
        request.onsuccess = function() {
          deferred.resolve("Successfully edited department information.")
          //after change the indexDB department name , update to mongodb too.
-         mongoServ.editDept(objDept,function(){});
+         // mongoServ.editDept(objDept,function(){});
        };
 
        return deferred.promise;

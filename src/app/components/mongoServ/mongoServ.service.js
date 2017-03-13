@@ -12,6 +12,8 @@
     this.addDept = addDept;
     this.editDept = editDept;
     this.rmDept = rmDept;
+    this.editDeptObjectID = editDeptObjectID;
+
     //leave
     this.getLeaveByUsername = getLeaveByUsername;
     this.getPendingApprovalLeaveByUsername = getPendingApprovalLeaveByUsername;
@@ -23,6 +25,7 @@
     this.addUser = addUser;
     this.rmUser = rmUser;
     this.editUser = editUser;
+    this.editUserObjectID = editUserObjectID;
     //permission
     this.addPermission = addPermission;
     this.removePermission = removePermission;
@@ -127,11 +130,33 @@
     }
 
     function editDept(objDept){
-      // return $http({method:"POST", url:"/editDept/",
-      //   data:{'data':objDept}
-      // })
+      return $http({method:"POST", url:"/editDept/",
+        data:{'data':objDept}
+      })
       console.log('editDept');
     }
+
+
+    function editDeptObjectID(objectID){
+      var deferred = $q.defer();
+
+      var result = $http({method:"POST", url:"http://localhost:3003/editDeptObjectID/",
+        data:{'data':objectID}
+      }).then(function(results){ 
+
+       deferred.resolve(results)
+      })
+
+      // return $http({method:"POST", url:"/editDeptObjectID/",
+      //   data:{'data':objectID}
+      // })
+      console.log('editDept');
+      return deferred.promise;
+
+    }
+
+
+
     function rmDept(objDept){
       // return $http({method:"POST", url:"/editDept/",
       //   data:{'data':objDept}
@@ -146,8 +171,20 @@
       // return $http({method:"POST", url:"/addLeave/",
       //   data{'data':objDept});
       // })
-      console.log('add 1 leave');
-      console.log(objLeave);
+      var deferred = $q.defer();
+
+      var result = $http({method:"POST", url:"http://localhost:3003/addLeave/",
+        data:{'data':objectID}
+      }).then(function(results){ 
+
+        callback(results)
+      })
+
+      // return $http({method:"POST", url:"/editDeptObjectID/",
+      //   data:{'data':objectID}
+      // })
+      console.log('addLeave');
+      return deferred.promise;
 
     }
 
@@ -160,6 +197,23 @@
         console.log(objLeaves);
         console.log('Edit Leave');
       }
+    }
+
+    function editLeaveObjectID(objLeave){
+      var deferred = $q.defer();
+
+      var result = $http({method:"POST", url:"http://localhost:3003/editLeaveObjectID/",
+        data:{'data':objectID}
+      }).then(function(results){ 
+
+       deferred.resolve(results)
+      })
+
+      // return $http({method:"POST", url:"/editDeptObjectID/",
+      //   data:{'data':objectID}
+      // })
+      console.log('editDept');
+      return deferred.promise;
     }
 
     function getLeaveByUsername(username){
@@ -291,32 +345,32 @@
       // need tp see the indexeId first
       var users = [];
       // var users = [
-      //   {
-      //     contactno:"011288299292",
-      //     department:"IT Department",
-      //     fullname:"Cindy",
-      //     objectID:"a123456",
-      //     position:" ",
-      //     status:"Active",
-      //     supervisor:" ",
-      //     usergroup:"1",
-      //     username:"cindy@snsoft.my",
-      //     userpwd:"9999",
-      //     lastModified:"1488326400"
-      //   },
-      //   {
-      //     contactno:"013288299292",
-      //     department:"IT Department",
-      //     fullname:"Evonne",
-      //     objectID:"x123456",
-      //     position:" ",
-      //     status:"Active",
-      //     supervisor:" ",
-      //     usergroup:"1",
-      //     username:"evonne@snsoft.my",
-      //     userpwd:"9999",
-      //     lastModified:"1488326400"
-      //   }
+        // {
+        //   contactno:"011288299292",
+        //   department:"IT Department",
+        //   fullname:"Cindy",
+        //   objectID:"a123456",
+        //   position:" ",
+        //   status:"Active",
+        //   supervisor:" ",
+        //   usergroup:"1",
+        //   username:"cindy@snsoft.my",
+        //   userpwd:"9999",
+        //   lastModified:"1488326400"
+        // },
+        // {
+        //   contactno:"013288299292",
+        //   department:"IT Department",
+        //   fullname:"Evonne",
+        //   objectID:"x123456",
+        //   position:" ",
+        //   status:"Active",
+        //   supervisor:" ",
+        //   usergroup:"1",
+        //   username:"evonne@snsoft.my",
+        //   userpwd:"9999",
+        //   lastModified:"1488326400"
+        // }
       // ]
 
       // test data 2 -- test if the objectID is same
@@ -387,6 +441,7 @@
 
       //   }
       // ]
+      var users =  $http({method: "GET", url:"http://localhost:3003/users/"});
 
 
       deferred.resolve(users);
@@ -405,7 +460,20 @@
       //   data{'data':username});
       // })
     }
-    function addUser(){
+    function addUser(objUser, callback){
+
+
+      var deferred = $q.defer();
+      // $http({method:"POST", url:"http://localhost:3003/addUser/",
+      var result = $http({method:"POST", url:"http://localhost:3003/user/",
+        data:{'data':objUser}
+      }).then(function(results){ 
+
+       callback(results) 
+      })
+      console.log('addUser');
+      return deferred.promise;
+
       // return $http({method:"POST", url:"/addUser/",
       //   data{'data':username});
       // })
@@ -422,6 +490,21 @@
       // })
     }
 
+    function editUserObjectID(objectID){
+
+      var deferred = $q.defer();
+
+      var result = $http({method:"POST", url:"http://localhost:3003/editUserObjectID/",
+        data:{'data':objectID}
+      }).then(function(results){ 
+
+       deferred.resolve(results)
+      })
+
+      console.log('editUser');
+      return deferred.promise;
+
+    }
 
     //////////////
     // PERMISSION

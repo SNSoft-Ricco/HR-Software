@@ -64,18 +64,18 @@
             for(var d in data){
               // data from indexDB
               var evens = _.find(collections, function(num){ 
-                return (num.objectID&&num.objectID!=""&&num.objectID == data[d].objectID)
+                return (num._id&&num._id!=""&&num._id == data[d]._id)
                  });
-              if(!evens||data[d].objectID==""||!data[d].objectID){
+              if(!evens||data[d]._id==""||!data[d]._id){
                 modifyCollection['indexDBNotExist'].push(data[d]);
               }
               for(var collection in collections){
                 var indexDB = collections[collection];
                 /** this is for time not matching [MONGODB] -> [INDEXDB] **/
-                // if record objectID exist
-                if(data[d].objectID && data[d].objectID !=""){
-                  // if objectID same
-                  if(data[d].objectID==indexDB.objectID){
+                // if record _id exist
+                if(data[d]._id && data[d]._id !=""){
+                  // if _id same
+                  if(data[d]._id==indexDB._id){
                     // but modified
                     if(data[d].lastModified > indexDB.lastModified){
                       // if mongodb date bigger than indexdb , update this record to indexdb
@@ -88,14 +88,19 @@
                     }
                   }
                 }else{
-                  console.log('the objectID do exist');
+                  console.log('the _id do exist');
                 }
 
 
                 /*  */
-                if(!indexDB.objectID||indexDB.objectID==""){
-                  modifyCollection['mongoDBNotExist'].push(indexDB);
-                }
+
+              }
+            }
+
+            /* find record are not exists in mongodb*/
+            for(var collection in collections){
+              if(!collections[collection]._id||collections[collection]._id==""){
+                modifyCollection['mongoDBNotExist'].push(collections[collection]);
               }
             }
             deferred.resolve(modifyCollection);

@@ -38,13 +38,36 @@
         var value = event.target.result;
         console.log('leaveServ run 1 times');
         if (value) {
-
+          var sync = true;
           if(sync){
             // compare the file between indexDB & mongoDB , then sync it
             syncData.compare(value, mongoServ.addLeave, mongoServ.getLeaveByUsername)
             .then(function(data){
 
-                mongoServ.addLeave(data['mongoDBNotExist']);
+                // mongoServ.addLeave(data['mongoDBNotExist']);
+
+
+                mongoServ.addLeave(data['mongoDBNotExist'] , function(udata){
+                    // assign objectID to departments
+
+                    var objectID = udata.data.insertedIds[0];
+                      // only use for recreate a field name "objectID"
+                    mongoServ.editLeaveObjectID(objectID).then(function(eData){
+                      
+                      // getLeave(udata.config.data.data.indexID)
+                      //   .then(function(indexData){
+                      //     indexData.objectID = eData.config.data.data;
+                      //     editLeave(indexData);
+                      //   });
+
+                    })
+                });
+
+
+
+
+
+
                 mongoServ.editLeave(data['indexDBtimeNotMatch']);
 
                 var indexDBNotExist = data.indexDBNotExist;

@@ -47,7 +47,30 @@
               syncData.compare(users, mongoServ.addUser, mongoServ.getAllUsers)
               .then(function(data){
 
-                  mongoServ.addUser(data['mongoDBNotExist']);
+                // mongoServ.addUser(data['mongoDBNotExist']);
+                mongoServ.addUser(data['mongoDBNotExist'] , function(udata){
+                    // assign objectID to departments
+
+                    var objectIDs = udata.data.insertedIds;
+
+                    objectIDs.forEach(function(objectID){
+                      // only use for recreate a field name "objectID"
+                      mongoServ.editUserObjectID(objectID).then(function(eData){
+                        
+                        udata.config.data.data.forEach(function(userRecord){
+
+                          getUser(userRecord.username)
+                            .then(function(indexData){
+                              indexData._id = eData.config.data.data;
+                              editUser(indexData);
+                            });
+
+                        });
+                      })
+                    })
+                });
+
+
                   mongoServ.editUser(data['indexDBtimeNotMatch']);
 
                   var indexDBNotExist = data.indexDBNotExist;
@@ -77,7 +100,7 @@
     // Resolve  - Users object
     function getUser(username) {
       var deferred = $q.defer();
-
+      console.log(username);
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
           .get(username);
