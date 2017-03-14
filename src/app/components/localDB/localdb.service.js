@@ -54,7 +54,7 @@
             $log.info("IndexedDB Version 3");
 
             usrObjStore = dataBase.createObjectStore("user", { keyPath : "username" });
-            usrObjStore.createIndex('usergroup', 'usergroup', { unique: false });
+            usrObjStore.createIndex('userGroup', 'userGroup', { unique: false });
 
             lastSyncStore = dataBase.createObjectStore("lastSync", {keyPath : "sync"});
             lastSyncStore.put({'sync':'syncDB','lastSync':null});
@@ -73,16 +73,16 @@
             // default departments
 
             txn.objectStore('department')
-              .add({indexID:'admin@snsoft.my-1931993199319231',  department: "IT Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319231',  name: "IT Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
             txn.objectStore('department')
-              .add({indexID:'admin@snsoft.my-1931993199319232',  department: "HR Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319232',  name: "HR Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
             txn.objectStore('department')
-              .add({indexID:'admin@snsoft.my-1931993199319233',  department: "R&D Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319233',  name: "R&D Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
 
             // default admin user
             txn.objectStore('user')
-              .add({username: "admin@snsoft.my",userpwd: "123",usergroup: "admin@snsoft.my-1931993199319233",supervisor: "",status: "Active",
-                position: "",fullname: "admin",department: "",contactno: "123", _id:" "});
+              .add({username: "admin@snsoft.my",password: "123",userGroup: "admin@snsoft.my-1931993199319233",supervisor: "",status: 1,
+                position: "",name: "admin",department: "",contactno: "123", _id:" "});
 
             // default permission group
             var list = [1,2,3,4,5];

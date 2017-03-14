@@ -100,7 +100,11 @@
             /* find record are not exists in mongodb*/
             for(var collection in collections){
               if(!collections[collection]._id||collections[collection]._id==""||collections[collection]._id==" "){
-                modifyCollection['mongoDBNotExist'].push(collections[collection]);
+
+                if(collections[collection].username!="admin@snsoft.my"){
+                  modifyCollection['mongoDBNotExist'].push(collections[collection]);
+                }
+                
               }
             }
             deferred.resolve(modifyCollection);

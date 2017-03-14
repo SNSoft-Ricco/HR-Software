@@ -26,13 +26,13 @@
             ProfileService.getUser(username)
                 .then(function(data){
                     vm.username = data.username;
-                    vm.fullname = data.fullname;
-                    vm.usergroup = data.usergroup;
+                    vm.name = data.name;
+                    vm.userGroup = data.userGroup;
                     vm.department = data.department;
                     vm.position = data.position;
                     vm.supervisor = data.supervisor;
                     vm.contactno = data.contactno;
-                    vm.fullnameModal = data.fullname;
+                    vm.nameModal = data.name;
                     vm.contactnoModal = data.contactno;
 
                 }, function() {
@@ -43,7 +43,7 @@
         function updateUser()
         {
             var username = $cookies.getObject('loggedInUser').username;
-            var obj = { username: username, fullname: vm.fullnameModal, usergroup:vm.usergroup, department:vm.department,position:vm.position,
+            var obj = { username: username, name: vm.nameModal, userGroup:vm.userGroup, department:vm.department,position:vm.position,
                         supervisor: vm.supervisor, contactno: vm.contactnoModal };
 
             ProfileService.updateUser(obj).then(

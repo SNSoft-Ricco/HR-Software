@@ -45,20 +45,17 @@
 
                 mongoServ.addDept(data['mongoDBNotExist'] , function(udata){
                     // assign objectID to departments
-
-                    var objectID = udata.data.insertedIds[0];
-                      // only use for recreate a field name "objectID"
-                    mongoServ.editDeptObjectID(objectID).then(function(eData){
-                      
-                      getDept(udata.config.data.data.indexID)
-                        .then(function(indexData){
-                          indexData.objectID = eData.config.data.data;
-                          editDept(indexData);
+                    if(udata.length==0||!udata.data){ return }
+                        udata.data.forEach(function(deptRecord){
+                          var _id = deptRecord._id;
+                          getDept(deptRecord.indexID)
+                            .then(function(indexData){
+                              indexData._id = _id;
+                              editDept(indexData);
+                            });
                         });
-
-                    })
                 });
-                
+
                 mongoServ.editDept(data['indexDBtimeNotMatch']);
 
                 var indexDBNotExist = data.indexDBNotExist;
@@ -120,7 +117,7 @@
       var deferred = $q.defer();
 
       // Let new department be active
-      objDept.status = "Active";
+      objDept.status = 1;
       if(!objDept.indexID){
         objDept.indexID = syncData.generateIndexID();
       }
@@ -152,10 +149,13 @@
     // Promise Resolve - Success Message
     function rmDept (objDept) {
       var deferred = $q.defer();
-
+      objDept.status = 0;
+      // var request = 
+      //   localdb.getObjectStore(DB_STORENAME, 'readwrite')
+      //   .delete(objDept.department);
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
-        .delete(objDept.department);
+        .put(objDept);
 
       request.onerror = function(event) {
         // Remove department trasaction - Error
@@ -166,10 +166,10 @@
       // Remove department - Success
       request.onsuccess = function() {
         deferred.resolve("Successfully removed department.")
-        // mongoServ.rmDept(objDept, function(){
-        //   objDept.status = "False";
-        //   editDept(objDept);
-        // });
+
+        mongoServ.editDept(objDept, function(){
+          editDept(objDept);
+        });
       };
 
       return deferred.promise;

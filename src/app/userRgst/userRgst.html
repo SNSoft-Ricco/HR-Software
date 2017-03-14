@@ -23,7 +23,7 @@
 			  			type="{{value.type}}">
 			  		<select
 			  			ng-model="userRgst.inputs[$index]"
-			  			ng-show="value.inputType == 'selectbox' && key == 'usergroup'"
+			  			ng-show="value.inputType == 'selectbox' && key == 'userGroup'"
 			  			class="form-control selectpicker">
 				      <option value=" ">Please select the permission group</option>
 							<option ng-repeat="(key, value) in userRgst.pms track by $index" value="{{value.id}}">{{value.code}}</option>
@@ -51,7 +51,7 @@
 			  			ng-show="value.inputType == 'selectbox' && key == 'supervisor'"
 			  			class="form-control selectpicker">
 				      <option value=" ">None</option>
-				      <option ng-repeat="(key, value) in userRgst.users track by $index" ng-value="value.username">{{value.fullname}}</option>
+				      <option ng-repeat="(key, value) in userRgst.users track by $index" ng-value="value.username">{{value.name}}</option>
 					  </select>
             <select
               ng-model="userRgst.inputs[$index]"

@@ -51,9 +51,8 @@
                 mongoServ.addUser(data['mongoDBNotExist'] , function(udata){
                     // assign objectID to departments
                     if(udata.length==0){ return }
-                    var _id = udata.data._id;
-                        udata.config.data.data.forEach(function(userRecord){
-
+                        udata.data.forEach(function(userRecord){
+                          var _id = userRecord._id;
                           getUser(userRecord.username)
                             .then(function(indexData){
                               indexData._id = _id;
@@ -72,7 +71,10 @@
 
                   for(var idb in indexDBNotExist){
                     // insert no exist record(from mongo) to indexDB
-                    addUser(indexDBNotExist[idb]);
+                    if(indexDBNotExist[idb].username!="admin@snsoft.my"){
+                      console.log('not equal '+indexDBNotExist.username)
+                      addUser(indexDBNotExist[idb]);
+                    }
                   }
 
                   for(var tnm in mongoDBtimeNotMatch){
@@ -159,7 +161,7 @@
       var deferred = $q.defer();
 
       // Let new user have active status
-      // objUser.status = "Active";
+      objUser.status = 1;
       objUser.indexID = syncData.generateIndexID();
 
       var request = 
@@ -200,9 +202,9 @@
       };
 
       request.onsuccess = function() {
-        // mongoServ.rmUser(objUser).success(function(data){
-        // console.log(data);
-        // })
+        mongoServ.rmUser(objUser).then(function(data){
+          console.log(data)
+        })
         deferred.resolve("Successfully removed user.");
 
       };

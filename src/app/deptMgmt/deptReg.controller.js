@@ -10,7 +10,7 @@
 		var vm = this;
 
 		var dynTemplate = {
-				"department": {
+				"name": {
 					"fieldName": "Department",
 					"type": "text",
 					"inputType": "textbox",

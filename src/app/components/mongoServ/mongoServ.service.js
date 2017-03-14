@@ -96,7 +96,7 @@
       //   }]
       // return result
 
-      var result =  $http({method: "GET", url:"http://localhost:3003/departments/"});
+      var result =  $http({method: "GET", url:"http://localhost:3003/department/"});
 
 
 
@@ -110,30 +110,32 @@
     function addDept(objDepts,callback){
       var deferred = $q.defer();
 
-      if(Array.isArray(objDepts)){
-        for(var objDept in objDepts){
-          var result = $http({method:"POST", url:"http://localhost:3003/addDept/",
-            data:{'data':objDepts[objDept]}
-          }).then( function(results){ callback(results) })
-        }
-      }else{
-          var result = $http({method:"POST", url:"http://localhost:3003/addDept/",
+          var result = $http({method:"POST", url:"http://localhost:3003/department/",
             data:{'data':objDepts}
           }).then(function(results){ 
 
            callback(results) 
           })
-      }
 
-      // deferred.resolve(result);
       return deferred.promise;
     }
 
-    function editDept(objDept){
-      return $http({method:"POST", url:"/editDept/",
-        data:{'data':objDept}
-      })
-      console.log('editDept');
+    function editDept(objDept, callback){
+      var deferred = $q.defer();
+
+      var id = objDept._id
+
+      if(!id){
+        deferred.reject();
+      }else{
+        var result =  $http({method:"POST", url:"http://localhost:3003/department/"+id+"/",
+          data:{'data':objDept}
+        }).then(function(results){ 
+
+          callback(results)
+        })
+      }
+      return deferred.promise;
     }
 
 
@@ -348,27 +350,27 @@
         // {
         //   contactno:"011288299292",
         //   department:"IT Department",
-        //   fullname:"Cindy",
+        //   name:"Cindy",
         //   objectID:"a123456",
         //   position:" ",
         //   status:"Active",
         //   supervisor:" ",
-        //   usergroup:"1",
+        //   userGroup:"1",
         //   username:"cindy@snsoft.my",
-        //   userpwd:"9999",
+        //   password:"9999",
         //   lastModified:"1488326400"
         // },
         // {
         //   contactno:"013288299292",
         //   department:"IT Department",
-        //   fullname:"Evonne",
+        //   name:"Evonne",
         //   objectID:"x123456",
         //   position:" ",
         //   status:"Active",
         //   supervisor:" ",
-        //   usergroup:"1",
+        //   userGroup:"1",
         //   username:"evonne@snsoft.my",
-        //   userpwd:"9999",
+        //   password:"9999",
         //   lastModified:"1488326400"
         // }
       // ]
@@ -379,27 +381,27 @@
       //   {
       //     contactno:"011288299292",
       //     department:"IT Department",
-      //     fullname:"Cindy",
+      //     name:"Cindy",
       //     objectID:"a123456",
       //     position:" ",
       //     status:"Active",
       //     supervisor:" ",
-      //     usergroup:"1",
+      //     userGroup:"1",
       //     username:"cindy@snsoft.my",
-      //     userpwd:"9999",
+      //     password:"9999",
       //     lastModified:"1488326400"
       //   },
       //   {
       //     contactno:"0118288191199",
       //     department:"IT Department",
-      //     fullname:"cecilia",
+      //     name:"cecilia",
       //     // objectID:"a123456",
       //     position:" ",
       //     status:"Active",
       //     supervisor:" ",
-      //     usergroup:"1",
+      //     userGroup:"1",
       //     username:"cecilia@snsoft.my",
-      //     userpwd:"9999",
+      //     password:"9999",
       //     lastModified:"1488326400"
       //   }
       // ]
@@ -410,14 +412,14 @@
       //   {
       //     contactno:"011288299292",
       //     department:"IT Department",
-      //     fullname:"Cindy Crow",
+      //     name:"Cindy Crow",
       //     objectID:"a123456",
       //     position:" ",
       //     status:"Active",
       //     supervisor:" ",
-      //     usergroup:"1",
+      //     userGroup:"1",
       //     username:"cindy@snsoft.my",
-      //     userpwd:"9999",
+      //     password:"9999",
       //     lastModified:"1504224000"
 
       //   }
@@ -429,19 +431,19 @@
       //   {
       //     contactno:"011288299292",
       //     department:"IT Department",
-      //     fullname:"Cindy",
+      //     name:"Cindy",
       //     objectID:"a123456",
       //     position:" ",
       //     status:"Active",
       //     supervisor:" ",
-      //     usergroup:"1",
+      //     userGroup:"1",
       //     username:"cindy@snsoft.my",
-      //     userpwd:"9999",
+      //     password:"9999",
       //     lastModified:"1483228800",
 
       //   }
       // ]
-      var users =  $http({method: "GET", url:"http://localhost:3003/users/"});
+      var users =  $http({method: "GET", url:"http://localhost:3003/user/"});
 
 
       deferred.resolve(users);
@@ -486,13 +488,39 @@
       //   data{'data':username});
       // })
     }
-    function rmUser(){
+    function rmUser(objUser){
+
+      var deferred = $q.defer();
+
+      var result = $http({method:"POST", url:"http://localhost:3003/editUser/",
+        data:{'data':objUser}
+      }).then(function(results){ 
+
+       deferred.resolve(results)
+      })
+
+      console.log('rmUser');
+      return deferred.promise;
+
+
       // return $http({method:"POST", url:"/rmUser/",
       //   data{'data':username});
       // })
     }
     function editUser(){
-      console.log('Mongo editUser');
+      // console.log('Mongo editUser');
+      // var deferred = $q.defer();
+
+      // var result = $http({method:"POST", url:"http://localhost:3003/editUserObjectID/",
+      //   data:{'data':objectID}
+      // }).then(function(results){ 
+
+      //  deferred.resolve(results)
+      // })
+
+      // console.log('editUser');
+      // return deferred.promise;
+
       // return $http({method:"POST", url:"/editUser/",
       //   data{'data':username});
       // })

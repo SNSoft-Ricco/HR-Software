@@ -11,7 +11,7 @@
 	    {
 	      return ProfileService.getUser(username)
 	        .then(function(data){
-	            return PermissionService.getPermission(data.usergroup)
+	            return PermissionService.getPermission(data.userGroup)
 	               .then (function(result){
 	               	  if(result){
 		                  allowPermission = result.PermissionList;

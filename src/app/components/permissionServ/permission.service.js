@@ -221,7 +221,7 @@
 		{
 			var deferred = $q.defer();
 			var rslt = localdb.getObjectStore(DB_OBJ_USER, 'readonly');
-			var index = rslt.index('usergroup');
+			var index = rslt.index('userGroup');
 			var sID = id.toString();
 			userList = [];
 
@@ -236,7 +236,7 @@
 		        var cursor = event.target.result;
 		        if (cursor) {
 		        	var objPms = {};
-				    objPms = { name: cursor.value.fullname, dept: cursor.value.department,  position: cursor.value.position };
+				    objPms = { name: cursor.value.name, dept: cursor.value.department,  position: cursor.value.position };
 				    userList.push(objPms);
 
 		        	cursor.continue();
