@@ -64,7 +64,7 @@
                 });
 
 
-                  mongoServ.editUser(data['indexDBtimeNotMatch']);
+                  mongoServ.editUser(data['indexDBtimeNotMatch'], function(){});
 
                   var indexDBNotExist = data.indexDBNotExist;
                   var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
@@ -190,10 +190,10 @@
     // Resolve  - Success Message
     function rmUser(objUser) {
       var deferred = $q.defer();
-
+      objUser.status = 0;
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
-          .delete(objUser.username);
+          .put(objUser);
 
       request.onerror = function (event) {
         // Remove user trasaction - Error
@@ -202,8 +202,9 @@
       };
 
       request.onsuccess = function() {
-        mongoServ.rmUser(objUser).then(function(data){
+        mongoServ.editUser(objUser).then(function(data){
           console.log(data)
+          editUser(data);
         })
         deferred.resolve("Successfully removed user.");
 

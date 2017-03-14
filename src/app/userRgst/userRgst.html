@@ -35,7 +35,7 @@
 							ng-change="userRgst.loadNext(key, userRgst.inputs[$index])"
 			  			class="form-control selectpicker">
 				      <option value=" ">Please assign a department</option>
-				      <option ng-repeat="(key, value) in userRgst.depts track by $index">{{value.department}}</option>
+				      <option ng-repeat="(key, value) in userRgst.depts track by $index">{{value.name}}</option>
 					  </select>
 						<select
 			  			ng-model="userRgst.inputs[$index]"

@@ -507,7 +507,27 @@
       //   data{'data':username});
       // })
     }
-    function editUser(){
+    function editUser(objUser, callback){
+
+      var deferred = $q.defer();
+
+      var id = objUser._id
+
+      if(!id){
+        deferred.reject();
+      }else{
+        var result =  $http({method:"PATCH", url:"http://localhost:3003/user/"+id+"/",
+          data:{'data':objUser}
+        }).then(function(results){ 
+
+          deferred.resolve(results);
+        })
+      }
+      return deferred.promise;
+
+
+
+
       // console.log('Mongo editUser');
       // var deferred = $q.defer();
 
