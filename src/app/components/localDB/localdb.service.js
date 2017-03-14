@@ -96,7 +96,7 @@
           case (evt.oldVersion < 5):
             $log.info("IndexedDB Version 5");
             systemObjStore = dataBase.createObjectStore("system", { keyPath : "_id", autoIncrement : true });
-            txn.objectStore('system').add({leaveTypes: { 1: "Annual Leave", 2: "Medical Leave", 99: "Other Reason" }});
+            txn.objectStore('system').add({type: { 1: "Annual Leave", 2: "Medical Leave", 99: "Other Reason" }});
           case (evt.oldVersion < 6):
             $log.info("IndexedDB Version 6");
             storeCreateIndex(leaveObjStore, "user.username", { unique: true });
@@ -118,7 +118,7 @@
           case (evt.oldVersion < 10):
             $log.info("IndexedDB Version 10");
             leaveObjStore = txn.objectStore('leave');
-            storeCreateIndex(leaveObjStore, "approvalBy", { unique: false, multiEntry: true});
+            storeCreateIndex(leaveObjStore, "approveBy", { unique: false, multiEntry: true});
         }
 
         deferred.resolve();

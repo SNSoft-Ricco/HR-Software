@@ -13,6 +13,7 @@
     this.getPendingApprovalLeaveByUsername = getPendingApprovalLeaveByUsername;
     this.approveLeave = approveLeave;
     this.getPendingApprovalLeaveByDepartment = getPendingApprovalLeaveByDepartment;
+    this.getLeave = getLeave;
 
     //// Local Variable Declaration
     var DB_STORENAME = 'leave';
@@ -45,27 +46,18 @@
             .then(function(data){
 
                 // mongoServ.addLeave(data['mongoDBNotExist']);
-
-
                 mongoServ.addLeave(data['mongoDBNotExist'] , function(udata){
                     // assign objectID to departments
-
-                    var objectID = udata.data.insertedIds[0];
-                      // only use for recreate a field name "objectID"
-                    mongoServ.editLeaveObjectID(objectID).then(function(eData){
-                      
-                      // getLeave(udata.config.data.data.indexID)
-                      //   .then(function(indexData){
-                      //     indexData.objectID = eData.config.data.data;
-                      //     editLeave(indexData);
-                      //   });
-
-                    })
+                    if(udata.length==0||!udata.data){ return }
+                        udata.data.forEach(function(leaveRecord){
+                          var _id = leaveRecord._id;
+                          getLeave(leaveRecord.indexID)
+                            .then(function(indexData){
+                              indexData._id = _id;
+                              editLeave(indexData);
+                            });
+                        });
                 });
-
-
-
-
 
 
                 mongoServ.editLeave(data['indexDBtimeNotMatch']);
@@ -90,6 +82,30 @@
         }
       };
 
+      return deferred.promise;
+    }
+
+    function getLeave(indexID){
+      var deferred = $q.defer();
+
+      var request =
+        localdb.getObjectStore(DB_STORENAME, 'readonly')
+        .get(indexID);
+
+      request.onerror = function(event) {
+        // Add leave trasaction - Error
+        $log.debug("Transaction error: ", event);
+        deferred.reject();
+      };
+      request.onsuccess = function(event) {
+        var value = event.target.result;
+
+        if (value) {
+          deferred.resolve(value);
+        } else {
+          deferred.reject("Leave Not Found!");
+        }
+      };
       return deferred.promise;
     }
 
@@ -126,7 +142,7 @@
 
     function editLeave(objLeave){
       var deferred = $q.defer();
-      var indexID = objLeave.indexID;
+      // var indexID = objLeave.indexID;
 
       var request = localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .put(objLeave);
@@ -159,7 +175,7 @@
       var request = 
 
         localdb.getObjectStore(DB_STORENAME, 'readonly')
-        .index('approvalBy')
+        .index('approveBy')
         .getAll(singleKeyRange);
 
       request.onerror = function() {
@@ -216,7 +232,7 @@
 
       // var request =
       //   localdb.getObjectStore(DB_STORENAME, 'readonly')
-      //   .index('approvalBy')
+      //   .index('approveBy')
       //   .getAll(singleKeyRange);
 
       // request.onerror = function() {

@@ -28,9 +28,9 @@
                           <tbody>
                           <tr dir-paginate="leave in leaveMgmt.leaves | itemsPerPage: 10">
                               <td> <div ng-if="!leave._id"><span class="glyphicon glyphicon-plus glyphicon-exclamation-sign"></span></div></td>
-                              <td> {{ leave.leaveType }} </td>
-                              <td> {{ leave.fromDate | date: 'dd/MM/yyyy' }} </td>
-                              <td> {{ leave.toDate | date: 'dd/MM/yyyy' }} </td>
+                              <td> {{ leave.type }} </td>
+                              <td> {{ leave.from | date: 'dd/MM/yyyy' }} </td>
+                              <td> {{ leave.to | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.status }} </td>
                           </tr> 
                           </tbody>
@@ -57,7 +57,7 @@
                             <tr dir-paginate="leave in leaveMgmt.leavesPendingMyApprove | itemsPerPage: 10 track by leave._id">
                               <td> <input type="checkbox" ng-model="leaveMgmt.selectedApproval[leave._id]"> </td>
                               <td> {{ leave.user }} </td>
-                              <td> {{ leave.leaveType }} </td>
+                              <td> {{ leave.type }} </td>
                               <td> {{ leave.fromDate | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.toDate | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.status }} </td>

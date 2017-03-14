@@ -1,5 +1,6 @@
 (function() {
 'use strict';
+  const SITE_URL = "http://localhost:3003"
 
   angular
       .module('snsoftHr')
@@ -96,7 +97,7 @@
       //   }]
       // return result
 
-      var result =  $http({method: "GET", url:"http://localhost:3003/department/"});
+      var result =  $http({method: "GET", url:SITE_URL+"/department/"});
 
 
 
@@ -110,7 +111,7 @@
     function addDept(objDepts,callback){
       var deferred = $q.defer();
 
-          var result = $http({method:"POST", url:"http://localhost:3003/department/",
+          var result = $http({method:"POST", url:SITE_URL+"/department/",
             data:{'data':objDepts}
           }).then(function(results){ 
 
@@ -128,7 +129,7 @@
       if(!id){
         deferred.reject();
       }else{
-        var result =  $http({method:"POST", url:"http://localhost:3003/department/"+id+"/",
+        var result =  $http({method:"POST", url:SITE_URL+"/department/"+id+"/",
           data:{'data':objDept}
         }).then(function(results){ 
 
@@ -142,7 +143,7 @@
     function editDeptObjectID(objectID){
       var deferred = $q.defer();
 
-      var result = $http({method:"POST", url:"http://localhost:3003/editDeptObjectID/",
+      var result = $http({method:"POST", url:SITE_URL+"/editDeptObjectID/",
         data:{'data':objectID}
       }).then(function(results){ 
 
@@ -175,7 +176,7 @@
       // })
       var deferred = $q.defer();
 
-      var result = $http({method:"POST", url:"http://localhost:3003/addLeave/",
+      var result = $http({method:"POST", url:SITE_URL+"/leave/",
         data:{'data':objLeave}
       }).then(function(results){ 
 
@@ -204,7 +205,7 @@
     function editLeaveObjectID(objLeave){
       var deferred = $q.defer();
 
-      var result = $http({method:"POST", url:"http://localhost:3003/editLeaveObjectID/",
+      var result = $http({method:"POST", url:SITE_URL+"/editLeaveObjectID/",
         data:{'data':objectID}
       }).then(function(results){ 
 
@@ -220,19 +221,19 @@
 
     function getLeaveByUsername(username){
       var deferred = $q.defer();
-      var leaves = [];
+      // var leaves = [];
 
       // test data 1 -- test for the first data insert
       // *** need to have objectID , or it will create everytime ***
       // var leaves =[
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-03-01T16:00:00.000Z",
-      //     toDate:"2017-03-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-03-01T16:00:00.000Z",
+      //     to:"2017-03-06T16:00:00.000Z",
       //     description:"Apply for Sick Leave",
       //     leaveStatus:"Pending",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-03-07T16:00:00.000Z",
       //     lastModified:"1488326400",
       //     objectID:"x12345",
@@ -240,12 +241,12 @@
       //   },
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-03-04T16:00:00.000Z",
-      //     toDate:"2017-03-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-03-04T16:00:00.000Z",
+      //     to:"2017-03-06T16:00:00.000Z",
       //     description:"Apply for Medical Leave",
       //     leaveStatus:"Pending",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-03-07T18:00:00.000Z",
       //     lastModified:"1488326400",
       //     objectID:"a123456",
@@ -258,12 +259,12 @@
       // var leaves = [
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-03-04T16:00:00.000Z",
-      //     toDate:"2017-03-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-03-04T16:00:00.000Z",
+      //     to:"2017-03-06T16:00:00.000Z",
       //     description:"Apply for Medical Leave",
       //     leaveStatus:"Pending",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-03-07T18:00:00.000Z",
       //     lastModified:"1488326400",
       //     objectID:"a123456",
@@ -271,13 +272,13 @@
       //   },
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-06-01T16:00:00.000Z",
-      //     toDate:"2017-06-02T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-06-01T16:00:00.000Z",
+      //     to:"2017-06-02T16:00:00.000Z",
       //     description:"Apply for emo Leave",
       //     leaveStatus:"Pending",
       //     objectID:"",
-      //     approvalBy:"kenny@snsoft.my",
+      //     approveBy:"kenny@snsoft.my",
       //     createdTime:"2017-06-07T18:00:00.000Z",
       //     lastModified:"1488326400",
       //     status:1
@@ -290,12 +291,12 @@
       // var leaves = [
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-09-04T16:00:00.000Z",
-      //     toDate:"2017-09-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-09-04T16:00:00.000Z",
+      //     to:"2017-09-06T16:00:00.000Z",
       //     description:"Apply for Medical Leave",
       //     leaveStatus:"Success",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-09-07T18:00:00.000Z",
       //     lastModified:"1504224000",
       //     indexID:"mark@snsoft.my-1488957854149",
@@ -308,25 +309,26 @@
       // var leaves = [
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-01-04T16:00:00.000Z",
-      //     toDate:"2017-01-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-01-04T16:00:00.000Z",
+      //     to:"2017-01-06T16:00:00.000Z",
       //     description:"Apply for Medical Leave",
       //     leaveStatus:"Success",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-01-07T18:00:00.000Z",
       //     lastModified:"1483228800",
       //     indexID:"mark@snsoft.my-1488957854149",
       //     objectID:"a123456",
       //     status:1
       //   }]
-
-
-      deferred.resolve(leaves);
-      return deferred.promise;
       // return $http({method:"POST", url:"/getLeaveByUsername/",
       //   data{'data':username});
       // })
+      var leaves =  $http({method: "GET", url:SITE_URL+"/leave/"});
+
+      deferred.resolve(leaves);
+      return deferred.promise;
+
     }
 
     function getPendingApprovalLeaveByUsername(username){
@@ -443,7 +445,7 @@
 
       //   }
       // ]
-      var users =  $http({method: "GET", url:"http://localhost:3003/user/"});
+      var users =  $http({method: "GET", url:SITE_URL+"/user/"});
 
 
       deferred.resolve(users);
@@ -469,8 +471,8 @@
 
       if(objUser.length!=0){
 
-          // $http({method:"POST", url:"http://localhost:3003/addUser/",
-          var result = $http({method:"POST", url:"http://localhost:3003/user/",
+          // $http({method:"POST", url:SITE_URL+"/addUser/",
+          var result = $http({method:"POST", url:SITE_URL+"/user/",
             data:{'data':objUser}
           }).then(function(results){ 
 
@@ -492,7 +494,7 @@
 
       var deferred = $q.defer();
 
-      var result = $http({method:"POST", url:"http://localhost:3003/editUser/",
+      var result = $http({method:"POST", url:SITE_URL+"/editUser/",
         data:{'data':objUser}
       }).then(function(results){ 
 
@@ -516,7 +518,7 @@
       if(!id){
         deferred.reject();
       }else{
-        var result =  $http({method:"PATCH", url:"http://localhost:3003/user/"+id+"/",
+        var result =  $http({method:"PATCH", url:SITE_URL+"/user/"+id+"/",
           data:{'data':objUser}
         }).then(function(results){ 
 
@@ -531,7 +533,7 @@
       // console.log('Mongo editUser');
       // var deferred = $q.defer();
 
-      // var result = $http({method:"POST", url:"http://localhost:3003/editUserObjectID/",
+      // var result = $http({method:"POST", url:SITE_URL+"/editUserObjectID/",
       //   data:{'data':objectID}
       // }).then(function(results){ 
 
@@ -550,7 +552,7 @@
 
       var deferred = $q.defer();
 
-      var result = $http({method:"POST", url:"http://localhost:3003/editUserObjectID/",
+      var result = $http({method:"POST", url:SITE_URL+"/editUserObjectID/",
         data:{'data':objectID}
       }).then(function(results){ 
 
