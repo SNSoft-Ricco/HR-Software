@@ -31,7 +31,7 @@
       };    
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
-        var cursor = event.target.result;
+      var cursor = event.target.result;
         
         if (cursor) {
           departments.push(cursor.value);

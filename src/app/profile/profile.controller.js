@@ -31,9 +31,9 @@
                     vm.department = data.department;
                     vm.position = data.position;
                     vm.supervisor = data.supervisor;
-                    vm.contactno = data.contactno;
+                    vm.contactNo = data.contactNo;
                     vm.nameModal = data.name;
-                    vm.contactnoModal = data.contactno;
+                    vm.contactnoModal = data.contactNo;
 
                 }, function() {
                   alert("Invalid user!");
@@ -44,7 +44,7 @@
         {
             var username = $cookies.getObject('loggedInUser').username;
             var obj = { username: username, name: vm.nameModal, userGroup:vm.userGroup, department:vm.department,position:vm.position,
-                        supervisor: vm.supervisor, contactno: vm.contactnoModal };
+                        supervisor: vm.supervisor, contactNo: vm.contactnoModal };
 
             ProfileService.updateUser(obj).then(
                 function(){

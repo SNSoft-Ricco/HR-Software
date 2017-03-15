@@ -59,7 +59,7 @@
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-user"
       },
-      "contactno": {
+      "contactNo": {
         "fieldName": "Contact No.",
         "type": "text",
         "inputType": "textbox",
@@ -176,6 +176,7 @@
           toastr.success("Successfully added employee", "Success");
           back();
         });
+
       }
 
     }

@@ -71,18 +71,19 @@
             store.createIndex('PermissionList', 'PermissionList', { unique: false });
 
             // default departments
+            var timestamp = new Date().getTime();
 
             txn.objectStore('department')
-              .add({indexID:'admin@snsoft.my-1931993199319231',  name: "IT Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319231',  name: "IT Department", lastModified:timestamp,  position:[{ positionId: 1, positionName: 'Department Head'}]});
             txn.objectStore('department')
-              .add({indexID:'admin@snsoft.my-1931993199319232',  name: "HR Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319232',  name: "HR Department", lastModified:timestamp,  position:[{ positionId: 1, positionName: 'Department Head'}]});
             txn.objectStore('department')
-              .add({indexID:'admin@snsoft.my-1931993199319233',  name: "R&D Department", position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319233',  name: "R&D Department", lastModified:timestamp,  position:[{ positionId: 1, positionName: 'Department Head'}]});
 
             // default admin user
             txn.objectStore('user')
               .add({username: "admin@snsoft.my",password: "123",userGroup: "admin@snsoft.my-1931993199319233",supervisor: "",status: 1,
-                position: "",name: "admin",department: "",contactno: "123", _id:" "});
+                position: "",name: "admin",department: "",contactNo: "123", _id:" "});
 
             // default permission group
             var list = [1,2,3,4,5];

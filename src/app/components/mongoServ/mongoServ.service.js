@@ -13,7 +13,6 @@
     this.addDept = addDept;
     this.editDept = editDept;
     this.rmDept = rmDept;
-    this.editDeptObjectID = editDeptObjectID;
 
     //leave
     this.getLeaveByUsername = getLeaveByUsername;
@@ -26,7 +25,7 @@
     this.addUser = addUser;
     this.rmUser = rmUser;
     this.editUser = editUser;
-    this.editUserObjectID = editUserObjectID;
+
     //permission
     this.addPermission = addPermission;
     this.removePermission = removePermission;
@@ -121,42 +120,24 @@
       return deferred.promise;
     }
 
-    function editDept(objDept, callback){
+    function editDept(objDept){
       var deferred = $q.defer();
 
       var id = objDept._id
-
+      objDept.lastModified = new Date();
       if(!id){
         deferred.reject();
       }else{
-        var result =  $http({method:"POST", url:SITE_URL+"/department/"+id+"/",
+        var result =  $http({method:"PATCH", url:SITE_URL+"/department/"+id+"/",
           data:{'data':objDept}
         }).then(function(results){ 
 
-          callback(results)
+          deferred.resolve(results)
         })
       }
       return deferred.promise;
     }
 
-
-    function editDeptObjectID(objectID){
-      var deferred = $q.defer();
-
-      var result = $http({method:"POST", url:SITE_URL+"/editDeptObjectID/",
-        data:{'data':objectID}
-      }).then(function(results){ 
-
-       deferred.resolve(results)
-      })
-
-      // return $http({method:"POST", url:"/editDeptObjectID/",
-      //   data:{'data':objectID}
-      // })
-      console.log('editDept');
-      return deferred.promise;
-
-    }
 
 
 
@@ -350,7 +331,7 @@
       var users = [];
       // var users = [
         // {
-        //   contactno:"011288299292",
+        //   contactNo:"011288299292",
         //   department:"IT Department",
         //   name:"Cindy",
         //   objectID:"a123456",
@@ -363,7 +344,7 @@
         //   lastModified:"1488326400"
         // },
         // {
-        //   contactno:"013288299292",
+        //   contactNo:"013288299292",
         //   department:"IT Department",
         //   name:"Evonne",
         //   objectID:"x123456",
@@ -381,7 +362,7 @@
       // ***** need to copy indexID , or it will create new record *****
       // var users = [
       //   {
-      //     contactno:"011288299292",
+      //     contactNo:"011288299292",
       //     department:"IT Department",
       //     name:"Cindy",
       //     objectID:"a123456",
@@ -394,7 +375,7 @@
       //     lastModified:"1488326400"
       //   },
       //   {
-      //     contactno:"0118288191199",
+      //     contactNo:"0118288191199",
       //     department:"IT Department",
       //     name:"cecilia",
       //     // objectID:"a123456",
@@ -412,7 +393,7 @@
       // ***** need to copy indexID , or it will create new record *****
       // var users = [
       //   {
-      //     contactno:"011288299292",
+      //     contactNo:"011288299292",
       //     department:"IT Department",
       //     name:"Cindy Crow",
       //     objectID:"a123456",
@@ -431,7 +412,7 @@
       // ***** need to copy indexID , or it will create new record *****
       // var users = [
       //   {
-      //     contactno:"011288299292",
+      //     contactNo:"011288299292",
       //     department:"IT Department",
       //     name:"Cindy",
       //     objectID:"a123456",
@@ -552,21 +533,6 @@
       // })
     }
 
-    function editUserObjectID(objectID){
-
-      var deferred = $q.defer();
-
-      var result = $http({method:"POST", url:SITE_URL+"/editUserObjectID/",
-        data:{'data':objectID}
-      }).then(function(results){ 
-
-       deferred.resolve(results)
-      })
-
-      console.log('editUser');
-      return deferred.promise;
-
-    }
 
     //////////////
     // PERMISSION

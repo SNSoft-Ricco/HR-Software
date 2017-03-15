@@ -182,10 +182,6 @@
 
       }; 
       request.onsuccess = function() {
-        // mongoServ.addUser(objUser).success(function(data){
-        //   objectUser.objectID = data.objectID;
-        // })
-
         deferred.resolve("Successfully added user.")
       };
       return deferred.promise;

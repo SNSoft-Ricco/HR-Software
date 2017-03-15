@@ -6,7 +6,7 @@
 		.controller('DeptRegController', DeptRegController);
 
 	/** @ngInject */
-	function DeptRegController($log, $window, $cookies, $state, $stateParams, deptServ, userServ, toastr, AuthService) {
+	function DeptRegController($log, $window, $cookies, $state, $stateParams, deptServ, userServ, toastr, AuthService, mongoServ) {
 		var vm = this;
 
 		var dynTemplate = {
@@ -88,12 +88,17 @@
         deptServ.editDept(fields).then(function(response){
           toastr.success('Sucessfully edit department', 'Success');
           $state.go('deptMgmt');
-        });
+        })
+       .then(function(){
+          mongoServ.editDept(fields);
+        })
       } else {
         deptServ.addDept(fields).then(function(response){
           toastr.success('Sucessfully added department', 'Success');
 					$state.go('deptMgmt');
-        });
+        })
+
+
       }
 		}
 
