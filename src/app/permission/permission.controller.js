@@ -26,7 +26,7 @@
                 "value": "test",
                 "forEdit": "false"
             },
-            "desc": {
+            "description": {
                 "fieldName": "Description",
                 "type": "text",
                 "inputType": "textbox",
@@ -76,7 +76,7 @@
             var i = 0;
             var fields = {};
             var obj = {};
-            var indexID = syncData.generateIndexID();
+            // var indexID = syncData.generateIndexID();
             // Get dynamic fields
             for (var field in vm.dynFields) {
                 fields[field] = vm.inputs[i];
@@ -85,7 +85,7 @@
 
             if(vm.id == null || vm.id=="") //insert
             {
-                obj = { indexID:indexID, code: fields.code, desc: fields.desc, PermissionList:vm.selection };
+                obj = {  code: fields.code, description: fields.description, permissionList:vm.selection };
 
                 var promise = PermissionService.addPermission(obj);
                 promise.then (function(){
@@ -94,7 +94,7 @@
             }
             else //update
             {
-                obj = { indexID:fields.indexID , code: fields.code, desc: fields.desc, PermissionList:vm.selection };
+                obj = {  code: fields.code, description: fields.description, permissionList:vm.selection };
 
                 var promise = PermissionService.updatePermission(obj);
                 promise.then (function(){
@@ -127,7 +127,7 @@
                 vm.id = "";
                 vm.selection = [];
                 //vm.code = "";
-                //vm.desc = "";
+                //vm.description = "";
 
                 for(var i=0; i<vm.inputs.length; i++)
                 {
@@ -149,15 +149,15 @@
 
                 vm.id = result.indexID;
                 vm.selection = [];
-                vm.selection = result.PermissionList;
+                vm.selection = result.permissionList;
                 //vm.code = result.code;
-                //vm.desc = result.desc;
+                //vm.description = result.description;
 
                 for(var field in result)
                 {
                     if(field == "code")
                         vm.inputs[0] = result[field];
-                    else if(field == "desc")
+                    else if(field == "description")
                         vm.inputs[1] = result[field];
                     else if(field == "indexID")
                         vm.inputs[2] = result[field];                }

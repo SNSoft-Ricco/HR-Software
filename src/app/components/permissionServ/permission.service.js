@@ -37,12 +37,12 @@
 
 		    req.onupgradeneeded = function (evt) {
 		      console.log("openDb.onupgradeneeded...");
-		      var store = evt.currentTarget.result.createObjectStore(
+		      var store = evt.currentTarget.result.createObjectStore(s
 		        DB_OBJ_PERMISSION, { keyPath: 'id', autoIncrement: true });
 
 		      store.createIndex('code', 'code', { unique: false });
-		      store.createIndex('desc', 'desc', { unique: false });
-		      store.createIndex('PermissionList', 'PermissionList', { unique: false });
+		      store.createIndex('description', 'description', { unique: false });
+		      store.createIndex('permissionList', 'permissionList', { unique: false });
 
 		      deferred.resolve();
 		    };
@@ -159,7 +159,7 @@
 
 			request.onerror = function(event) {
 				deferred.reject();
-				console.log("get error: " + event.target.errorCode);
+				console.log("get error: " + event.target.error.message);
 			};
 
 			request.onsuccess = function(event) {
@@ -183,7 +183,7 @@
 			  if (cursor) {
 
 			    var objPms = {};
-			    objPms = { id: cursor.value.indexID, code: cursor.value.code, desc: cursor.value.desc, array:cursor.value.PermissionList, objectID:cursor.value.objectID, lastModified:cursor.value.lastModified };
+			    objPms = { id: cursor.value.indexID, indexID:cursor.value.indexID, code: cursor.value.code, description: cursor.value.description,permissionList:cursor.value.permissionList, array:cursor.value.permissionList, _id:cursor.value._id, lastModified:cursor.value.lastModified };
 
 			    permissionArray.push(objPms);
 			    cursor.continue();
@@ -194,7 +194,21 @@
 		              syncData.compare(permissionArray, mongoServ.addPermission, mongoServ.getAllPermission)
 		              .then(function(data){
 
-		                  mongoServ.addPermission(data['mongoDBNotExist']);
+
+		                  mongoServ.addPermission(data['mongoDBNotExist'])
+		                  .then(function(udata){
+		                      // assign objectID to departments
+		                      if(udata.length==0||!udata.data){ return }
+		                          udata.data.forEach(function(pmRecord){
+		                            var _id = pmRecord._id;
+		                            vm.getPermission(pmRecord.indexID)
+		                              .then(function(indexData){
+		                                indexData._id = _id;
+		                                vm.updatePermission(indexData);
+		                              });
+		                          });
+		                  });
+
 		                  mongoServ.updatePermission(data['indexDBtimeNotMatch']);
 
 		                  var indexDBNotExist = data.indexDBNotExist;

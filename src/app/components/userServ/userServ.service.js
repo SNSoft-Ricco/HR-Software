@@ -48,7 +48,8 @@
               .then(function(data){
 
                 // mongoServ.addUser(data['mongoDBNotExist']);
-                mongoServ.addUser(data['mongoDBNotExist'] , function(udata){
+                mongoServ.addUser(data['mongoDBNotExist'])
+                .then(function(udata){
                     // assign objectID to departments
                     if(udata.length==0){ return }
                         udata.data.forEach(function(userRecord){

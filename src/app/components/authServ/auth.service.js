@@ -14,7 +14,7 @@
 	            return PermissionService.getPermission(data.userGroup)
 	               .then (function(result){
 	               	  if(result){
-		                  allowPermission = result.PermissionList;
+		                  allowPermission = result.permissionList;
 		                  return Promise.resolve(allowPermission);
 		              }
 		              else

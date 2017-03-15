@@ -67,8 +67,8 @@
             var store = evt.currentTarget.result
             .createObjectStore("permission", { keyPath:"indexID"});
             store.createIndex('code', 'code', { unique: false });
-            store.createIndex('desc', 'desc', { unique: false });
-            store.createIndex('PermissionList', 'PermissionList', { unique: false });
+            store.createIndex('description', 'description', { unique: false });
+            store.createIndex('permissionList', 'permissionList', { unique: false });
 
             // default departments
             var timestamp = new Date().getTime();
@@ -87,8 +87,8 @@
 
             // default permission group
             var list = [1,2,3,4,5];
-            txn.objectStore('permission').add({code: "System Administrator",desc: "System Administrator",
-              PermissionList: list, indexID:'admin@snsoft.my-1931993199319233'});
+            txn.objectStore('permission').add({code: "System Administrator",description: "System Administrator",
+              permissionList: list, indexID:'admin@snsoft.my-1931993199319233'});
 
           case (evt.oldVersion < 4):
             $log.info("IndexedDB Version 4");
