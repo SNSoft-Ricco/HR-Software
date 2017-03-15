@@ -71,16 +71,19 @@
               }
               for(var collection in collections){
                 var indexDB = collections[collection];
-                /** this is for time not matching [MONGODB] -> [INDEXDB] **/
+                /** this is for time not matching [MONGODB] & [INDEXDB] **/
                 // if record _id exist
                 if(data[d]._id && data[d]._id !=""){
                   // if _id same
                   if(data[d]._id==indexDB._id){
                     // but modified
-                    if(data[d].lastModified > indexDB.lastModified){
+                    var mongoLastModified = new Date(data[d].lastModified).getTime();
+                    var idbLastModified = new Date(collections[collection].lastModified).getTime();
+
+                    if(mongoLastModified > idbLastModified){
                       // if mongodb date bigger than indexdb , update this record to indexdb
                       modifyCollection['mongoDBtimeNotMatch'].push(data[d]);
-                    }else if(data[d].lastModified < indexDB.lastModified){
+                    }else if(mongoLastModified < idbLastModified){
                       // if indexdb date bigger than mongodb , update this record to mongod
                       modifyCollection['indexDBtimeNotMatch'].push(indexDB);
                     }else{
@@ -139,7 +142,7 @@
 
     function mergeLeaveData(sync, fn, param1){
       var deferred = $q.defer();
-
+      sync = false;
       if(sync){
         fn(param1,false)
         .then(fn(param1))

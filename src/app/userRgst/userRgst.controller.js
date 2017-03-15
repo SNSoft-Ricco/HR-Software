@@ -8,7 +8,7 @@
   /** @ngInject */
   function UserRgstController(
     $log, $cookies, $state, $timeout, $stateParams,
-    userServ, deptServ, PermissionService, toastr,AuthService) {
+    userServ, deptServ, PermissionService, toastr,AuthService, mongoServ) {
 
     var vm = this;
     var objUser = $stateParams.myParam;
@@ -67,7 +67,7 @@
       }
     };
 
-    vm.userStatusList = ['Active', 'Disabled'];
+    vm.userStatusList = [0,1]// ['Active', 'Disabled'];
     vm.dynFields = dynTemplate;
     vm.editMode = false;
     vm.title = "New User Registration";
@@ -163,10 +163,14 @@
 
       if (vm.editMode)
       {
+        console.log(fields);
         userServ.editUser(fields).then(function(){
           toastr.success("Successfully edited employee", "Success");
           back();
-        });
+        })
+        .then(function(){
+          mongoServ.editUser(fields);
+        })
       } else {
         userServ.addUser(fields).then(function(){
           toastr.success("Successfully added employee", "Success");

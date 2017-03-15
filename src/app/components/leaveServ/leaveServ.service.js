@@ -116,8 +116,13 @@
       var deferred = $q.defer();
 
       // Set Leave as Pending
-      objLeave.status = "Pending";
+      objLeave.approveStatus = "Pending";
+      objLeave.status = 1;
       objLeave.indexID = syncData.generateIndexID();
+      if(!objLeave.lastModified){
+        objLeave.lastModified = new Date().getTime();
+      }
+
 
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
@@ -175,7 +180,7 @@
       var request = 
 
         localdb.getObjectStore(DB_STORENAME, 'readonly')
-        .index('approveBy')
+        .index('approvalBy')
         .getAll(singleKeyRange);
 
       request.onerror = function() {

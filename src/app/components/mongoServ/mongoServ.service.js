@@ -518,6 +518,10 @@
       if(!id){
         deferred.reject();
       }else{
+
+        // if(!Array.isArray(objUser)){
+        //   objUser = [objUser];
+        // }
         var result =  $http({method:"PATCH", url:SITE_URL+"/user/"+id+"/",
           data:{'data':objUser}
         }).then(function(results){ 

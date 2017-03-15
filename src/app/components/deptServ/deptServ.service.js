@@ -121,6 +121,9 @@
       if(!objDept.indexID){
         objDept.indexID = syncData.generateIndexID();
       }
+      if(!objDept.lastModified){
+        objDept.lastModified = new Date().getTime();
+      }
 
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')

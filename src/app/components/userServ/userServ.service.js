@@ -64,7 +64,10 @@
                 });
 
 
-                  mongoServ.editUser(data['indexDBtimeNotMatch'], function(){});
+                  mongoServ.editUser(data['indexDBtimeNotMatch'], function(){
+
+
+                  });
 
                   var indexDBNotExist = data.indexDBNotExist;
                   var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
@@ -163,6 +166,9 @@
       // Let new user have active status
       objUser.status = 1;
       objUser.indexID = syncData.generateIndexID();
+      if(!objUser.lastModified){
+        objUser.lastModified = new Date().getTime();
+      }
 
       var request = 
 
