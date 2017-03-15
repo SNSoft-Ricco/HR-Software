@@ -4,7 +4,7 @@
 		.module('snsoftHr')
 		.service('PermissionService',PermissionService);
 
-	function PermissionService($q,localdb){
+	function PermissionService($q,localdb, mongoServ, syncData){
 
 		//const DB_NAME = 'snsofthrdb';
 	  	//const DB_VERSION = 4; 
@@ -14,7 +14,7 @@
 	  	//var db;
 	  	var permissionArray=[];
 	  	var userList=[];
-
+	  	var vm = this;
 		/*this.openDb=function () {
 			var deferred = $q.defer();
 
@@ -66,7 +66,8 @@
 		this.addPermission=function (obj)
 		{
 			var deferred = $q.defer();
-
+			obj.indexID = syncData.generateIndexID();
+			obj.lastModified = parseInt((new Date().getTime())/1000);
 			/*
 			var transaction = db.transaction([DB_OBJ_PERMISSION], "readwrite");
 
@@ -152,7 +153,8 @@
 
 			/*var objectStore = db.transaction([DB_OBJ_PERMISSION], "readwrite").objectStore(DB_OBJ_PERMISSION);
 			var request = objectStore.get(id);*/
-			var pid = parseInt(id);
+			// var pid = parseInt(id);
+			var pid = id;
 			var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(pid);
 
 			request.onerror = function(event) {
@@ -167,7 +169,7 @@
 			return deferred.promise;
 		}
 
-		this.getAllPermission=function()
+		this.getAllPermission=function(sync)
 		{
 			permissionArray=[];
 			var deferred = $q.defer();
@@ -181,14 +183,35 @@
 			  if (cursor) {
 
 			    var objPms = {};
-			    objPms = { id: cursor.key, code: cursor.value.code, desc: cursor.value.desc, array:cursor.value.PermissionList };
+			    objPms = { id: cursor.value.indexID, code: cursor.value.code, desc: cursor.value.desc, array:cursor.value.PermissionList, objectID:cursor.value.objectID, lastModified:cursor.value.lastModified };
 
 			    permissionArray.push(objPms);
 			    cursor.continue();
 			  }
 			  else {
+		          if(sync){
+		              // compare the file between indexDB & mongoDB , then sync it
+		              syncData.compare(permissionArray, mongoServ.addPermission, mongoServ.getAllPermission)
+		              .then(function(data){
+
+		                  mongoServ.addPermission(data['mongoDBNotExist']);
+		                  mongoServ.updatePermission(data['indexDBtimeNotMatch']);
+
+		                  var indexDBNotExist = data.indexDBNotExist;
+		                  var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+
+		                  for(var idb in indexDBNotExist){
+		                    // insert no exist record(from mongo) to indexDB
+		                    vm.addPermission(indexDBNotExist[idb]);
+		                  }
+
+		                  for(var tnm in mongoDBtimeNotMatch){
+		                    //update indexDB data, because the lastmodified date is different(compared to mongodb)
+		                    vm.updatePermission(mongoDBtimeNotMatch[tnm]);
+		                  }
+		              })
+		          }
 			    deferred.resolve(permissionArray);
-			    
 			  }
 			};
 			return deferred.promise;
@@ -198,7 +221,7 @@
 		{
 			var deferred = $q.defer();
 			var rslt = localdb.getObjectStore(DB_OBJ_USER, 'readonly');
-			var index = rslt.index('usergroup');
+			var index = rslt.index('userGroup');
 			var sID = id.toString();
 			userList = [];
 
@@ -213,7 +236,7 @@
 		        var cursor = event.target.result;
 		        if (cursor) {
 		        	var objPms = {};
-				    objPms = { name: cursor.value.fullname, dept: cursor.value.department,  position: cursor.value.position };
+				    objPms = { name: cursor.value.name, dept: cursor.value.department,  position: cursor.value.position };
 				    userList.push(objPms);
 
 		        	cursor.continue();

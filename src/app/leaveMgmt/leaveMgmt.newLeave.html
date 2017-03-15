@@ -21,8 +21,8 @@
                 <div layout-gt-xs="row">
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>Leave Type</label>
-                        <md-select ng-model="dialog.leaveType">
-                            <md-option ng-repeat="leave in dialog.leaveTypes" value="{{leave}}">
+                        <md-select ng-model="dialog.type">
+                            <md-option ng-repeat="leave in dialog.types" value="{{leave}}">
                                 {{leave}}
                             </md-option>
                         </md-select>
@@ -33,12 +33,12 @@
                 <div layout-gt-xs="row">
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>From Date</label>
-                        <md-datepicker ng-model="dialog.fromDate" ng-change="dialog.toDate = dialog.fromDate" md-open-on-focus></md-datepicker>
+                        <md-datepicker ng-model="dialog.from" ng-change="dialog.to = dialog.from" md-open-on-focus></md-datepicker>
                     </md-input-container>
 
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>To Date</label>
-                        <md-datepicker ng-model="dialog.toDate" md-open-on-focus></md-datepicker>
+                        <md-datepicker ng-model="dialog.to" md-open-on-focus></md-datepicker>
                     </md-input-container>
                 </div>
 <!--

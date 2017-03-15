@@ -64,6 +64,7 @@
 			                <table class="table table-bordered table-striped table-condensed">
 								<thead> 
 									<tr>
+										<th></th>
 									    <th>ID</th>
 									    <th>Code</th>
 									    <th>Description</th>
@@ -73,7 +74,7 @@
 								</thead>
 								<tbody>
 									<tr ng-repeat="pms in Permission.pmsArray">
-										
+										<td><div ng-if="!pms._id"><span class="glyphicon glyphicon-plus glyphicon-exclamation-sign"></span></div></td>
 									    <td>{{ pms.id }}</td>
 									    <td>{{ pms.code }}</td>
 									    <td>{{ pms.desc }}</td>
