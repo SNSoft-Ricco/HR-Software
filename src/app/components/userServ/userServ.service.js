@@ -73,9 +73,9 @@
                   var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
 
                   for(var idb in indexDBNotExist){
+
                     // insert no exist record(from mongo) to indexDB
                     if(indexDBNotExist[idb].username!="admin@snsoft.my"){
-                      console.log('not equal '+indexDBNotExist.username)
                       addUser(indexDBNotExist[idb]);
                     }
                   }
@@ -169,21 +169,21 @@
       if(!objUser.lastModified){
         objUser.lastModified = new Date().getTime();
       }
-
       var request = 
-
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
           .add(objUser);
 
       request.onerror = function (event) {
         // Add user trasaction - Error
-        alert("Transaction error: " + event.target.errorCode);
+        // alert("Transaction error: " + event.target.errorCode);
+        console.log(event.target.error.message);
         deferred.reject();
 
       }; 
       request.onsuccess = function() {
         deferred.resolve("Successfully added user.")
       };
+
       return deferred.promise;
     }
 

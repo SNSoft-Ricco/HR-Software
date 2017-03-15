@@ -111,7 +111,7 @@
       var deferred = $q.defer();
 
           var result = $http({method:"POST", url:SITE_URL+"/department/",
-            data:{'data':objDepts}
+            data:objDepts
           }).then(function(results){ 
 
            callback(results) 
@@ -129,7 +129,7 @@
         deferred.reject();
       }else{
         var result =  $http({method:"PATCH", url:SITE_URL+"/department/"+id+"/",
-          data:{'data':objDept}
+          data:objDept
         }).then(function(results){ 
 
           deferred.resolve(results)
@@ -158,7 +158,7 @@
       var deferred = $q.defer();
 
       var result = $http({method:"POST", url:SITE_URL+"/leave/",
-        data:{'data':objLeave}
+        data:objLeave
       }).then(function(results){ 
 
         callback(results)
@@ -183,22 +183,6 @@
       }
     }
 
-    function editLeaveObjectID(objLeave){
-      var deferred = $q.defer();
-
-      var result = $http({method:"POST", url:SITE_URL+"/editLeaveObjectID/",
-        data:{'data':objectID}
-      }).then(function(results){ 
-
-       deferred.resolve(results)
-      })
-
-      // return $http({method:"POST", url:"/editDeptObjectID/",
-      //   data:{'data':objectID}
-      // })
-      console.log('editDept');
-      return deferred.promise;
-    }
 
     function getLeaveByUsername(username){
       var deferred = $q.defer();
@@ -454,7 +438,7 @@
 
           // $http({method:"POST", url:SITE_URL+"/addUser/",
           var result = $http({method:"POST", url:SITE_URL+"/user/",
-            data:{'data':objUser}
+            data:objUser
           }).then(function(results){ 
 
            callback(results) 
@@ -476,7 +460,7 @@
       var deferred = $q.defer();
 
       var result = $http({method:"POST", url:SITE_URL+"/editUser/",
-        data:{'data':objUser}
+        data:objUser
       }).then(function(results){ 
 
        deferred.resolve(results)
@@ -504,7 +488,7 @@
         //   objUser = [objUser];
         // }
         var result =  $http({method:"PATCH", url:SITE_URL+"/user/"+id+"/",
-          data:{'data':objUser}
+          data:objUser
         }).then(function(results){ 
 
           deferred.resolve(results);
