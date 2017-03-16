@@ -30,75 +30,35 @@
 
 	    this.checkPermission=function(username, id)
 	    {
-	    	if(allowPermission.length == 0)
-	    	{
+        var deferred = $q.defer();
+
+	    	//if(allowPermission.length == 0)
+	    	//{
 		    	this.getAllowPermission(username).then(function(data){
-		        	if(data.indexOf(id) !== -1)
-		        		return true;
-		        	else
-		        		return false;
+		        	if(data.indexOf(id) !== -1) {
+                deferred.resolve(true);
+              }
+		        	else {
+                deferred.resolve(false);
+              }
 		        }, function(err) {
-		        	return false;
+            deferred.reject();
 		        });
-		    }
+		   /* }
 		    else
 		    {
 		    	if(allowPermission.indexOf(id) !== -1)
-	        		return true;
+            deferred.resolve(true);
 	        	else
-	        		return false;
-		    }
+            deferred.resolve(false);
+		    }*/
+
+        return deferred.promise;
 	    }
 
 	    this.clearList=function()
 	    {
 	    	allowPermission = [];
 	    }
-
-	    /*
-	    this.checkDbConnection=function()
-	    {
-	    	var db = localdb.getDbConn();
-		    if(!db)
-		    {
-		    	console.log("open dbbbbb222");
-	            localdb.openDb();
-	        }
-
-	        
-			return localdb.getDbConn().then(
-	    		function(db){
-		        	if(!db){
-	            		localdb.openDb().then(
-	            			function(data){
-	            				return Promise.resolve(data);
-	            			},function(err) {
-		        				return Promise.reject("Get Db connection error");
-		        			}
-	            		);
-		        	}
-		        	else
-		        		Promise.resolve(db);
-		        },function(err) {
-		        	return Promise.reject("Get Db connection error");
-		    });
-	        
-	    }*/
-
-	    this.getDbConnection=function()
-	    {
-	    	return localdb.getDbConn();
-	    }
-
-	    this.openDbConnection=function()
-	    {
-	    	localdb.openDb();
-	    }
-
-	    var db = localdb.getDbConn();
-	    if(!db)
-	    {
-            localdb.openDb();
-        }
 	}
 })();
