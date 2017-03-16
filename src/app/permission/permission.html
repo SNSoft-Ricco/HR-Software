@@ -3,7 +3,7 @@
       <sns-navbar></sns-navbar>
 
       <!-- Page Body -->
-	  <div class="row" ng-if="Permission.checkViewPermission(5)">
+	  <div class="row" ng-if="Permission.isAllowed">
 	    <div class="box col-md-12">
 	      <div class="box-inner">
 	        <div class="box-content">
@@ -18,13 +18,13 @@
 	                <div class="col-md-4 inputGroupContainer">
 	                  <div class="input-group">
 	                    <span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
-	                    <input 
-	                      ng-model="Permission.inputs[$index]" 
+	                    <input
+	                      ng-model="Permission.inputs[$index]"
 	                      ng-show="value.inputType == 'textbox'"
 	                      ng-disabled="Permission.editMode && value.forEdit"
-	                      placeholder="{{value.placeholder}}" 
-	                      class="form-control" 
-	                      type="{{value.type}}">	                    
+	                      placeholder="{{value.placeholder}}"
+	                      class="form-control"
+	                      type="{{value.type}}">
 	                  </div>
 	                </div>
 	             </div>
@@ -62,7 +62,7 @@
 			        <div class="box-inner">
 			            <div class="box-content">
 			                <table class="table table-bordered table-striped table-condensed">
-								<thead> 
+								<thead>
 									<tr>
 										<th></th>
 									    <th>ID</th>
@@ -132,7 +132,7 @@
       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
     </div>
   </div>
-  
+
 </div>
 </div>
 
@@ -157,5 +157,5 @@
 		    <input type="button" value="Send" ng-click='Permission.AddPermission()' />
 		</form>-->
 
-		  
-    
+
+

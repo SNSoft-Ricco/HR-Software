@@ -9,6 +9,7 @@
   function DeptDetailController($log, $window, $cookies, $state, $stateParams, $mdDialog, deptServ, userServ, AuthService) {
     var vm = this;
     var objDept = $stateParams.myParam;
+    var id = 4;
 
     // Function Declaration
     vm.addPosition = addPosition;
@@ -18,7 +19,7 @@
       $state.go('deptMgmt');
     }
     else {
-      vm.deptName = objDept.department;
+      vm.deptName = objDept.name;
       vm.headName = objDept.head;
       vm.checkViewPermission = checkViewPermission;
       vm.users = "";
@@ -58,21 +59,27 @@
     }
 
     //// Private Functions
-    function showDeptUsers () {
-      userServ.getUsersByIndex("userDepartment", objDept.department).then(function(users) {
+    function showDeptUsers() {
+      userServ.getUsersByIndex("userDepartment", objDept.name).then(function (users) {
         vm.users = users;
       })
     }
 
-    function checkViewPermission(id)
+    function checkViewPermission()
     {
       if(document.cookie.indexOf('loggedInUser') > -1){
         var username = $cookies.getObject('loggedInUser').username;
-        var isAllowed = AuthService.checkPermission(username,id);
-        return isAllowed;
+        var promise = AuthService.checkPermission(username,id);
+        promise.then(function(data){
+          vm.isAllowed = data;
+        }, function(err) {
+          console.log("invalid permission checking");
+        });
       }
       else
         $log.info("cookies not exist");
     }
+
+    this.checkViewPermission();
   }
 })();

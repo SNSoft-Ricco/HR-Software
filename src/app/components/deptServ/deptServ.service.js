@@ -17,22 +17,22 @@
     var DB_STORENAME = 'department';
 
     function getAllDepartments(sync) {
-      
+
       var deferred = $q.defer();
       var departments = [];
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
         .openCursor();
 
       request.onerror = function() {
         $log.info("Open Cursor Error!");
         deferred.reject();
-      };    
+      };
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
       var cursor = event.target.result;
-        
+
         if (cursor) {
           departments.push(cursor.value);
           cursor.continue();
@@ -90,13 +90,14 @@
     function getDept(deptName) {
       var deferred = $q.defer();
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
-        .get(deptName);
+          .index('name')
+          .get(deptName);
 
       request.onerror = function() {
         $log.info("Open ObjectStore Error!");
-      };    
+      };
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         var value = event.target.result;
@@ -108,7 +109,7 @@
         }
       };
 
-      return deferred.promise;  
+      return deferred.promise;
     }
 
     // Add New Department
@@ -126,7 +127,7 @@
         objDept.lastModified = new Date().getTime();
       }
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .add(objDept);
 
@@ -138,7 +139,7 @@
         //   alert("Transaction error: " + event.target.errorCode);
 
         deferred.reject();
-      }; 
+      };
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         // deferred.resolve("Successfully added department.");
@@ -155,10 +156,10 @@
     function rmDept (objDept) {
       var deferred = $q.defer();
       objDept.status = 0;
-      // var request = 
+      // var request =
       //   localdb.getObjectStore(DB_STORENAME, 'readwrite')
       //   .delete(objDept.department);
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .put(objDept);
 
@@ -166,7 +167,7 @@
         // Remove department trasaction - Error
         alert("Transaction error: " + event.target.errorCode);
         deferred.reject();
-      }; 
+      };
 
       // Remove department - Success
       request.onsuccess = function() {
@@ -182,7 +183,7 @@
     function editDept(objDept) {
       var deferred = $q.defer();
 
-      var request = 
+      var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .put(objDept);
 

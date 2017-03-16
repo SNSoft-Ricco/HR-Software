@@ -8,27 +8,30 @@
 	/** @ngInject */
 	function DeptRegController($log, $window, $cookies, $state, $stateParams, deptServ, userServ, toastr, AuthService, mongoServ) {
 		var vm = this;
+		var id = 4;
 
 		var dynTemplate = {
-				"name": {
-					"fieldName": "Department",
-					"type": "text",
-					"inputType": "textbox",
-					"glyphClass": "glyphicon glyphicon-user",
-					"placeholder": "Enter a department name",
-					"value": "test",
-					"forEdit": "false"
-				},
-        "head": {
-					"fieldName": "Head",
-					"type": "text",
-					"inputType": "selectUser",
-					"glyphClass": "glyphicon glyphicon-user",
-					"placeholder": "",
-					"value": "test",
-					"forEdit": "true"
-				}
-			}
+      "name": {
+        "fieldName": "Department",
+        "type": "text",
+        "inputType": "textbox",
+        "glyphClass": "glyphicon glyphicon-user",
+        "placeholder": "Enter a department name",
+        "value": "test",
+        "forEdit": "false"
+      },
+      "head": {
+        "fieldName": "Head",
+        "type": "text",
+        "inputType": "selectUser",
+        "glyphClass": "glyphicon glyphicon-user",
+        "placeholder": "",
+        "value": "test",
+        "forEdit": "true"
+      }
+    };
+
+		var hiddenFields = ['position', 'indexID', 'lastModified'];
 
 		vm.dynFields = dynTemplate;
 		vm.editMode = false;
@@ -45,7 +48,7 @@
       var i = 0;
 
       vm.editMode = true;
-      vm.title = "Edit Department Information"
+      vm.title = "Edit Department Information";
 
       for (var dept in objDept) {
         if(vm.dynFields.hasOwnProperty(dept)) {
@@ -73,9 +76,8 @@
 
 		// Load users as select options
 		userServ.getAllUsers().then(function(users){
-			$log.info("getAllUsers",users);
 			vm.users = users;
-		})
+		});
 
 		function newDept () {
 			var i = 0;
@@ -114,17 +116,22 @@
         "glyphClass": "glyphicon glyphicon-list-alt"
       };
      }
-     
-    function checkViewPermission(id)
+
+    function checkViewPermission()
     {
-        if(document.cookie.indexOf('loggedInUser') > -1){
-            var username = $cookies.getObject('loggedInUser').username;
-            var isAllowed = AuthService.checkPermission(username,id);
-            return isAllowed;
-        }
-        else{
-            $log.info("cookies not exist");
-        }
+
+      if(document.cookie.indexOf('loggedInUser') > -1){
+        var username = $cookies.getObject('loggedInUser').username;
+        var promise = AuthService.checkPermission(username,id);
+        promise.then(function(data){
+          vm.isAllowed = data;
+        }, function(err) {
+          console.log("invalid permission checking");
+        });
+      }
+      else
+        console.log("cookies not exist");
     }
+    this.checkViewPermission();
 	}
 })();

@@ -66,42 +66,45 @@
 		this.addPermission=function (obj)
 		{
 			var deferred = $q.defer();
-			obj.indexID = syncData.generateIndexID();
-			obj.lastModified = parseInt((new Date().getTime())/1000);
 
-			var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').add(obj);
+            obj.indexID = syncData.generateIndexID();
+            obj.lastModified = parseInt((new Date().getTime())/1000);
 
-			request.onsuccess = function(event) {
-			    deferred.resolve();
-			    $log.info("insert successfully");
-			};
+            localdb.openDb().then(function() {
+              var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').add(obj);
 
-			request.onerror = function(event) {
-				deferred.reject();
-				$log.info("insert error: " + event.target.errorCode);
-			};
+              request.onsuccess = function (event) {
+                deferred.resolve();
+              };
 
-			return deferred.promise;
+              request.onerror = function (event) {
+                deferred.reject();
+                console.log("insert error: " + event.target.errorCode);
+              };
+            });
+
+
+            return deferred.promise;
 		}
 
 		this.removePermission=function (id)
 		{
-			/*var request = db.transaction([DB_OBJ_PERMISSION], "readwrite")
-                .objectStore(DB_OBJ_PERMISSION)
-                .delete(id);*/
-
             var deferred = $q.defer();
-            var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').delete(id); 
 
-			request.onsuccess = function(event) {
-				deferred.resolve();
-				$log.info("delete done");
-			};
 
-			request.onerror = function(event) {
-				deferred.reject();
-				$log.info("delete error: " + event.target.errorCode);
-			};
+            localdb.openDb().then(function() {
+              var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').delete(id);
+
+              request.onsuccess = function (event) {
+                deferred.resolve();
+              };
+
+              request.onerror = function (event) {
+                deferred.reject();
+                console.log("delete error: " + event.target.errorCode);
+              };
+            });
+
 
 			return deferred.promise;
 		}
@@ -109,22 +112,20 @@
 		this.updatePermission=function(obj)
 		{
 			var deferred = $q.defer();
-			
-			/*var request = db.transaction([DB_OBJ_PERMISSION], "readwrite")
-                .objectStore(DB_OBJ_PERMISSION)
-                .put(obj);*/
 
-            var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').put(obj);
+            localdb.openDb().then(function() {
+              var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').put(obj);
 
-			request.onsuccess = function(event) {
-				deferred.resolve();
-				$log.info("update done");
-			};
+              request.onsuccess = function (event) {
+                deferred.resolve();
+              };
 
-			request.onerror = function(event) {
-				deferred.reject();
-				$log.info("update error: " + event.target.errorCode);
-			};
+              request.onerror = function (event) {
+                deferred.reject();
+                console.log("update error: " + event.target.errorCode);
+              };
+            });
+
 
 			return deferred.promise;
 		}
@@ -133,31 +134,32 @@
 		{
 			var deferred = $q.defer();
 
-			/*var objectStore = db.transaction([DB_OBJ_PERMISSION], "readwrite").objectStore(DB_OBJ_PERMISSION);
-			var request = objectStore.get(id);*/
-			// var pid = parseInt(id);
-			var pid = id;
-			var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(pid);
 
-			request.onerror = function(event) {
-				deferred.reject();
-				$log.info("get error: " + event.target.error.message);
-			};
+      localdb.openDb().then(function() {
+        var pid = id;
+        var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(pid);
 
-			request.onsuccess = function(event) {
-				var data = event.target.result;
-			  	deferred.resolve(data);
-			};
+        request.onerror = function (event) {
+          deferred.reject();
+          console.log("get error: " + event.target.errorCode);
+        };
+
+        request.onsuccess = function (event) {
+          var data = event.target.result;
+          deferred.resolve(data);
+        };
+      });
 			return deferred.promise;
-		}
+		};
 
 		this.getAllPermission=function(sync)
 		{
 			permissionArray=[];
 			var deferred = $q.defer();
 
+<<<<<<< HEAD
 			//var objectStore = db.transaction(DB_OBJ_PERMISSION).objectStore(DB_OBJ_PERMISSION);
-
+          localdb.openDb().then(function() {
 			var objectStore = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly');
 
 			objectStore.openCursor().onsuccess = function(event) {
@@ -210,50 +212,66 @@
 			    deferred.resolve(permissionArray);
 			  }
 			};
+          });
 			return deferred.promise;
 		}
 
 		this.getPermissionUser=function(id)
 		{
 			var deferred = $q.defer();
-			var rslt = localdb.getObjectStore(DB_OBJ_USER, 'readonly');
-			var index = rslt.index('userGroup');
-			var sID = id.toString();
-			userList = [];
 
-			var request = index.openCursor(IDBKeyRange.only(sID));
+            localdb.openDb().then(function() {
+              var rslt = localdb.getObjectStore(DB_OBJ_USER, 'readonly');
+              var index = rslt.index('usergroup');
+              var sID = id.toString();
+              userList = [];
 
-			request.onerror = function() {
-		        $log.info("Open ObjectStore Error!");
-		        deferred.reject(); 
-		      };    
+              var request = index.openCursor(IDBKeyRange.only(sID));
 
-		    request.onsuccess = function(event) {
-		        var cursor = event.target.result;
-		        if (cursor) {
-		        	var objPms = {};
-				    objPms = { name: cursor.value.name, dept: cursor.value.department,  position: cursor.value.position };
-				    userList.push(objPms);
+              request.onerror = function () {
+                console.log("Open ObjectStore Error!");
+                deferred.reject();
+              };
 
-		        	cursor.continue();
-		        }
-				else {
-				   deferred.resolve(userList);
-				}
+              request.onsuccess = function (event) {
+                var cursor = event.target.result;
+                if (cursor) {
+                  var objPms = {};
+                  objPms = { name: cursor.value.name, dept: cursor.value.department,  position: cursor.value.position };
+                  userList.push(objPms);
 
-				if(userList)
-					deferred.resolve(userList);
-		    };
+                  cursor.continue();
+                }
+                else {
+                  deferred.resolve(userList);
+                }
+
+                if (userList)
+                  deferred.resolve(userList);
+              };
+            });
 			return deferred.promise;
-		}
+		};
 
-		this.getDbConnection=function()
-		{
-			var db = localdb.getDbConn();
-			return db;
-		}
+		this.getUserGroupNameByID = function(id) {
+		  return new Promise(function(resolve,reject) {
+        localdb.openDb().then(function() {
+          var request =
+            localdb
+              .getObjectStore(DB_OBJ_PERMISSION, 'readonly')
+              .get(id);
 
-		//this.openDb();
+          request.onerror = function (event) {
+            reject("get error: " + event.target.errorCode);
+          };
+
+          request.onsuccess = function (event) {
+            var data = event.target.result;
+            resolve(data.code);
+          };
+        });
+      })
+    }
 	}
 
 })();

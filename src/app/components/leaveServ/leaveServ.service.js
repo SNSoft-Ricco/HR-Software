@@ -169,7 +169,7 @@
         //   objLeave.objectID = data.objectID;
         // });
       };
-      return deferred.promise; 
+      return deferred.promise;
     }
 
 
@@ -181,10 +181,10 @@
       var deferred = $q.defer();
 
       var singleKeyRange = IDBKeyRange.only(username);
-      var request = 
+      var request =
 
         localdb.getObjectStore(DB_STORENAME, 'readonly')
-        .index('approvalBy')
+        .index('approveBy')
         .getAll(singleKeyRange);
 
       request.onerror = function() {

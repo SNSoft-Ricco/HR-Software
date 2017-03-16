@@ -1,3 +1,4 @@
+
 (function() {
   'use strict';
 
@@ -11,6 +12,7 @@
     userServ, deptServ, PermissionService, toastr,AuthService, mongoServ) {
 
     var vm = this;
+    var id = 2;
     var objUser = $stateParams.myParam;
     var isRegister = $stateParams.isRegister;
 
@@ -67,6 +69,8 @@
       }
     };
 
+    var hiddenFields = ['indexID', 'lastModified', 'userGroupName'];
+
     vm.userStatusList = [0,1]// ['Active', 'Disabled'];
     vm.dynFields = dynTemplate;
     vm.editMode = false;
@@ -114,18 +118,20 @@
 
             loadNext(field, objUser[field]);
           } else {
-            vm.dynFields[field] = {
-              "fieldName": field,
-              "type": "text",
-              "inputType": "textbox",
-              "glyphClass": "glyphicon glyphicon-list-alt"
-            };
+            if (hiddenFields.indexOf(field) < 0) {
+              vm.dynFields[field] = {
+                "fieldName": field,
+                "type": "text",
+                "inputType": "textbox",
+                "glyphClass": "glyphicon glyphicon-list-alt"
+              };
 
-            if (field == 'status') {
-              vm.dynFields[field].inputType = "selectBox";
+              if (field == 'status') {
+                vm.dynFields[field].inputType = "selectBox";
+              }
+
+              vm.inputs[i] = objUser[field];
             }
-
-            vm.inputs[i] = objUser[field];
           }
 
           i++;
@@ -205,15 +211,21 @@
       }
     }
 
-    function checkViewPermission(id)
+    function checkViewPermission()
     {
-        if(document.cookie.indexOf('loggedInUser') > -1){
-            var username = $cookies.getObject('loggedInUser').username;
-            var isAllowed = AuthService.checkPermission(username,id);
-            return isAllowed;
-        }
-        else
-            $log.debug("cookies not exist");
+      if(document.cookie.indexOf('loggedInUser') > -1){
+        var username = $cookies.getObject('loggedInUser').username;
+        var promise = AuthService.checkPermission(username,id);
+        promise.then(function(data){
+          vm.isAllowed = data;
+        }, function(err) {
+          console.log("invalid permission checking");
+        });
+      }
+      else
+        console.log("cookies not exist");
     }
+
+    this.checkViewPermission();
   }
 })();

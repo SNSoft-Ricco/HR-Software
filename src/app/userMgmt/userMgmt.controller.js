@@ -6,8 +6,9 @@
     .controller('UserMgmtController', UserMgmtController);
 
   /** @ngInject */
-  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, AuthService, syncData) {
+  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, PermissionService, AuthService, syncData) {
     var vm = this;
+    var id=2;
 
     vm.users = [];
 
@@ -20,19 +21,25 @@
     vm.username = "";
     //angular.fromJson($cookies.get("loggedInUser")).username;
 
-    $timeout(showUsers,500);
+      showUsers();
 
     function register() {
       $state.go("userRgst", {isRegister: true});
     }
 
     function showUsers() {
-
       syncData.sync()
       .then(function(result){
         syncData.mergeData(result, userServ.getAllUsers)
         .then(function(users){
           vm.users = users;
+
+          vm.users.map(function(user) {
+            PermissionService.getUserGroupNameByID(user.userGroup)
+              .then(function(code) {
+                user.userGroupName = code;
+              });
+          });
         })
       })
     }
@@ -55,16 +62,20 @@
       })
     }
 
-    function checkViewPermission(id)
+    function checkViewPermission()
     {
-
-        if(document.cookie.indexOf('loggedInUser') > -1){
-            var username = $cookies.getObject('loggedInUser').username;
-            var isAllowed = AuthService.checkPermission(username,id);
-            return isAllowed;
-        }
-        else
-            console.log("cookies not exist");
+      if(document.cookie.indexOf('loggedInUser') > -1){
+        var username = $cookies.getObject('loggedInUser').username;
+        var promise = AuthService.checkPermission(username,id);
+        promise.then(function(data){
+          vm.isAllowed = data;
+        }, function(err) {
+          console.log("invalid permission checking");
+        });
+      }
+      else
+        console.log("cookies not exist");
     }
+    this.checkViewPermission();
   }
 })();
