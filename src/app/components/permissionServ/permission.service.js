@@ -76,22 +76,22 @@
 		{
 			var deferred = $q.defer();
 
-            localdb.openDb().then(function() {
-              var pid = id;
-              var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(pid);
+      localdb.openDb().then(function() {
+        var pid = id;
+        var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(pid);
 
-              request.onerror = function (event) {
-                deferred.reject();
-                console.log("get error: " + event.target.errorCode);
-              };
+        request.onerror = function (event) {
+          deferred.reject();
+          console.log("get error: " + event.target.errorCode);
+        };
 
-              request.onsuccess = function (event) {
-                var data = event.target.result;
-                deferred.resolve(data);
-              };
-            });
+        request.onsuccess = function (event) {
+          var data = event.target.result;
+          deferred.resolve(data);
+        };
+      });
 			return deferred.promise;
-		}
+		};
 
 		this.getAllPermission=function(sync)
 		{
@@ -176,7 +176,27 @@
               };
             });
 			return deferred.promise;
-		}
+		};
+
+		this.getUserGroupNameByID = function(id) {
+		  return new Promise(function(resolve,reject) {
+        localdb.openDb().then(function() {
+          var request =
+            localdb
+              .getObjectStore(DB_OBJ_PERMISSION, 'readonly')
+              .get(id);
+
+          request.onerror = function (event) {
+            reject("get error: " + event.target.errorCode);
+          };
+
+          request.onsuccess = function (event) {
+            var data = event.target.result;
+            resolve(data.code);
+          };
+        });
+      })
+    }
 	}
 
 })();
