@@ -92,7 +92,7 @@
 
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
-          .index('name')
+          // .index('name')
           .get(deptName);
 
       request.onerror = function() {

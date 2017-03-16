@@ -25,7 +25,7 @@
       var deferred = $q.defer();
       var users = [];
       sync = true;
-      // localdb.openDb().then(function() {
+      localdb.openDb().then(function() {
         var request =
           localdb.getObjectStore(DB_STORENAME, 'readonly')
             .openCursor();
@@ -96,7 +96,7 @@
           }
       }
       }
-    // });
+    });
 
 
       return deferred.promise;

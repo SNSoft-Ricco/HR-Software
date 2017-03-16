@@ -19,29 +19,27 @@
       var deferred = $q.defer();
       // check lastSync in localdb , if null ,then fetch all the database
       // if not null , fetch time only after lastSyncTimed
-      var request = localdb.getObjectStore(DB_STORENAME, 'readonly').get('syncDB');
-      $log.info('Sync Data Start....!')
-      // var request =
-      //   localdb.getObjectStore(DB_STORENAME, 'readonly')
-      //   .get(indexID);
-      request.onsuccess = function(event){
-        var result = event.target.result;
-        var dateNow = result.lastsync;
-        $log.info('sync done');
+      // var request = localdb.getObjectStore(DB_STORENAME, 'readonly').get('syncDB');
+      // $log.info('Sync Data Start....!')
+      // request.onsuccess = function(event){
+      //   var result = event.target.result;
+      //   var dateNow = result;
+      //   $log.info('sync done');
 
-          // will uncomment when the api is ready.
-          if(dateNow==null||dateNow==""){
-            deferred.resolve(true);
+      //     // will uncomment when the api is ready.
+      //     if(dateNow==null||dateNow==""){
+      //       deferred.resolve(true);
 
-          }else{
-            deferred.resolve(false);
-          }
+      //     }else{
+      //       deferred.resolve(false);
+      //     }
 
-        };
-        request.onerror = function(){
-          $log.info("Sync data Error!")
-        };
+      //   };
+      //   request.onerror = function(){
+      //     $log.info("Sync data Error!")
+      //   };
 
+      deferred.resolve(true)
 
       return deferred.promise;
     }
