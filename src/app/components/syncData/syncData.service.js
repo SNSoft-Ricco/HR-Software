@@ -19,12 +19,12 @@
       // check lastSync in localdb , if null ,then fetch all the database
       // if not null , fetch time only after lastSyncTime
       var syncTime = localdb.getObjectStore('lastSync', 'readonly').get('syncDB');
-      console.log('Sync Data Start....!')
+      $log.info('Sync Data Start....!')
 
       syncTime.onsuccess = function(event){
         var result = event.target.result;
         var dateNow = result.lastSync;
-        console.log('sync done');
+        $log.info('sync done');
 
         // will uncomment when the api is ready.
         if(dateNow==null||dateNow==""){
@@ -48,7 +48,7 @@
         var deferred = $q.defer();
 
         getFn().then(function(data){
-            console.log(data);
+            $log.info(data);
             var data = data.data;
             var modifyCollection = {
               'mongoDBNotExist':[],
@@ -91,7 +91,7 @@
                     }
                   }
                 }else{
-                  console.log('the _id do exist');
+                  $log.info('the _id do exist');
                 }
 
 

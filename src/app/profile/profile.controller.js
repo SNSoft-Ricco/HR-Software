@@ -61,7 +61,7 @@
                 return isAllowed;
             }
             else
-                console.log("cookies not exist");
+                $log.info("cookies not exist");
         }
 
         /*

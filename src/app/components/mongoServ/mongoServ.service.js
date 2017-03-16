@@ -161,13 +161,13 @@
         data:objLeave
       }).then(function(results){ 
 
-        callback(results)
-      })
+        callback(results);
+      });
 
       // return $http({method:"POST", url:"/editDeptObjectID/",
       //   data:{'data':objectID}
       // })
-      console.log('addLeave');
+      $log.info('addLeave');
       return deferred.promise;
 
     }
@@ -178,8 +178,8 @@
       //   data{'data':objDept});
       // })
       if(objLeaves.length>0){
-        console.log(objLeaves);
-        console.log('Edit Leave');
+        $log.info(objLeaves);
+        $log.info('Edit Leave');
       }
     }
 
@@ -440,12 +440,12 @@
           var result = $http({method:"POST", url:SITE_URL+"/user/",
             data:objUser
           }).then(function(results){ 
-           console.log('addUser');
+           $log.info('addUser');
            deferred.resolve(results);
           }, function(err){
             var errors =  err.config.data;
             for(var error in errors){
-              console.log(errors[error].username +' ' +err.data.message);
+              $log.info(errors[error].username +' ' +err.data.message);
             }
             deferred.resolve(err);
           })
@@ -468,10 +468,10 @@
         data:objUser
       }).then(function(results){ 
 
-       deferred.resolve(results)
+       deferred.resolve(results);
       })
 
-      console.log('rmUser');
+      $log.info('rmUser');
       return deferred.promise;
 
 
@@ -483,7 +483,7 @@
 
       var deferred = $q.defer();
 
-      var id = objUser._id
+      var id = objUser._id;
 
       if(!id){
         deferred.reject();
@@ -504,7 +504,7 @@
 
 
 
-      // console.log('Mongo editUser');
+      // $log.info('Mongo editUser');
       // var deferred = $q.defer();
 
       // var result = $http({method:"POST", url:SITE_URL+"/editUserObjectID/",
@@ -514,7 +514,7 @@
       //  deferred.resolve(results)
       // })
 
-      // console.log('editUser');
+      // $log.info('editUser');
       // return deferred.promise;
 
       // return $http({method:"POST", url:"/editUser/",
@@ -531,7 +531,7 @@
       var deferred = $q.defer();
       // var permission = [];
       if(permission.length>0){
-        console.log('add permission record to mongodb');
+        $log.info('add permission record to mongodb');
       
     
        var result =  $http({method:"POST", url:SITE_URL+"/permission/",
@@ -548,7 +548,7 @@
     function removePermission(){
 
       var deferred = $q.defer();
-      var id = objPm._id
+      var id = objPm._id;
       if(!id){
         deferred.reject();
       }else{
@@ -566,7 +566,7 @@
     function updatePermission(objPm){
 
       var deferred = $q.defer();
-      var id = objPm._id
+      var id = objPm._id;
 
       if(!id){
         deferred.reject();

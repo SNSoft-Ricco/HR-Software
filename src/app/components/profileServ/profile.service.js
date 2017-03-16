@@ -29,7 +29,7 @@
 
 			request.onerror = function(event) {
 				deferred.reject();
-				console.log("get user info error: " + event.target.errorCode);
+				$log.info("get user info error: " + event.target.errorCode);
 			};
 
 			request.onsuccess = function(event) {
@@ -47,7 +47,7 @@
 
         	request.onerror = function(event) {
 				deferred.reject();
-				console.log("get user info error: " + event.target.errorCode);
+				$log.info("get user info error: " + event.target.errorCode);
 			};
 
 			request.onsuccess = function(event) {

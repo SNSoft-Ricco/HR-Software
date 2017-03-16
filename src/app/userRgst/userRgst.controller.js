@@ -163,7 +163,7 @@
 
       if (vm.editMode)
       {
-        console.log(fields);
+        $log.info(fields);
         userServ.editUser(fields).then(function(){
           toastr.success("Successfully edited employee", "Success");
           back();
@@ -213,7 +213,7 @@
             return isAllowed;
         }
         else
-            console.log("cookies not exist");
+            $log.debug("cookies not exist");
     }
   }
 })();

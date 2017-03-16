@@ -60,7 +60,7 @@
                 return isAllowed;
             }
             else
-                console.log("cookies not exist");
+                $log.debug("cookies not exist");
             	return isAllowed;
         }
 	}

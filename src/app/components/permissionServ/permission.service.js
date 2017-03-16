@@ -68,35 +68,17 @@
 			var deferred = $q.defer();
 			obj.indexID = syncData.generateIndexID();
 			obj.lastModified = parseInt((new Date().getTime())/1000);
-			/*
-			var transaction = db.transaction([DB_OBJ_PERMISSION], "readwrite");
-
-			console.log(obj);
-
-			transaction.oncomplete = function(event) {
-			  deferred.resolve();
-			  console.log("insert done");
-			};
-
-			transaction.onerror = function(event) {
-			  deferred.reject();
-			  console.log("insert error");
-			};
-
-			var objectStore = transaction.objectStore(DB_OBJ_PERMISSION);
-			var request = objectStore.add(obj);
-			*/
 
 			var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').add(obj);
 
 			request.onsuccess = function(event) {
 			    deferred.resolve();
-			    console.log("insert successfully");
+			    $log.info("insert successfully");
 			};
 
 			request.onerror = function(event) {
 				deferred.reject();
-				console.log("insert error: " + event.target.errorCode);
+				$log.info("insert error: " + event.target.errorCode);
 			};
 
 			return deferred.promise;
@@ -113,12 +95,12 @@
 
 			request.onsuccess = function(event) {
 				deferred.resolve();
-				console.log("delete done");
+				$log.info("delete done");
 			};
 
 			request.onerror = function(event) {
 				deferred.reject();
-				console.log("delete error: " + event.target.errorCode);
+				$log.info("delete error: " + event.target.errorCode);
 			};
 
 			return deferred.promise;
@@ -136,12 +118,12 @@
 
 			request.onsuccess = function(event) {
 				deferred.resolve();
-				console.log("update done");
+				$log.info("update done");
 			};
 
 			request.onerror = function(event) {
 				deferred.reject();
-				console.log("update error: " + event.target.errorCode);
+				$log.info("update error: " + event.target.errorCode);
 			};
 
 			return deferred.promise;
@@ -159,7 +141,7 @@
 
 			request.onerror = function(event) {
 				deferred.reject();
-				console.log("get error: " + event.target.error.message);
+				$log.info("get error: " + event.target.error.message);
 			};
 
 			request.onsuccess = function(event) {
@@ -242,7 +224,7 @@
 			var request = index.openCursor(IDBKeyRange.only(sID));
 
 			request.onerror = function() {
-		        console.log("Open ObjectStore Error!");
+		        $log.info("Open ObjectStore Error!");
 		        deferred.reject(); 
 		      };    
 

@@ -61,11 +61,12 @@
                 var indexDBNotExist = data.indexDBNotExist;
                 var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
 
-                for(var idb in indexDBNotExist){
-                  // insert no exist record(from mongo) to indexDB
-                  addDept(indexDBNotExist[idb], function(data){
-
-                  });
+                if(indexDBNotExist.length>0){
+                  for(var idb in indexDBNotExist){
+                    // insert no exist record(from mongo) to indexDB
+                      addDept(indexDBNotExist[idb], function(data){
+                    });
+                  }
                 }
 
                 for(var tnm in mongoDBtimeNotMatch){
@@ -141,6 +142,7 @@
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         // deferred.resolve("Successfully added department.");
+        $log.info(objDept);
         deferred.resolve("Successfully added department.");
       };
 

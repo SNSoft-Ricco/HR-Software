@@ -40,8 +40,8 @@
     function rmUser(objUser) {
       $log.debug("Removing user: " + objUser.username);
       userServ.rmUser(objUser).then(function(result){
-        alert(result);
-        showUsers();
+        // alert(result);
+        // showUsers();
       });
     }
 
