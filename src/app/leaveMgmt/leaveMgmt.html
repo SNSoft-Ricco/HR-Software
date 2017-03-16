@@ -1,7 +1,7 @@
 <div class="container">
   <sns-navbar></sns-navbar>
 
-  <div class="row" ng-if="leaveMgmt.checkViewPermission(3)">
+  <div class="row" ng-if="leaveMgmt.isAllowed">
     <div class="box col-md-12">
         <div class="box-inner">
             <div class="box-content" ng-cloak>
@@ -30,7 +30,7 @@
                               <td> {{ leave.fromDate | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.toDate | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.status }} </td>
-                          </tr> 
+                          </tr>
                           </tbody>
                         </table>
                         <div class="text-center">
@@ -59,7 +59,7 @@
                               <td> {{ leave.fromDate | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.toDate | date: 'dd/MM/yyyy' }} </td>
                               <td> {{ leave.status }} </td>
-                            </tr> 
+                            </tr>
                             <div class="text-center">
                               <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="app/components/dirPagination/dirPagination.tpl.html"></dir-pagination-controls>
                             </div>
@@ -83,7 +83,7 @@
                 </md-content>
 
 
-              
+
 
             </div>
         </div>
