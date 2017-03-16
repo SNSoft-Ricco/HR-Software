@@ -21,7 +21,7 @@
     vm.username = "";
     //angular.fromJson($cookies.get("loggedInUser")).username;
 
-    $timeout(showUsers,500);
+    showUsers();
 
     function register() {
       $state.go("userRgst", {isRegister: true});

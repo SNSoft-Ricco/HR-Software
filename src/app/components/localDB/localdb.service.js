@@ -30,13 +30,11 @@
       var deferred = $q.defer();
 
       if(bOpenDB) {
-        $log.info("DB has opened");
         deferred.resolve(true);
         return deferred.promise;
       }
 
       var req = indexedDB.open(DB_NAME, DB_VERSION);
-      var justUpgraded = false;
 
       req.onerror = function (evt) {
         $log.info("openDb:", evt.target.errorCode);
@@ -55,10 +53,10 @@
             if (!objectStore.indexNames.contains(name)) {
                 objectStore.createIndex(name, name, options);
             }
-        }
+        };
 
         switch(true) {
-          case (evt.oldVersion < 3):
+          case (evt.oldVersion < 4):
             $log.info("IndexedDB Version 3");
 
             usrObjStore = dataBase.createObjectStore("user", { keyPath : "username" });
@@ -66,10 +64,14 @@
 
             lastSyncStore = dataBase.createObjectStore("lastSync", {keyPath : "sync"});
             lastSyncStore.put({'sync':'syncDB','lastSync':null});
-            deptObjStore= dataBase.createObjectStore("department", { keyPath : "indexID"});
+            deptObjStore = dataBase.createObjectStore("department", { keyPath : "indexID"});
+            leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "indexID" });
 
             // Create Index
             usrObjStore.createIndex("userDepartment", "department", { unique: false });
+
+            storeCreateIndex(leaveObjStore, "department", { unique: false });
+            storeCreateIndex(deptObjStore, "name", { unique: true });
 
             //Permission object store
             var store = evt.currentTarget.result
@@ -82,11 +84,14 @@
             var timestamp = new Date().getTime();
 
             txn.objectStore('department')
-              .add({indexID:'admin@snsoft.my-1931993199319231',  name: "IT Department", lastModified:timestamp,  position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319231',  name: "IT Department", lastModified:timestamp,
+                position:[{ positionId: 1, positionName: 'Department Head'}]});
             txn.objectStore('department')
-              .add({indexID:'admin@snsoft.my-1931993199319232',  name: "HR Department", lastModified:timestamp,  position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319232',  name: "HR Department", lastModified:timestamp,
+                position:[{ positionId: 1, positionName: 'Department Head'}]});
             txn.objectStore('department')
-              .add({indexID:'admin@snsoft.my-1931993199319233',  name: "R&D Department", lastModified:timestamp,  position:[{ positionId: 1, positionName: 'Department Head'}]});
+              .add({indexID:'admin@snsoft.my-1931993199319233',  name: "R&D Department", lastModified:timestamp,
+                position:[{ positionId: 1, positionName: 'Department Head'}]});
 
             // default admin user
             txn.objectStore('user')
@@ -98,10 +103,6 @@
             txn.objectStore('permission').add({code: "System Administrator",desc: "System Administrator",
               PermissionList: list, indexID:'admin@snsoft.my-1931993199319233'});
 
-          case (evt.oldVersion < 4):
-            $log.info("IndexedDB Version 4");
-            leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "indexID" });
-            storeCreateIndex(leaveObjStore, "department", { unique: false });
           case (evt.oldVersion < 5):
             $log.info("IndexedDB Version 5");
             systemObjStore = dataBase.createObjectStore("system", { keyPath : "_id", autoIncrement : true });

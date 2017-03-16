@@ -59,8 +59,8 @@
     }
 
     //// Private Functions
-    function showDeptUsers () {
-      userServ.getUsersByIndex("userDepartment", objDept.department).then(function(users) {
+    function showDeptUsers() {
+      userServ.getUsersByIndex("userDepartment", objDept.name).then(function (users) {
         vm.users = users;
       })
     }

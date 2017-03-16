@@ -25,45 +25,48 @@
       var deferred = $q.defer();
       var users = [];
 
-      var request =
-        localdb.getObjectStore(DB_STORENAME, 'readonly')
-          .openCursor();
+      localdb.openDb().then(function() {
+        var request =
+          localdb.getObjectStore(DB_STORENAME, 'readonly')
+            .openCursor();
 
-      request.onerror = function () {
-        $log.info("Open Cursor Error!");
-        deferred.reject();
-      };
-      request.onsuccess = function (event) {
-        var cursor = event.target.result;
+        request.onerror = function () {
+          $log.info("Open Cursor Error!");
+          deferred.reject();
+        };
+        request.onsuccess = function (event) {
+          var cursor = event.target.result;
 
-        if (cursor) {
-          users.push(cursor.value);
-          cursor.continue();
-        }
-        else {
-          if(sync){
+          if (cursor) {
+            users.push(cursor.value);
+            cursor.continue();
+          }
+          else {
+            if (sync) {
               // compare the file between indexDB & mongoDB , then sync it
               syncData.compare(users, mongoServ.addUser, mongoServ.getAllUsers)
-              .then(function(data){
+                .then(function (data) {
 
-                // mongoServ.addUser(data['mongoDBNotExist']);
-                mongoServ.addUser(data['mongoDBNotExist'] , function(udata){
+                  // mongoServ.addUser(data['mongoDBNotExist']);
+                  mongoServ.addUser(data['mongoDBNotExist'], function (udata) {
                     // assign objectID to departments
-                    if(udata.length==0){ return }
-                        udata.data.forEach(function(userRecord){
-                          var _id = userRecord._id;
-                          getUser(userRecord.username)
-                            .then(function(indexData){
-                              indexData._id = _id;
-                              editUser(indexData);
-                            });
+                    if (udata.length == 0) {
+                      return
+                    }
+                    udata.data.forEach(function (userRecord) {
+                      var _id = userRecord._id;
+                      getUser(userRecord.username)
+                        .then(function (indexData) {
+                          indexData._id = _id;
+                          editUser(indexData);
                         });
+                    });
 
                     // })
-                });
+                  });
 
 
-                  mongoServ.editUser(data['indexDBtimeNotMatch'], function(){
+                  mongoServ.editUser(data['indexDBtimeNotMatch'], function () {
 
 
                   });
@@ -71,24 +74,26 @@
                   var indexDBNotExist = data.indexDBNotExist;
                   var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
 
-                  for(var idb in indexDBNotExist){
+                  for (var idb in indexDBNotExist) {
 
                     // insert no exist record(from mongo) to indexDB
-                    if(indexDBNotExist[idb].username!="admin@snsoft.my"){
+                    if (indexDBNotExist[idb].username != "admin@snsoft.my") {
                       addUser(indexDBNotExist[idb]);
                     }
                   }
 
-                  for(var tnm in mongoDBtimeNotMatch){
+                  for (var tnm in mongoDBtimeNotMatch) {
                     //update indexDB data, because the lastmodified date is different(compared to mongodb)
                     editUser(mongoDBtimeNotMatch[tnm]);
                   }
-              })
-          }
+                })
+            }
 
-          deferred.resolve(users);
-        }
-      };
+            deferred.resolve(users);
+          }
+        };
+      });
+
 
       return deferred.promise;
     }
@@ -165,7 +170,7 @@
       // Let new user have active status
       objUser.status = 1;
       objUser.indexID = syncData.generateIndexID();
-      if(!objUser.lastModified){
+      if (!objUser.lastModified) {
         objUser.lastModified = new Date().getTime();
       }
       var request =
@@ -179,7 +184,7 @@
         deferred.reject();
 
       };
-      request.onsuccess = function() {
+      request.onsuccess = function () {
         deferred.resolve("Successfully added user.")
       };
 
@@ -202,8 +207,8 @@
         deferred.reject();
       };
 
-      request.onsuccess = function() {
-        mongoServ.editUser(objUser).then(function(data){
+      request.onsuccess = function () {
+        mongoServ.editUser(objUser).then(function (data) {
           $log.info(data);
           editUser(data);
         })
@@ -224,15 +229,15 @@
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
           .put(objUser);
 
-      request.onerror = function() {
-         deferred.reject("Edit User Failed!");
-       };
-       request.onsuccess = function() {
+      request.onerror = function () {
+        deferred.reject("Edit User Failed!");
+      };
+      request.onsuccess = function () {
         // mongoServ.editUser(objUser).success(function(data){
         // console.log(data);
         // })
-         deferred.resolve("Successfully edited user information.")
-       };
+        deferred.resolve("Successfully edited user information.")
+      };
 
 
       return deferred.promise;
