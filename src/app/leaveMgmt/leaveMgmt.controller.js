@@ -40,7 +40,8 @@
         var vm = this;
 
         vm.checkViewPermission = checkViewPermission;
-        vm.types = ["Annual Leave", "Medical Leave", "Other Reason"];
+        vm.types = ["Annual Leave", "Medical Leave", "Compassionate Leave", "Hospitalization",
+          "Marriage", "Maternity", "Unpaid Leave", "Paternity", "Other Reason"];
 
         vm.hide = function() {
           $mdDialog.hide();
