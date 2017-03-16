@@ -11,25 +11,27 @@
 		var id = 4;
 
 		var dynTemplate = {
-				"name": {
-					"fieldName": "Department",
-					"type": "text",
-					"inputType": "textbox",
-					"glyphClass": "glyphicon glyphicon-user",
-					"placeholder": "Enter a department name",
-					"value": "test",
-					"forEdit": "false"
-				},
-        "head": {
-					"fieldName": "Head",
-					"type": "text",
-					"inputType": "selectUser",
-					"glyphClass": "glyphicon glyphicon-user",
-					"placeholder": "",
-					"value": "test",
-					"forEdit": "true"
-				}
-			}
+      "name": {
+        "fieldName": "Department",
+        "type": "text",
+        "inputType": "textbox",
+        "glyphClass": "glyphicon glyphicon-user",
+        "placeholder": "Enter a department name",
+        "value": "test",
+        "forEdit": "false"
+      },
+      "head": {
+        "fieldName": "Head",
+        "type": "text",
+        "inputType": "selectUser",
+        "glyphClass": "glyphicon glyphicon-user",
+        "placeholder": "",
+        "value": "test",
+        "forEdit": "true"
+      }
+    };
+
+		var hiddenFields = ['position', 'indexID', 'lastModified'];
 
 		vm.dynFields = dynTemplate;
 		vm.editMode = false;
@@ -46,13 +48,13 @@
       var i = 0;
 
       vm.editMode = true;
-      vm.title = "Edit Department Information"
+      vm.title = "Edit Department Information";
 
-      for (var dept in objDept) {
-        if(vm.dynFields.hasOwnProperty(dept)) {
-          vm.inputs[i] = objDept[dept];
+      for (var field in objDept) {
+        if(vm.dynFields.hasOwnProperty(field)) {
+          vm.inputs[field] = objDept[field];
         } else {
-					if (dept !== "position") {
+					if (hiddenFields.indexOf(field) < 0) {
 						vm.dynFields[dept] = {
 							"fieldName": dept,
 							"type": "text",
@@ -70,9 +72,8 @@
 
 		// Load users as select options
 		userServ.getAllUsers().then(function(users){
-			$log.info("getAllUsers",users);
 			vm.users = users;
-		})
+		});
 
 		function newDept () {
 			var i = 0;
