@@ -19,7 +19,7 @@
       $state.go('deptMgmt');
     }
     else {
-      vm.deptName = objDept.department;
+      vm.deptName = objDept.name;
       vm.headName = objDept.head;
       vm.checkViewPermission = checkViewPermission;
       vm.users = "";
