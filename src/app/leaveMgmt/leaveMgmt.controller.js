@@ -9,6 +9,7 @@
   /** @ngInject */
   function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService, syncData) {
     var vm = this;
+    var id = 3;
     vm.leaves;
     // Function Declaration
     vm.newLeave = newLeave;
@@ -113,16 +114,20 @@
     }
 
 
-    function checkViewPermission(id)
+    function checkViewPermission()
     {
       if(document.cookie.indexOf('loggedInUser') > -1){
         var username = $cookies.getObject('loggedInUser').username;
-        var isAllowed = AuthService.checkPermission(username,id);
-        return isAllowed;
+        var promise = AuthService.checkPermission(username,id);
+        promise.then(function(data){
+          vm.isAllowed = data;
+        }, function(err) {
+          console.log("invalid permission checking");
+        });
       }
       else
         console.log("cookies not exist");
     }
-
+    this.checkViewPermission();
   }
 })();
