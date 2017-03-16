@@ -34,7 +34,7 @@
 
       //if(allowPermission.length == 0)
       //{
-      vm.getAllowPermission(username).then(function(data){
+      this.getAllowPermission(username).then(function(data){
         if(data.indexOf(id) !== -1) {
           deferred.resolve(true);
         }
