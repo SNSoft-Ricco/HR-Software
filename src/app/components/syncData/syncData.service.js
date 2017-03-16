@@ -95,8 +95,6 @@
                 }
 
 
-                /*  */
-
               }
             }
 
@@ -107,7 +105,15 @@
                 if(collections[collection].username!="admin@snsoft.my"){
                   modifyCollection['mongoDBNotExist'].push(collections[collection]);
                 }
-                
+              }else{
+                // check if the indexID exist, but mongo dont
+
+                var evens = _.find(data, function(num){ 
+                  return (num._id&&num._id!=""&&num._id == collections[collection]._id)
+                   });
+                if(!evens||data[d]._id==""||!data[d]._id){
+                  modifyCollection['mongoDBNotExist'].push(collections[collection]);
+                }
               }
             }
             deferred.resolve(modifyCollection);

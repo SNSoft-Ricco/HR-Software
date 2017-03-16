@@ -169,10 +169,6 @@
       // Remove department - Success
       request.onsuccess = function() {
         deferred.resolve("Successfully removed department.")
-
-        mongoServ.editDept(objDept, function(){
-          editDept(objDept);
-        });
       };
 
       return deferred.promise;

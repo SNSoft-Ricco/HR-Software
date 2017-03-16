@@ -42,6 +42,7 @@
           cursor.continue();
         }
         else {
+          sync = false
           if(sync){
               // compare the file between indexDB & mongoDB , then sync it
               syncData.compare(users, mongoServ.addUser, mongoServ.getAllUsers)

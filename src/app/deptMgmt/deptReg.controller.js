@@ -50,7 +50,12 @@
       for (var dept in objDept) {
         if(vm.dynFields.hasOwnProperty(dept)) {
           vm.inputs[i] = objDept[dept];
-        } else {
+          i++;
+        } 
+        
+      }
+      for (var dept in objDept){
+      		if(!vm.dynFields.hasOwnProperty(dept)){
 					if (dept !== "position") {
 						vm.dynFields[dept] = {
 							"fieldName": dept,
@@ -60,10 +65,9 @@
 						};
 
 						vm.inputs[i] = objDept[dept];
+						 i++;
 					}
-        }
-
-        i++;
+      		}
       }
 		}
 

@@ -37,7 +37,6 @@
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         var value = event.target.result;
-        console.log('leaveServ run 1 times');
         if (value) {
           var sync = true;
           if(sync){
@@ -91,9 +90,9 @@
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
         .get(indexID);
-
       request.onerror = function(event) {
         // Add leave trasaction - Error
+
         $log.debug("Transaction error: ", event);
         deferred.reject();
       };
@@ -118,7 +117,11 @@
       // Set Leave as Pending
       objLeave.approveStatus = "Pending";
       objLeave.status = 1;
-      objLeave.indexID = syncData.generateIndexID();
+
+      if(!objLeave.indexID||objLeave.indexID==""){
+        objLeave.indexID = syncData.generateIndexID();
+      }
+
       if(!objLeave.lastModified){
         objLeave.lastModified = new Date().getTime();
       }
@@ -130,7 +133,8 @@
 
       request.onerror = function(event) {
         // Add leave trasaction - Error
-        $log.debug("Transaction error: ", event);
+
+        $log.debug("Transaction error: ", event.target.error);
         deferred.reject();
       };
       request.onsuccess = function() {

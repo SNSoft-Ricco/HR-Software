@@ -451,7 +451,7 @@
           })
 
       }else{
-           deferred.resolve(results);
+           deferred.resolve([]);
       }
 
       return deferred.promise;
