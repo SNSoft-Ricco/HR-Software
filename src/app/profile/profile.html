@@ -3,7 +3,7 @@
     <sns-navbar></sns-navbar>
 
     <!-- Page Body -->
-	<div class="row" ng-if="profile.checkViewPermission(1)">
+	<div class="row" ng-if="profile.isAllowed">
 	    <div class="box col-md-12">
 	      <div class="box-inner">
 	        <div class="box-content">
@@ -12,7 +12,7 @@
 				    <div class="panel-heading">{{profile.title}}</div>
 				      	<div class="panel-body">
 				      		<div class="col-md-12">
-				      			
+
 				      			<table>
 				      				<tr>
 				      					<td class="col-md-4"><label class="control-label">Username:</label></td>
@@ -47,7 +47,7 @@
 				      					<td></td>
 				      				</tr>
 				      			</table>
-				      		</div>				      	
+				      		</div>
 				      	</div>
 				 </div>
 		    </div>
@@ -60,7 +60,7 @@
  <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
+
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -70,10 +70,16 @@
 
         <div class="modal-body">
            <form class="well form-horizontal" id="modal_form" name="modal_form">
-	            <fieldset>
-	              <div class="col-md-4"><label>Name:</label></div> <input type="text" name="name" ng-model="profile.fullnameModal" />
-			      <div class="col-md-4"><label>Contact No:</label></div> <input type="text" name="contact" ng-model="profile.contactnoModal" /> 
-			    </fieldset>
+             <table>
+               <tr>
+                 <td class="col-md-6"><label>Name:</label></td>
+                 <td><input type="text" name="name" ng-model="profile.fullnameModal" /></td>
+               </tr>
+               <tr>
+                 <td class="col-md-6"><label>Contact No:</label></td>
+                 <td><input type="text" name="contact" ng-model="profile.contactnoModal" /></td>
+               </tr>
+			       </table>
 		   </form>
         </div>
 
@@ -82,6 +88,6 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-      
+
     </div>
   </div>
