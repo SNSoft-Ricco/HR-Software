@@ -157,7 +157,6 @@
 			permissionArray=[];
 			var deferred = $q.defer();
 
-<<<<<<< HEAD
 			//var objectStore = db.transaction(DB_OBJ_PERMISSION).objectStore(DB_OBJ_PERMISSION);
           localdb.openDb().then(function() {
 			var objectStore = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly');

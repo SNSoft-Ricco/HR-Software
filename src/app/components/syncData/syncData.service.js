@@ -38,7 +38,7 @@
         syncTime.onerror = function(){
           $log.info("Sync data Error!")
         };
-      });
+
 
       return deferred.promise;
     }
@@ -115,8 +115,6 @@
                   modifyCollection['mongoDBNotExist'].push(collections[collection]);
                 }
               }
-            }
-          }
         }
         deferred.resolve(modifyCollection);
       })

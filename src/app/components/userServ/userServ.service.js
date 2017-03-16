@@ -78,13 +78,10 @@
                   });
 
 
-                  mongoServ.editUser(data['indexDBtimeNotMatch'], function () {
+                  // mongoServ.editUser(data['indexDBtimeNotMatch']);
 
-
-                  });
-
-                  var indexDBNotExist = data.indexDBNotExist;
-                  var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+                  var indexDBNotExist = data['indexDBNotExist'];
+                  var mongoDBtimeNotMatch = data['mongoDBtimeNotMatch'];
 
                   for (var idb in indexDBNotExist) {
 
@@ -98,7 +95,6 @@
                     //update indexDB data, because the lastmodified date is different(compared to mongodb)
                     editUser(mongoDBtimeNotMatch[tnm]);
                   }
-                })
             }
 
             deferred.resolve(users);
@@ -222,21 +218,9 @@
         deferred.reject();
       };
 
-<<<<<<< HEAD
-      request.onsuccess = function() {
-        // mongoServ.editUser(objUser).then(function(data){
-        //   $log.info(data)
-        //   editUser(data);
-        // })
-=======
-      request.onsuccess = function () {
-        mongoServ.editUser(objUser).then(function (data) {
-          $log.info(data);
-          editUser(data);
-        })
->>>>>>> origin
-        deferred.resolve("Successfully removed user.");
 
+      request.onsuccess = function() {
+        deferred.resolve("Successfully removed user.");
       };
 
       return deferred.promise;

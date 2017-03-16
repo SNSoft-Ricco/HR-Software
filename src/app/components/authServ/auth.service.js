@@ -6,7 +6,7 @@
 
   function AuthService($q,localdb,ProfileService,PermissionService){
     var allowPermission = [];
-
+    var vm = this;
     this.getAllowPermission=function(username)
     {
       return ProfileService.getUser(username)
@@ -14,7 +14,7 @@
           return PermissionService.getPermission(data.userGroup)
             .then (function(result){
               if(result){
-                allowPermission = result.PermissionList;
+                allowPermission = result.permissionList;
                 return Promise.resolve(allowPermission);
               }
               else
@@ -34,7 +34,7 @@
 
       //if(allowPermission.length == 0)
       //{
-      this.getAllowPermission(username).then(function(data){
+      vm.getAllowPermission(username).then(function(data){
         if(data.indexOf(id) !== -1) {
           deferred.resolve(true);
         }
