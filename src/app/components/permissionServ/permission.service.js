@@ -77,7 +77,7 @@
 			var deferred = $q.defer();
 
             localdb.openDb().then(function() {
-              var pid = parseInt(id);
+              var pid = id;
               var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(pid);
 
               request.onerror = function (event) {
