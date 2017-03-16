@@ -39,6 +39,7 @@
       function DialogController($log, $mdDialog, $cookies, leaveServ, toastr) {
         var vm = this;
 
+        vm.entitleDays = 0;
         vm.checkViewPermission = checkViewPermission;
         vm.types = ["Annual Leave", "Medical Leave", "Compassionate Leave", "Hospitalization",
           "Marriage", "Maternity", "Unpaid Leave", "Paternity", "Other Reason"];
@@ -67,6 +68,10 @@
             loadCurUserLeave();
             vm.cancel();
           });
+        };
+
+        vm.loadEntitlement = function(leaveType) {
+          vm.entitleDays = curUser.leaveDays[leaveType];
         };
       }
     }
