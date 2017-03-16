@@ -145,7 +145,7 @@
       objUser.status = "Active";
       objUser.indexID = syncData.generateIndexID();
 
-      var request = 
+      var request =
 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
           .add(objUser);
@@ -155,7 +155,7 @@
         alert("Transaction error: " + event.target.errorCode);
         deferred.reject();
 
-      }; 
+      };
       request.onsuccess = function() {
         // mongoServ.addUser(objUser).success(function(data){
         //   objectUser.objectID = data.objectID;
