@@ -8,6 +8,7 @@
 	/** @ngInject */
 	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr, AuthService, syncData) {
 		var vm = this;
+		var id = 4;
 
 		// Function Declaration
 		vm.newDept = newDept;
@@ -52,16 +53,20 @@
 			})
 		}
 
-		function checkViewPermission(id)
-        {
-            if(document.cookie.indexOf('loggedInUser') > -1){
-                var username = $cookies.getObject('loggedInUser').username;
-                var isAllowed = AuthService.checkPermission(username,id);
-                return isAllowed;
-            }
-            else
-                console.log("cookies not exist");
-            	return isAllowed;
-        }
+    function checkViewPermission()
+    {
+      if(document.cookie.indexOf('loggedInUser') > -1){
+        var username = $cookies.getObject('loggedInUser').username;
+        var promise = AuthService.checkPermission(username,id);
+        promise.then(function(data){
+          vm.isAllowed = data;
+        }, function(err) {
+          console.log("invalid permission checking");
+        });
+      }
+      else
+        console.log("cookies not exist");
+    }
+    this.checkViewPermission();
 	}
 })();
