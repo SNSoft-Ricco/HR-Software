@@ -9,6 +9,7 @@
   function localdb($log, $window, $q, mongoServ) {
     var DB_NAME = "snsofthrdb";
     var DB_VERSION = 10;
+    var bOpenDB = false;
     /**
      * IndexedDB Version Changelog
      * 4 (Ricco): added leave table
@@ -27,6 +28,13 @@
     //// Public Functions
     function openDb() {
       var deferred = $q.defer();
+
+      if(bOpenDB) {
+        $log.info("DB has opened");
+        deferred.resolve(true);
+        return deferred.promise;
+      }
+
       var req = indexedDB.open(DB_NAME, DB_VERSION);
       var justUpgraded = false;
 
@@ -126,7 +134,15 @@
 
       req.onsuccess = function () {
         db = this.result;
-        deferred.resolve(db);
+        $log.info("Opening DB conn..");
+
+        db.onerror = function(event) {
+          deferred.reject("Database error: " + event.target.errorCode);
+        };
+
+        bOpenDB = true;
+        //deferred.resolve(db);
+        deferred.resolve(true);
       };
 
       return deferred.promise;
