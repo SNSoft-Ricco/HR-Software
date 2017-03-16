@@ -12,12 +12,11 @@
 
     function ProfileController($timeout,$cookies,ProfileService,AuthService) {
         var vm = this;
+        var id = 1;
         vm.title = "Profile Management";
         vm.loadProfile = loadProfile;
         vm.updateUser = updateUser;
         vm.checkViewPermission = checkViewPermission;
-
-        $timeout(loadProfile,1000);
 
         function loadProfile()
         {
@@ -49,32 +48,26 @@
             ProfileService.updateUser(obj).then(
                 function(){
                     loadProfile();
-            });   
-        }
-
-        
-        function checkViewPermission(id)
-        {
-            if(document.cookie.indexOf('loggedInUser') > -1){
-                var username = $cookies.getObject('loggedInUser').username;
-                var isAllowed = AuthService.checkPermission(username,id);
-                return isAllowed;
-            }
-            else
-                console.log("cookies not exist");
-        }
-
-        /*
-        var db = ProfileService.getDbConnection();
-
-        if(db){
-            loadProfile();
-        }else{
-            var promise = ProfileService.openDb();
-            promise.then (function(){
-                loadProfile();
             });
-        }*/
+        }
+
+        function checkViewPermission()
+        {
+          if(document.cookie.indexOf('loggedInUser') > -1){
+            var username = $cookies.getObject('loggedInUser').username;
+            var promise = AuthService.checkPermission(username,id);
+            promise.then(function(data){
+              vm.isAllowed = data;
+            }, function(err) {
+              console.log("invalid permission checking");
+            });
+          }
+          else
+            console.log("cookies not exist");
+        }
+
+      this.checkViewPermission();
+      this.loadProfile();
     }
 
 })();
