@@ -14,16 +14,19 @@
     this.mergeData = mergeData;
     this.mergeLeaveData = mergeLeaveData;
 
+    var DB_STORENAME = "lastsync";
     function sync(){
       var deferred = $q.defer();
       // check lastSync in localdb , if null ,then fetch all the database
       // if not null , fetch time only after lastSyncTimed
-      var syncTime = localdb.getObjectStore('lastSync', 'readonly').get('syncDB');
+      var request = localdb.getObjectStore(DB_STORENAME, 'readonly').get('syncDB');
       $log.info('Sync Data Start....!')
-
-      syncTime.onsuccess = function(event){
+      // var request =
+      //   localdb.getObjectStore(DB_STORENAME, 'readonly')
+      //   .get(indexID);
+      request.onsuccess = function(event){
         var result = event.target.result;
-        var dateNow = result.lastSync;
+        var dateNow = result.lastsync;
         $log.info('sync done');
 
           // will uncomment when the api is ready.
@@ -35,7 +38,7 @@
           }
 
         };
-        syncTime.onerror = function(){
+        request.onerror = function(){
           $log.info("Sync data Error!")
         };
 

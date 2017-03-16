@@ -24,8 +24,8 @@
     function getAllUsers(sync) {
       var deferred = $q.defer();
       var users = [];
-
-      localdb.openDb().then(function() {
+      sync = true;
+      // localdb.openDb().then(function() {
         var request =
           localdb.getObjectStore(DB_STORENAME, 'readonly')
             .openCursor();
@@ -43,49 +43,44 @@
           }
           else {
             if (sync) {
-              // compare the file between indexDB & mongoDB , then sync it
-              syncData.compare(users, mongoServ.addUser, mongoServ.getAllUsers)
-                .then(function (data) {
+                  // compare the file between indexDB & mongoDB , then sync it
+                  syncData.compare(users, mongoServ.addUser, mongoServ.getAllUsers)
+                  .then(function (data) {
 
-                // mongoServ.addUser(data['mongoDBNotExist']);
-                mongoServ.addUser(data['mongoDBNotExist'])
-                .then(function(udata){
+                    // mongoServ.addUser(data['mongoDBNotExist']);
+                    mongoServ.addUser(data['mongoDBNotExist'])
+                    .then(function(udata){
                     // assign objectID to departments 
                     if(udata.length==0){ return }
-                        udata.data.forEach(function(userRecord){
-                          //if duplicate user-id , change status to 2
+                      udata.data.forEach(function(userRecord){
+                    //if duplicate user-id , change status to 2
 
-                           if(userRecord.errors){
-                              if(userRecord.errors.username.name == "ValidatorError"){
-                                  getUser(userRecord.errors.username.value)
-                                  .then(function(duplicateUser){
-                                      duplicateUser.status = 2;
-                                      editUser(duplicateUser);
-                                  })
-                              }
-                          }else{
-                              var _id = userRecord._id;
-                              getUser(userRecord.username)
-                                .then(function(indexData){
-                                  indexData._id = _id;
-                                  editUser(indexData);
-                                });
-                          }
-                        });
-                    });
-
-                    // })
-                  });
-
-
-                  // mongoServ.editUser(data['indexDBtimeNotMatch']);
+                    if(userRecord.errors){
+                      if(userRecord.errors.username.name == "ValidatorError"){
+                        getUser(userRecord.errors.username.value)
+                        .then(function(duplicateUser){
+                          duplicateUser.status = 2;
+                          editUser(duplicateUser);
+                        })
+                      }
+                    }else{
+                      var _id = userRecord._id;
+                      getUser(userRecord.username)
+                      .then(function(indexData){
+                        indexData._id = _id;
+                        editUser(indexData);
+                      });
+                    }  
+                   })
+                  })
+                  mongoServ.editUser(data['indexDBtimeNotMatch']);
 
                   var indexDBNotExist = data['indexDBNotExist'];
                   var mongoDBtimeNotMatch = data['mongoDBtimeNotMatch'];
 
                   for (var idb in indexDBNotExist) {
 
-                    // insert no exist record(from mongo) to indexDB
+                  // insert no exist record(from mongo) to indexDB
                     if (indexDBNotExist[idb].username != "admin@snsoft.my") {
                       addUser(indexDBNotExist[idb]);
                     }
@@ -93,14 +88,15 @@
 
                   for (var tnm in mongoDBtimeNotMatch) {
                     //update indexDB data, because the lastmodified date is different(compared to mongodb)
-                    editUser(mongoDBtimeNotMatch[tnm]);
+                      editUser(mongoDBtimeNotMatch[tnm]);
                   }
-            }
+                  deferred.resolve(users);
 
-            deferred.resolve(users);
+                  })
           }
-        };
-      });
+      }
+      }
+    // });
 
 
       return deferred.promise;

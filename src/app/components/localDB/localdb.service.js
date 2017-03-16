@@ -62,8 +62,8 @@
             usrObjStore = dataBase.createObjectStore("user", { keyPath : "username" });
             usrObjStore.createIndex('userGroup', 'userGroup', { unique: false });
 
-            lastSyncStore = dataBase.createObjectStore("lastSync", {keyPath : "sync"});
-            lastSyncStore.put({'sync':'syncDB','lastSync':null});
+            lastSyncStore = dataBase.createObjectStore("lastsync", {keyPath : "sync"});
+            lastSyncStore.add({'sync':'syncDB','lastsync':null});
             deptObjStore = dataBase.createObjectStore("department", { keyPath : "indexID"});
             leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "indexID" });
 
