@@ -31,7 +31,7 @@
       };    
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
-        var cursor = event.target.result;
+      var cursor = event.target.result;
         
         if (cursor) {
           departments.push(cursor.value);
@@ -43,7 +43,19 @@
             syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)
             .then(function(data){
 
-                mongoServ.addDept(data['mongoDBNotExist']);
+                mongoServ.addDept(data['mongoDBNotExist'] , function(udata){
+                    // assign objectID to departments
+                    if(udata.length==0||!udata.data){ return }
+                        udata.data.forEach(function(deptRecord){
+                          var _id = deptRecord._id;
+                          getDept(deptRecord.indexID)
+                            .then(function(indexData){
+                              indexData._id = _id;
+                              editDept(indexData);
+                            });
+                        });
+                });
+
                 mongoServ.editDept(data['indexDBtimeNotMatch']);
 
                 var indexDBNotExist = data.indexDBNotExist;
@@ -51,7 +63,9 @@
 
                 for(var idb in indexDBNotExist){
                   // insert no exist record(from mongo) to indexDB
-                  addDept(indexDBNotExist[idb]);
+                  addDept(indexDBNotExist[idb], function(data){
+
+                  });
                 }
 
                 for(var tnm in mongoDBtimeNotMatch){
@@ -103,8 +117,13 @@
       var deferred = $q.defer();
 
       // Let new department be active
-      objDept.status = "Active";
-      objDept.indexID = syncData.generateIndexID();
+      objDept.status = 1;
+      if(!objDept.indexID){
+        objDept.indexID = syncData.generateIndexID();
+      }
+      if(!objDept.lastModified){
+        objDept.lastModified = new Date().getTime();
+      }
 
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
@@ -121,14 +140,8 @@
       }; 
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
+        // deferred.resolve("Successfully added department.");
         deferred.resolve("Successfully added department.");
-
-        //create a department record in mongodb
-        mongoServ.addDept(objDept,function(udata){
-          //return the objectid created by mongodb
-          objDept.objectID = "x12345";
-          editDept(objDept);
-        })
       };
 
       return deferred.promise;
@@ -139,10 +152,13 @@
     // Promise Resolve - Success Message
     function rmDept (objDept) {
       var deferred = $q.defer();
-
+      objDept.status = 0;
+      // var request = 
+      //   localdb.getObjectStore(DB_STORENAME, 'readwrite')
+      //   .delete(objDept.department);
       var request = 
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
-        .delete(objDept.department);
+        .put(objDept);
 
       request.onerror = function(event) {
         // Remove department trasaction - Error
@@ -153,10 +169,10 @@
       // Remove department - Success
       request.onsuccess = function() {
         deferred.resolve("Successfully removed department.")
-        // mongoServ.rmDept(objDept, function(){
-        //   objDept.status = "False";
-        //   editDept(objDept);
-        // });
+
+        mongoServ.editDept(objDept, function(){
+          editDept(objDept);
+        });
       };
 
       return deferred.promise;
@@ -178,7 +194,7 @@
        request.onsuccess = function() {
          deferred.resolve("Successfully edited department information.")
          //after change the indexDB department name , update to mongodb too.
-         mongoServ.editDept(objDept,function(){});
+         // mongoServ.editDept(objDept,function(){});
        };
 
        return deferred.promise;

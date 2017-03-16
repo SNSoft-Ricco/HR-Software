@@ -1,5 +1,6 @@
 (function() {
 'use strict';
+  const SITE_URL = "http://localhost:3003"
 
   angular
       .module('snsoftHr')
@@ -12,6 +13,7 @@
     this.addDept = addDept;
     this.editDept = editDept;
     this.rmDept = rmDept;
+
     //leave
     this.getLeaveByUsername = getLeaveByUsername;
     this.getPendingApprovalLeaveByUsername = getPendingApprovalLeaveByUsername;
@@ -23,6 +25,12 @@
     this.addUser = addUser;
     this.rmUser = rmUser;
     this.editUser = editUser;
+
+    //permission
+    this.addPermission = addPermission;
+    this.removePermission = removePermission;
+    this.updatePermission = updatePermission;
+    this.getAllPermission = getAllPermission;
 
     //////////
     ///   Departments
@@ -88,31 +96,51 @@
       //   }]
       // return result
 
+      var result =  $http({method: "GET", url:SITE_URL+"/department/"});
+
+
+
       deferred.resolve(result);
 
       return deferred.promise;
 
-      // if(!lastSync){
-      //   // if sent 0 , which means return all result
-      //   return $http({method: "GET", url:"/departments/0/"});
-      // }else{
-      //   // if sent a number, only return the data after the last sync time
-      //   return $http({method: "GET", url:"/departments/"+lastSync+"/"})
-      // }
+
   	}
 
-    function addDept(objDept){
-      // return $http({method:"POST", url:"/addDept/",
-      //   data:{'data':objDept}
-      // })
+    function addDept(objDepts,callback){
+      var deferred = $q.defer();
+
+          var result = $http({method:"POST", url:SITE_URL+"/department/",
+            data:objDepts
+          }).then(function(results){ 
+
+           callback(results) 
+          })
+
+      return deferred.promise;
     }
 
     function editDept(objDept){
-      // return $http({method:"POST", url:"/editDept/",
-      //   data:{'data':objDept}
-      // })
-      console.log('editDept');
+      var deferred = $q.defer();
+
+      var id = objDept._id
+      objDept.lastModified = new Date();
+      if(!id){
+        deferred.reject();
+      }else{
+        var result =  $http({method:"PATCH", url:SITE_URL+"/department/"+id+"/",
+          data:objDept
+        }).then(function(results){ 
+
+          deferred.resolve(results)
+        })
+      }
+      return deferred.promise;
     }
+
+
+
+
     function rmDept(objDept){
       // return $http({method:"POST", url:"/editDept/",
       //   data:{'data':objDept}
@@ -127,8 +155,20 @@
       // return $http({method:"POST", url:"/addLeave/",
       //   data{'data':objDept});
       // })
-      console.log('add 1 leave');
-      console.log(objLeave);
+      var deferred = $q.defer();
+
+      var result = $http({method:"POST", url:SITE_URL+"/leave/",
+        data:objLeave
+      }).then(function(results){ 
+
+        callback(results)
+      })
+
+      // return $http({method:"POST", url:"/editDeptObjectID/",
+      //   data:{'data':objectID}
+      // })
+      console.log('addLeave');
+      return deferred.promise;
 
     }
 
@@ -143,21 +183,22 @@
       }
     }
 
+
     function getLeaveByUsername(username){
       var deferred = $q.defer();
-      var leaves = [];
+      // var leaves = [];
 
       // test data 1 -- test for the first data insert
       // *** need to have objectID , or it will create everytime ***
       // var leaves =[
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-03-01T16:00:00.000Z",
-      //     toDate:"2017-03-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-03-01T16:00:00.000Z",
+      //     to:"2017-03-06T16:00:00.000Z",
       //     description:"Apply for Sick Leave",
       //     leaveStatus:"Pending",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-03-07T16:00:00.000Z",
       //     lastModified:"1488326400",
       //     objectID:"x12345",
@@ -165,12 +206,12 @@
       //   },
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-03-04T16:00:00.000Z",
-      //     toDate:"2017-03-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-03-04T16:00:00.000Z",
+      //     to:"2017-03-06T16:00:00.000Z",
       //     description:"Apply for Medical Leave",
       //     leaveStatus:"Pending",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-03-07T18:00:00.000Z",
       //     lastModified:"1488326400",
       //     objectID:"a123456",
@@ -183,12 +224,12 @@
       // var leaves = [
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-03-04T16:00:00.000Z",
-      //     toDate:"2017-03-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-03-04T16:00:00.000Z",
+      //     to:"2017-03-06T16:00:00.000Z",
       //     description:"Apply for Medical Leave",
       //     leaveStatus:"Pending",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-03-07T18:00:00.000Z",
       //     lastModified:"1488326400",
       //     objectID:"a123456",
@@ -196,13 +237,13 @@
       //   },
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-06-01T16:00:00.000Z",
-      //     toDate:"2017-06-02T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-06-01T16:00:00.000Z",
+      //     to:"2017-06-02T16:00:00.000Z",
       //     description:"Apply for emo Leave",
       //     leaveStatus:"Pending",
       //     objectID:"",
-      //     approvalBy:"kenny@snsoft.my",
+      //     approveBy:"kenny@snsoft.my",
       //     createdTime:"2017-06-07T18:00:00.000Z",
       //     lastModified:"1488326400",
       //     status:1
@@ -215,12 +256,12 @@
       // var leaves = [
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-09-04T16:00:00.000Z",
-      //     toDate:"2017-09-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-09-04T16:00:00.000Z",
+      //     to:"2017-09-06T16:00:00.000Z",
       //     description:"Apply for Medical Leave",
       //     leaveStatus:"Success",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-09-07T18:00:00.000Z",
       //     lastModified:"1504224000",
       //     indexID:"mark@snsoft.my-1488957854149",
@@ -233,25 +274,26 @@
       // var leaves = [
       //   {
       //     user:"mark@snsoft.my",
-      //     leaveType:"Medical Leave",
-      //     fromDate:"2017-01-04T16:00:00.000Z",
-      //     toDate:"2017-01-06T16:00:00.000Z",
+      //     type:"Medical Leave",
+      //     from:"2017-01-04T16:00:00.000Z",
+      //     to:"2017-01-06T16:00:00.000Z",
       //     description:"Apply for Medical Leave",
       //     leaveStatus:"Success",
-      //     approvalBy:"logan@snsoft.my",
+      //     approveBy:"logan@snsoft.my",
       //     createdTime:"2017-01-07T18:00:00.000Z",
       //     lastModified:"1483228800",
       //     indexID:"mark@snsoft.my-1488957854149",
       //     objectID:"a123456",
       //     status:1
       //   }]
-
-
-      deferred.resolve(leaves);
-      return deferred.promise;
       // return $http({method:"POST", url:"/getLeaveByUsername/",
       //   data{'data':username});
       // })
+      var leaves =  $http({method: "GET", url:SITE_URL+"/leave/"});
+
+      deferred.resolve(leaves);
+      return deferred.promise;
+
     }
 
     function getPendingApprovalLeaveByUsername(username){
@@ -272,61 +314,61 @@
       // need tp see the indexeId first
       var users = [];
       // var users = [
-      //   {
-      //     contactno:"011288299292",
-      //     department:"IT Department",
-      //     fullname:"Cindy",
-      //     objectID:"a123456",
-      //     position:" ",
-      //     status:"Active",
-      //     supervisor:" ",
-      //     usergroup:"1",
-      //     username:"cindy@snsoft.my",
-      //     userpwd:"9999",
-      //     lastModified:"1488326400"
-      //   },
-      //   {
-      //     contactno:"013288299292",
-      //     department:"IT Department",
-      //     fullname:"Evonne",
-      //     objectID:"x123456",
-      //     position:" ",
-      //     status:"Active",
-      //     supervisor:" ",
-      //     usergroup:"1",
-      //     username:"evonne@snsoft.my",
-      //     userpwd:"9999",
-      //     lastModified:"1488326400"
-      //   }
+        // {
+        //   contactNo:"011288299292",
+        //   department:"IT Department",
+        //   name:"Cindy",
+        //   objectID:"a123456",
+        //   position:" ",
+        //   status:"Active",
+        //   supervisor:" ",
+        //   userGroup:"1",
+        //   username:"cindy@snsoft.my",
+        //   password:"9999",
+        //   lastModified:"1488326400"
+        // },
+        // {
+        //   contactNo:"013288299292",
+        //   department:"IT Department",
+        //   name:"Evonne",
+        //   objectID:"x123456",
+        //   position:" ",
+        //   status:"Active",
+        //   supervisor:" ",
+        //   userGroup:"1",
+        //   username:"evonne@snsoft.my",
+        //   password:"9999",
+        //   lastModified:"1488326400"
+        // }
       // ]
 
       // test data 2 -- test if the objectID is same
       // ***** need to copy indexID , or it will create new record *****
       // var users = [
       //   {
-      //     contactno:"011288299292",
+      //     contactNo:"011288299292",
       //     department:"IT Department",
-      //     fullname:"Cindy",
+      //     name:"Cindy",
       //     objectID:"a123456",
       //     position:" ",
       //     status:"Active",
       //     supervisor:" ",
-      //     usergroup:"1",
+      //     userGroup:"1",
       //     username:"cindy@snsoft.my",
-      //     userpwd:"9999",
+      //     password:"9999",
       //     lastModified:"1488326400"
       //   },
       //   {
-      //     contactno:"0118288191199",
+      //     contactNo:"0118288191199",
       //     department:"IT Department",
-      //     fullname:"cecilia",
+      //     name:"cecilia",
       //     // objectID:"a123456",
       //     position:" ",
       //     status:"Active",
       //     supervisor:" ",
-      //     usergroup:"1",
+      //     userGroup:"1",
       //     username:"cecilia@snsoft.my",
-      //     userpwd:"9999",
+      //     password:"9999",
       //     lastModified:"1488326400"
       //   }
       // ]
@@ -335,16 +377,16 @@
       // ***** need to copy indexID , or it will create new record *****
       // var users = [
       //   {
-      //     contactno:"011288299292",
+      //     contactNo:"011288299292",
       //     department:"IT Department",
-      //     fullname:"Cindy Crow",
+      //     name:"Cindy Crow",
       //     objectID:"a123456",
       //     position:" ",
       //     status:"Active",
       //     supervisor:" ",
-      //     usergroup:"1",
+      //     userGroup:"1",
       //     username:"cindy@snsoft.my",
-      //     userpwd:"9999",
+      //     password:"9999",
       //     lastModified:"1504224000"
 
       //   }
@@ -354,20 +396,21 @@
       // ***** need to copy indexID , or it will create new record *****
       // var users = [
       //   {
-      //     contactno:"011288299292",
+      //     contactNo:"011288299292",
       //     department:"IT Department",
-      //     fullname:"Cindy",
+      //     name:"Cindy",
       //     objectID:"a123456",
       //     position:" ",
       //     status:"Active",
       //     supervisor:" ",
-      //     usergroup:"1",
+      //     userGroup:"1",
       //     username:"cindy@snsoft.my",
-      //     userpwd:"9999",
+      //     password:"9999",
       //     lastModified:"1483228800",
 
       //   }
       // ]
+      var users =  $http({method: "GET", url:SITE_URL+"/user/"});
 
 
       deferred.resolve(users);
@@ -386,20 +429,206 @@
       //   data{'data':username});
       // })
     }
-    function addUser(){
+    function addUser(objUser, callback){
+
+
+      var deferred = $q.defer();
+
+      if(objUser.length!=0){
+
+          // $http({method:"POST", url:SITE_URL+"/addUser/",
+          var result = $http({method:"POST", url:SITE_URL+"/user/",
+            data:objUser
+          }).then(function(results){ 
+
+           callback(results) 
+          })
+          console.log('addUser');
+
+      }else{
+          callback([])
+      }
+
+      return deferred.promise;
+
       // return $http({method:"POST", url:"/addUser/",
       //   data{'data':username});
       // })
     }
-    function rmUser(){
+    function rmUser(objUser){
+
+      var deferred = $q.defer();
+
+      var result = $http({method:"POST", url:SITE_URL+"/editUser/",
+        data:objUser
+      }).then(function(results){ 
+
+       deferred.resolve(results)
+      })
+
+      console.log('rmUser');
+      return deferred.promise;
+
+
       // return $http({method:"POST", url:"/rmUser/",
       //   data{'data':username});
       // })
     }
-    function editUser(){
-      console.log('Mongo editUser');
+    function editUser(objUser, callback){
+
+      var deferred = $q.defer();
+
+      var id = objUser._id
+
+      if(!id){
+        deferred.reject();
+      }else{
+
+        // if(!Array.isArray(objUser)){
+        //   objUser = [objUser];
+        // }
+        var result =  $http({method:"PATCH", url:SITE_URL+"/user/"+id+"/",
+          data:objUser
+        }).then(function(results){ 
+
+          deferred.resolve(results);
+        })
+      }
+      return deferred.promise;
+
+
+
+
+      // console.log('Mongo editUser');
+      // var deferred = $q.defer();
+
+      // var result = $http({method:"POST", url:SITE_URL+"/editUserObjectID/",
+      //   data:{'data':objectID}
+      // }).then(function(results){ 
+
+      //  deferred.resolve(results)
+      // })
+
+      // console.log('editUser');
+      // return deferred.promise;
+
       // return $http({method:"POST", url:"/editUser/",
       //   data{'data':username});
+      // })
+    }
+
+
+    //////////////
+    // PERMISSION
+    //////////////
+
+    function addPermission(){
+      var deferred = $q.defer();
+      var permission = [];
+      if(permission.length>0){
+        console.log('add permission record to mongodb');
+      }
+     
+      deferred.resolve(permission);
+      return deferred.promise;
+      // return $http({method:"POST", url:"/addPermission/",
+      //   data{'data':username});
+      // })
+    }
+
+    function removePermission(){
+      var deferred = $q.defer();
+      var permission = [];
+      
+      deferred.resolve(permission);
+      return deferred.promise;
+      // return $http({method:"POST", url:"/removePermission/",
+      //   data{'data':username});
+      // })
+    }
+
+    function updatePermission(){
+      var deferred = $q.defer();
+      var permission = [];
+      
+      deferred.resolve(permission);
+      return deferred.promise;
+      // return $http({method:"POST", url:"/updatePermission/",
+      //   data{'data':username});
+      // })
+    }
+
+    function getAllPermission(){
+      var deferred = $q.defer();
+      var permission = [];
+
+      // test data 1 -- test for the first data insert
+      // *** need to have objectID , or it will create everytime ***
+      // var permission=[
+      //   {
+      //     PermissionList:[1,2,3],
+      //     code:"Operators 1",
+      //     desc:"Operators 1",
+      //     objectID:"a12345",
+      //     lastModified:14883264307
+      //   },
+      //   {
+      //     PermissionList:[1,5],
+      //     code:"Shopkeeper",
+      //     desc:"Shopkeeper",
+      //     objectID:"b12345",
+      //     lastModified:1488326400
+      //   }
+      // ]  
+
+      // test data 2 -- test if the objectID is same
+      // ***** need to copy indexID , or it will create new record *****
+      // var permission=[
+      //   {
+      //     PermissionList:[1,2,5],
+      //     code:"Operators 1",
+      //     desc:"Operators 1",
+      //     objectID:"a12345",
+      //     lastModified:14883264307
+      //   },
+      //   {
+      //     PermissionList:[1,5],
+      //     code:"Cleaner",
+      //     desc:"Cleaner",
+      //     objectID:"d12345",
+      //     lastModified:1488326400
+      //   }
+      // ]  
+
+      // test data 3 - test if the date is bigger than indexdb -> save to indexeddb
+      // ***** need to copy indexID , or it will create new record *****
+      // var permission=[
+      //   {
+      //     PermissionList:[1,2,5],
+      //     code:"Operators 423",
+      //     desc:"Operators 423",
+      //     indexID:"admin@snsoft.my-1489118096722",
+      //     objectID:"a12345",
+      //     lastModified:1504224012
+      //   }
+      // ]
+      
+      // test data 4 - test if the data is smaller than indexdb -> save to mongodb
+      // ***** need to copy indexID , or it will create new record *****
+      // var permission=[
+      //   {
+      //     PermissionList:[1,2,5],
+      //     code:"Operators 1",
+      //     desc:"Operators 1",
+      //     objectID:"a12345",
+      //     indexID:"admin@snsoft.my-1489113382465",
+      //     lastModified:1483228800
+      //   }
+      // ]
+
+      deferred.resolve(permission);
+      return deferred.promise;
+      // return $http({method:"GET", url:"/getAllPermission/"});
       // })
     }
 

@@ -8,7 +8,7 @@
   /** @ngInject */
   function UserRgstController(
     $log, $cookies, $state, $timeout, $stateParams,
-    userServ, deptServ, PermissionService, toastr,AuthService) {
+    userServ, deptServ, PermissionService, toastr,AuthService, mongoServ) {
 
     var vm = this;
     var id = 2;
@@ -25,7 +25,7 @@
         "value": "test",
 				"forEdit": "false"
       },
-      "userpwd": {
+      "password": {
         "fieldName": "Password",
         "type": "password",
         "inputType": "textbox",
@@ -34,7 +34,7 @@
 				"forEdit": "false"
 
       },
-      "usergroup": {
+      "userGroup": {
         "fieldName": "User Group",
         "inputType": "selectbox",
         "glyphClass": "glyphicon glyphicon-briefcase"
@@ -54,13 +54,13 @@
         "inputType": "selectbox",
         "glyphClass": "glyphicon glyphicon-user"
       },
-      "fullname": {
+      "name": {
         "fieldName": "Full Name",
         "type": "text",
         "inputType": "textbox",
         "glyphClass": "glyphicon glyphicon-user"
       },
-      "contactno": {
+      "contactNo": {
         "fieldName": "Contact No.",
         "type": "text",
         "inputType": "textbox",
@@ -68,7 +68,7 @@
       }
     };
 
-    vm.userStatusList = ['Active', 'Disabled'];
+    vm.userStatusList = [0,1]// ['Active', 'Disabled'];
     vm.dynFields = dynTemplate;
     vm.editMode = false;
     vm.title = "New User Registration";
@@ -155,7 +155,7 @@
       if (fields['position'] === 'Department Head') {
         $log.info("Department Head");
         deptServ.getDept(fields['department']).then(function(objDept){
-          objDept.head = fields['fullname'];
+          objDept.head = fields['name'];
           deptServ.editDept(objDept).then(function(){
             toastr.success("Successfully set department head", "Success");
           })
@@ -164,15 +164,20 @@
 
       if (vm.editMode)
       {
+        console.log(fields);
         userServ.editUser(fields).then(function(){
           toastr.success("Successfully edited employee", "Success");
           back();
-        });
+        })
+        .then(function(){
+          mongoServ.editUser(fields);
+        })
       } else {
         userServ.addUser(fields).then(function(){
           toastr.success("Successfully added employee", "Success");
           back();
         });
+
       }
 
     }

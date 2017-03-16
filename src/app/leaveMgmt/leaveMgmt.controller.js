@@ -45,7 +45,7 @@
         var vm = this;
 
         vm.checkViewPermission = checkViewPermission;
-        vm.leaveTypes = ["Annual Leave", "Medical Leave", "Other Reason"];
+        vm.types = ["Annual Leave", "Medical Leave", "Other Reason"];
 
         vm.hide = function() {
           $mdDialog.hide();
@@ -59,10 +59,10 @@
           var leave = {
             user: $cookies.getObject('loggedInUser').username,
             department: $cookies.getObject('loggedInUser').department,
-            approvalBy: $cookies.getObject('loggedInUser').supervisor,
-            leaveType: vm.leaveType,
-            fromDate: vm.fromDate,
-            toDate: vm.toDate,
+            approveBy: $cookies.getObject('loggedInUser').supervisor,
+            type: vm.type,
+            from: vm.from,
+            to: vm.to,
             description: vm.description
           };
 
