@@ -12,6 +12,7 @@
 
     function PermissionController($timeout,$cookies,PermissionService,AuthService) {
         var vm = this;
+        var id = 5;
 
         var dynTemplate = {
             "code": {
@@ -55,7 +56,6 @@
                                 {id:5, name:'Manage Permission'}
                               ];
         vm.selection = [];
-        $timeout(refreshList,200);
 
         function AddPermission() {
             var i = 0;
@@ -93,9 +93,9 @@
             promise.then (function(result){
                 var tmpArray = result;
 
-                for(var i=0;i<tmpArray.length;i++) 
-                { 
-                  for(var j=0;j<tmpArray[i].array.length;j++) 
+                for(var i=0;i<tmpArray.length;i++)
+                {
+                  for(var j=0;j<tmpArray[i].array.length;j++)
                   {
                     var txt = "";
                     if(tmpArray[i].array[j] == 1)      txt = vm.PermissionChkBox[0].name;
@@ -154,7 +154,7 @@
 
             // Is currently selected
             if (idx > -1) {
-              vm.selection.splice(idx, 1); //remove frim array 
+              vm.selection.splice(idx, 1); //remove frim array
             }
 
             // Is newly selected
@@ -163,12 +163,16 @@
             }
         }
 
-        function checkViewPermission(id)
+        function checkViewPermission()
         {
             if(document.cookie.indexOf('loggedInUser') > -1){
                 var username = $cookies.getObject('loggedInUser').username;
-                var isAllowed = AuthService.checkPermission(username,id);
-                return isAllowed;
+                var promise = AuthService.checkPermission(username,id);
+                promise.then(function(data){
+                  vm.isAllowed = data;
+                }, function(err) {
+                  console.log("invalid permission checking");
+                });
             }
             else
                 console.log("cookies not exist");
@@ -186,17 +190,8 @@
             });
         }
 
-        /*
-        var db = PermissionService.getDbConnection();
-
-        if(db){
-            refreshList();
-        }else{
-            var promise = PermissionService.openDb();
-            promise.then (function(){
-                refreshList();
-            });
-        }*/
+      this.checkViewPermission();
+      this.refreshList();
     }
 
 })();
