@@ -68,6 +68,17 @@
       }
     };
 
+    var leaveDaysTemplate = {
+      "Annual Leave":8,
+      "Medical Leave":14,
+      "Compassionate Leave":0,
+      "Hospitalization":60,
+      "Marriage":0,
+      "Maternity":0,
+      "Unpaid Leave":0,
+      "Paternity":0,
+      "Other Reason":0};
+
     var hiddenFields = ['indexID', 'lastModified', 'userGroupName'];
 
     vm.userStatusList = [0,1]// ['Active', 'Disabled'];
@@ -87,12 +98,12 @@
       // Load Permission as select options
       PermissionService.getAllPermission().then(function(pms){
         vm.pms = pms;
-      })
+      });
 
       // Load Departments as select options
       deptServ.getAllDepartments().then(function(depts) {
         vm.depts = depts;
-      })
+      });
 
       // Load users as select options
       userServ.getAllUsers().then(function(users){
@@ -154,6 +165,9 @@
         fields[field] = vm.inputs[i];
         i++;
       }
+
+      // to be removed - add leave days template to existing users
+      fields['leaveDays'] = leaveDaysTemplate;
 
       // Special handling to set user as department head
       if (fields['position'] === 'Department Head') {
