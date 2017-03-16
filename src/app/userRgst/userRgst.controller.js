@@ -68,6 +68,8 @@
       }
     };
 
+    var hiddenFields = ['indexID', 'lastModified', 'userGroupName'];
+
     vm.userStatusList = [0,1]// ['Active', 'Disabled'];
     vm.dynFields = dynTemplate;
     vm.editMode = false;
@@ -115,18 +117,20 @@
 
             loadNext(field, objUser[field]);
           } else {
-            vm.dynFields[field] = {
-              "fieldName": field,
-              "type": "text",
-              "inputType": "textbox",
-              "glyphClass": "glyphicon glyphicon-list-alt"
-            };
+            if (hiddenFields.indexOf(field) < 0) {
+              vm.dynFields[field] = {
+                "fieldName": field,
+                "type": "text",
+                "inputType": "textbox",
+                "glyphClass": "glyphicon glyphicon-list-alt"
+              };
 
-            if (field == 'status') {
-              vm.dynFields[field].inputType = "selectBox";
+              if (field == 'status') {
+                vm.dynFields[field].inputType = "selectBox";
+              }
+
+              vm.inputs[i] = objUser[field];
             }
-
-            vm.inputs[i] = objUser[field];
           }
 
           i++;
