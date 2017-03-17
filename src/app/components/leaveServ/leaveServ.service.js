@@ -123,7 +123,7 @@
       }
 
       if(!objLeave.lastModified){
-        objLeave.lastModified = new Date().getTime();
+        objLeave.lastModified = new Date();
       }
 
 
@@ -152,7 +152,7 @@
     function editLeave(objLeave){
       var deferred = $q.defer();
       // var indexID = objLeave.indexID;
-
+      objLeave.lastModified = new Date().getTime();
       var request = localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .put(objLeave);
 

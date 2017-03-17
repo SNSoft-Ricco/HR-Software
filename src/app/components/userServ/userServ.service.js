@@ -73,7 +73,14 @@
                     }  
                    })
                   })
-                  mongoServ.editUser(data['indexDBtimeNotMatch']);
+
+                  if(data['indexDBtimeNotMatch'].length>0){
+                    data['indexDBtimeNotMatch'].forEach(function(idbNotMatch){
+                      
+                      mongoServ.editUser(idbNotMatch);
+                    })
+                  }
+                  
 
                   var indexDBNotExist = data['indexDBNotExist'];
                   var mongoDBtimeNotMatch = data['mongoDBtimeNotMatch'];
@@ -228,6 +235,7 @@
     function editUser(objUser) {
       var deferred = $q.defer();
 
+      objUser.lastModified = new Date().getTime();
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
           .put(objUser);

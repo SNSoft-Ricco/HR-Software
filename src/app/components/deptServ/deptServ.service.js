@@ -183,7 +183,7 @@
     // Promise Resolve - Success Message
     function editDept(objDept) {
       var deferred = $q.defer();
-
+      objDept.lastModified = new Date().getTime();
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .put(objDept);
