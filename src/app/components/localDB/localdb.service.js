@@ -128,7 +128,6 @@
 
       req.onsuccess = function () {
         db = this.result;
-        $log.info("Opening DB conn..");
 
         db.onerror = function(event) {
           deferred.reject("Database error: " + event.target.errorCode);

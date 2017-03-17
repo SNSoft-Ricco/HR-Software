@@ -17,6 +17,7 @@
     vm.editUser = editUser;
     vm.deptDetail = deptDetail;
     vm.checkViewPermission = checkViewPermission;
+    vm.getStatusName = getStatusName;
 
     vm.username = "";
     //angular.fromJson($cookies.get("loggedInUser")).username;
@@ -77,5 +78,11 @@
         console.log("cookies not exist");
     }
     this.checkViewPermission();
+
+    function getStatusName(statusID) {
+      var userStatusList = {0: 'Suspended' ,1: 'Active'};
+
+      return userStatusList[statusID];
+    }
   }
 })();

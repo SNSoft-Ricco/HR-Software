@@ -27,7 +27,7 @@
                         <td> {{ user.userGroupName }}</td>
                         <td ng-click="userMgmt.deptDetail(user.department)"> {{ user.department }}</td>
                         <td> {{ user.position }} </td>
-                        <td> {{ user.status }} </td>
+                        <td> {{ userMgmt.getStatusName(user.status) }} </td>
                         <td>
                         	<i class="glyphicon glyphicon-pencil" ng-if="user.name !== 'admin'" ng-click="userMgmt.editUser(user)"></i>
                         	<i class="glyphicon glyphicon-remove" ng-if="user.name !== 'admin'" ng-click="userMgmt.rmUser(user)"></i>

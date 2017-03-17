@@ -58,7 +58,7 @@
               ng-if="value.fieldName == 'status'"
               class="form-control selectpicker">
               <option value=" ">None</option>
-              <option ng-repeat="status in userRgst.userStatusList track by $index">{{status}}</option>
+              <option ng-repeat="(key, value) in userRgst.userStatusList track by $index" ng-value="key">{{value}}</option>
             </select>
 			    </div>
 			  </div>
