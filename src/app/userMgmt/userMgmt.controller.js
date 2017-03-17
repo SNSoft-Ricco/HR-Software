@@ -6,7 +6,7 @@
     .controller('UserMgmtController', UserMgmtController);
 
   /** @ngInject */
-  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, PermissionService, AuthService, syncData) {
+  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, PermissionService, AuthService, syncData, mongoServ) {
     var vm = this;
     var id=2;
 
@@ -49,7 +49,11 @@
       userServ.rmUser(objUser).then(function(result){
         // alert(result);
         // showUsers();
-      });
+      })
+      .then(function(){
+        mongoServ.editUser(objUser);
+      })
+
     }
 
     function editUser(objUser) {

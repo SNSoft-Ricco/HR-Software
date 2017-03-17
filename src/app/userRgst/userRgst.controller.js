@@ -107,13 +107,14 @@
         $state.go('userMgmt');
       }
       else {
+        var i = 0;
 
         vm.editMode = true;
         vm.title = "Edit User Information";
 
         for (var field in objUser) {
           if(vm.dynFields.hasOwnProperty(field)) {
-            vm.inputs[field] = objUser[field];
+            vm.inputs[i] = objUser[field];
 
             loadNext(field, objUser[field]);
           } else {
@@ -129,10 +130,11 @@
                 vm.dynFields[field].inputType = "selectBox";
               }
 
-              vm.inputs[field] = objUser[field];
+              vm.inputs[i] = objUser[field];
             }
           }
-        }
+          i++;
+        } 
       }
 
 
@@ -151,7 +153,7 @@
 
       // Get dynamic fields
       for (var field in vm.dynFields) {
-        fields[field] = vm.inputs[field];
+        fields[field] = vm.inputs[i];
         i++;
       }
 
