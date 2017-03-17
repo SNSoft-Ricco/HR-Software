@@ -38,6 +38,7 @@
           cursor.continue();
         }
         else {
+          sync = true;
           if(sync){
             // compare the file between indexDB & mongoDB , then sync it
             syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)

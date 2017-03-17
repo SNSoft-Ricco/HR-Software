@@ -59,8 +59,8 @@
                       if(userRecord.errors.username.name == "ValidatorError"){
                         getUser(userRecord.errors.username.value)
                         .then(function(duplicateUser){
-                          duplicateUser.status = 2;
-                          editUser(duplicateUser);
+                          // duplicateUser.status = 2;
+                          // editUser(duplicateUser);
                         })
                       }
                     }else{

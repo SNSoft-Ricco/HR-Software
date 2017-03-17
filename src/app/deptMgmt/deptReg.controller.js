@@ -31,7 +31,8 @@
       }
     };
 
-		var hiddenFields = ['position', 'indexID', 'lastModified'];
+		var hiddenFields = ['position'];
+    // var hiddenFields = ['position', 'lastModified','_id','status'];
 
 		vm.dynFields = dynTemplate;
 		vm.editMode = false;
@@ -50,29 +51,25 @@
       vm.editMode = true;
       vm.title = "Edit Department Information";
 
-      for (var dept in objDept) {
-        if(vm.dynFields.hasOwnProperty(dept)) {
-          vm.inputs[i] = objDept[dept];
-          i++;
-        } 
-        
-      }
-      for (var dept in objDept){
-      		if(!vm.dynFields.hasOwnProperty(dept)){
-					if (dept !== "position") {
-						vm.dynFields[dept] = {
-							"fieldName": dept,
-							"type": "text",
-							"inputType": "textbox",
-							"glyphClass": "glyphicon glyphicon-list-alt"
-						};
+      for (var field in objDept) {
+        if(vm.dynFields.hasOwnProperty(field)) {
+          vm.inputs[field] = objDept[field];
+        } else {
+          if (hiddenFields.indexOf(field) < 0) {
+            vm.dynFields[field] = {
+              "fieldName": field,
+              "type": "text",
+              "inputType": "textbox",
+              "glyphClass": "glyphicon glyphicon-list-alt"
+            };
 
-						vm.inputs[i] = objDept[dept];
-						 i++;
-					}
-      		}
+            vm.inputs[field] = objDept[field];
+          }
+        }
+
+        i++;
       }
-		}
+    }
 
 		// Load users as select options
 		userServ.getAllUsers().then(function(users){
@@ -85,7 +82,7 @@
 
       // Get dynamic fields
       for (var field in vm.dynFields) {
-        fields[field] = vm.inputs[i];
+        fields[field] = vm.inputs[field];
         i++;
       }
 

@@ -6,7 +6,7 @@
 		.controller('DeptMgmtController', DeptMgmtController);
 
 	/** @ngInject */
-	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr, AuthService, syncData) {
+	function DeptMgmtController($log, $window, $cookies, $state, $timeout, $mdDialog, localdb, deptServ, toastr, AuthService, syncData, mongoServ) {
 		var vm = this;
 		var id = 4;
 
@@ -29,7 +29,10 @@
 		function rmDept(objDept) {
 			deptServ.rmDept(objDept).then(function(msg) {
 				toastr.success('Successfully removed department', 'Success');
-				showAllDepts();
+				objDept.status = 0;
+				mongoServ.editDept(objDept).then(function(){
+					showAllDepts();	
+				})
 			})
 		}
 

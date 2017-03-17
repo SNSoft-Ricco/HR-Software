@@ -131,7 +131,7 @@
 
     function mergeData(sync, fn){
       var deferred = $q.defer();
-
+      sync = false;
       if(sync){
         fn(false)
           .then(fn)

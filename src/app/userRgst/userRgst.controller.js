@@ -69,7 +69,7 @@
       }
     };
 
-    var hiddenFields = ['indexID', 'lastModified', 'userGroupName'];
+    var hiddenFields = []; // ['indexID', 'lastModified', 'userGroupName'];
 
     vm.userStatusList = [0,1]// ['Active', 'Disabled'];
     vm.dynFields = dynTemplate;
@@ -107,14 +107,13 @@
         $state.go('userMgmt');
       }
       else {
-        var i = 0;
 
         vm.editMode = true;
         vm.title = "Edit User Information";
 
         for (var field in objUser) {
           if(vm.dynFields.hasOwnProperty(field)) {
-            vm.inputs[i] = objUser[field];
+            vm.inputs[field] = objUser[field];
 
             loadNext(field, objUser[field]);
           } else {
@@ -130,13 +129,13 @@
                 vm.dynFields[field].inputType = "selectBox";
               }
 
-              vm.inputs[i] = objUser[field];
+              vm.inputs[field] = objUser[field];
             }
           }
-
-          i++;
         }
       }
+
+
     }
 
 
@@ -152,7 +151,7 @@
 
       // Get dynamic fields
       for (var field in vm.dynFields) {
-        fields[field] = vm.inputs[i];
+        fields[field] = vm.inputs[field];
         i++;
       }
 
