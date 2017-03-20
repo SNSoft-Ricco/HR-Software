@@ -106,7 +106,7 @@
                  if(collections[collection].username!="admin@snsoft.my"){
                    modifyCollection['mongoDBNotExist'].push(collections[collection]);
                  }
-
+            }
          }
         deferred.resolve(modifyCollection);
         // indexdb have but mongo dont have
