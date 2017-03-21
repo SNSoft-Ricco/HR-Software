@@ -1,53 +1,60 @@
 (function(){
 
-	angular
-		.module('snsoftHr')
-		.service('ProfileService',ProfileService);
+  angular
+    .module('snsoftHr')
+    .service('ProfileService',ProfileService);
 
-	function ProfileService($q,localdb){
+  function ProfileService(localdb, $q){
+    this.getUser = getUser;
+    this.updateUser = updateUser;
+
     var DB_OBJ_STORE_NAME = 'user';
 
-		this.getUser=function(uid)
-		{
-			var deferred = $q.defer();
-
-      localdb.openDb().then(function() {
-        var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readonly').get(uid);
-
-        request.onerror = function (event) {
-          deferred.reject();
-          console.log("get user info error: " + event.target.errorCode);
-        };
-
-        request.onsuccess = function (event) {
-          var data = event.target.result;
-          deferred.resolve(data);
-        };
-      });
-
-			return deferred.promise;
-		}
-
-		this.updateUser=function(obj)
-		{
+    function getUser (uid)
+    {
       var deferred = $q.defer();
 
-      localdb.openDb().then(function() {
-        var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readwrite').put(obj);
+      localdb.openDb().then(
+        function () {
+          var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readonly').get(uid);
+          request.onsuccess = function (event) {
+            var data = event.target.result;
+            deferred.resolve(data);
+          };
 
-        request.onerror = function (event) {
-          deferred.reject();
-          console.log("get user info error: " + event.target.errorCode);
-        };
+          request.onerror = function (event) {
+            deferred.reject("Error to user", event.target.errorCode);
+          };
+        },
+        function (error) {
+          deferred.reject("Error to check DB connection.", error);
+        }
+      );
+      return deferred.promise;
+    }
 
-        request.onsuccess = function (event) {
-          var data = event.target.result;
-          deferred.resolve(data);
-        };
-      });
+    function updateUser(obj)
+    {
+      var deferred = $q.defer();
 
-			return deferred.promise;
-		}
-	}
+      localdb.openDb().then(
+        function () {
+          var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readwrite').put(obj);
 
+          request.onsuccess = function (event) {
+            var data = event.target.result;
+            deferred.resolve(data);
+          };
+
+          request.onerror = function (event) {
+            deferred.reject("Error to update user", event.target.errorCode);
+          };
+        },
+        function (error) {
+          deferred.reject("Error to check DB connection.", error);
+        }
+      );
+      return deferred.promise;
+    }
+  }
 })();
