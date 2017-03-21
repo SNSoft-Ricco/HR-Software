@@ -93,8 +93,6 @@
                   // if same , dont update
                 }
               }
-            }else{
-              console.log('the _id do exist');
             }
           }
         }

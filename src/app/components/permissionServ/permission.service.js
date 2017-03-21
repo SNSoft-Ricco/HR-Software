@@ -9,7 +9,8 @@
     var DB_OBJ_USER = 'user';
     var permissionArray=[];
     var userList=[];
-
+    var vm = this;
+    
     this.addPermission=function (obj)
     {
       var deferred = $q.defer();
@@ -95,23 +96,15 @@
 
     this.getAllPermission=function(sync)
     {
-      permissionArray=[];
       var deferred = $q.defer();
-
+      permissionArray=[];
+      
       localdb.openDb().then(function() {
         var objectStore = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly');
 
         objectStore.openCursor().onsuccess = function (event) {
           var cursor = event.target.result;
           if (cursor) {
-
-			//var objectStore = db.transaction(DB_OBJ_PERMISSION).objectStore(DB_OBJ_PERMISSION);
-          localdb.openDb().then(function() {
-			var objectStore = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly');
-
-			objectStore.openCursor().onsuccess = function(event) {
-			  var cursor = event.target.result;
-			  if (cursor) {
 
 			    var objPms = {};
 			    objPms = { id: cursor.value.indexID, indexID:cursor.value.indexID, code: cursor.value.code, description: cursor.value.description,permissionList:cursor.value.permissionList, array:cursor.value.permissionList, _id:cursor.value._id, lastModified:cursor.value.lastModified };
@@ -124,7 +117,6 @@
 		              // compare the file between indexDB & mongoDB , then sync it
 		              syncData.compare(permissionArray, mongoServ.addPermission, mongoServ.getAllPermission)
 		              .then(function(data){
-8
 
 		                  mongoServ.addPermission(data['mongoDBNotExist'])
 		                  .then(function(udata){
@@ -156,11 +148,12 @@
 		                  }
 		              })
 		          }
-			    deferred.resolve(permissionArray);
+        deferred.resolve(permissionArray);
 			  }
-			};
-          });
-			return deferred.promise;
+        
+      };
+      });
+      return deferred.promise;  
 		}
 
 		this.getPermissionUser=function(id)
@@ -202,7 +195,7 @@
 
 		this.getUserGroupNameByID = function(id) {
 		  return new Promise(function(resolve,reject) {
-        
+
         localdb.openDb().then(function() {
           var request =
             localdb

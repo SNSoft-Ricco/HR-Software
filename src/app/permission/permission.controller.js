@@ -104,7 +104,8 @@
         }
 
         function refreshList(){
-            var promise = PermissionService.getAllPermission(true);
+            
+            var promise = PermissionService.getAllPermission();
             promise.then (function(result){
                 var tmpArray = result;
 

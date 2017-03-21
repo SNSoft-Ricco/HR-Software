@@ -31,8 +31,8 @@
       }
     };
 
-		var hiddenFields = ['position'];
-    // var hiddenFields = ['position', 'lastModified','_id','status'];
+		// var hiddenFields = ['position'];
+    var hiddenFields = ['position', 'lastModified','_id','status'];
 
 		vm.dynFields = dynTemplate;
 		vm.editMode = false;
