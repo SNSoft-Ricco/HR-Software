@@ -103,14 +103,6 @@
             txn.objectStore('permission').add({code: "System Administrator",description: "System Administrator",
               permissionList: list, indexID:'admin@snsoft.my-1931993199319233'});
 
-          case (evt.oldVersion < 5):
-            $log.info("IndexedDB Version 5");
-            systemObjStore = dataBase.createObjectStore("system", { keyPath : "_id", autoIncrement : true });
-            txn.objectStore('system').add({type: { 1: "Annual Leave", 2: "Medical Leave", 99: "Other Reason" }});
-          case (evt.oldVersion < 6):
-            $log.info("IndexedDB Version 6");
-            storeCreateIndex(leaveObjStore, "user.username", { unique: true });
-            storeCreateIndex(leaveObjStore, "user.department", { unique: false });
           case (evt.oldVersion < 7):
             $log.info("IndexedDB Version 7");
             leaveObjStore = txn.objectStore('leave');
@@ -136,7 +128,6 @@
 
       req.onsuccess = function () {
         db = this.result;
-        $log.info("Opening DB conn..");
 
         db.onerror = function(event) {
           deferred.reject("Database error: " + event.target.errorCode);

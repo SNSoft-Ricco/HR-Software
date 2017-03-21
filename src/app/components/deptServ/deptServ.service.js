@@ -21,46 +21,47 @@
       var deferred = $q.defer();
       var departments = [];
 
-      var request =
-        localdb.getObjectStore(DB_STORENAME, 'readonly')
-        .openCursor();
+      localdb.openDb().then(function(){
+        var request =
+          localdb.getObjectStore(DB_STORENAME, 'readonly')
+            .openCursor();
 
-      request.onerror = function() {
-        $log.info("Open Cursor Error!");
-        deferred.reject();
-      };
-      // Do something when all the data is added to the database.
-      request.onsuccess = function(event) {
-      var cursor = event.target.result;
+        request.onerror = function() {
+          $log.info("Open Cursor Error!");
+          deferred.reject();
+        };
+        // Do something when all the data is added to the database.
+        request.onsuccess = function(event) {
+          var cursor = event.target.result;
 
-        if (cursor) {
-          departments.push(cursor.value);
-          cursor.continue();
-        }
-        else {
-          sync = true;
-          if(sync){
-            // compare the file between indexDB & mongoDB , then sync it
-            syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)
-            .then(function(data){
-
-                mongoServ.addDept(data['mongoDBNotExist'] , function(udata){
+          if (cursor) {
+            departments.push(cursor.value);
+            cursor.continue();
+          }
+          else {
+            if(sync){
+              // compare the file between indexDB & mongoDB , then sync it
+              syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)
+                .then(function(data){
+                  
+                  mongoServ.addDept(data['mongoDBNotExist'] , function(udata){
                     // assign objectID to departments
                     if(udata.length==0||!udata.data){ return }
-                        udata.data.forEach(function(deptRecord){
-                          var _id = deptRecord._id;
-                          getDept(deptRecord.indexID)
-                            .then(function(indexData){
-                              indexData._id = _id;
-                              editDept(indexData);
-                            });
+                    udata.data.forEach(function(deptRecord){
+                      var _id = deptRecord._id;
+                      getDept(deptRecord.indexID)
+                        .then(function(indexData){
+                          indexData._id = _id;
+                          editDept(indexData);
                         });
-                });
+                    });
+                  });
 
-                mongoServ.editDept(data['indexDBtimeNotMatch']);
+                  mongoServ.editDept(data['indexDBtimeNotMatch']);
 
-                var indexDBNotExist = data.indexDBNotExist;
-                var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+                  var indexDBNotExist = data.indexDBNotExist;
+                  var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+
 
                 if(indexDBNotExist.length>0){
                   for(var idb in indexDBNotExist){
@@ -70,15 +71,16 @@
                   }
                 }
 
-                for(var tnm in mongoDBtimeNotMatch){
-                  //update indexDB data, because the lastmodified date is different(compared to mongodb)
-                  editDept(mongoDBtimeNotMatch[tnm]);
-                }
-            })
+                  for(var tnm in mongoDBtimeNotMatch){
+                    //update indexDB data, because the lastmodified date is different(compared to mongodb)
+                    editDept(mongoDBtimeNotMatch[tnm]);
+                  }
+                })
+            }
+            deferred.resolve(departments);
           }
-          deferred.resolve(departments);
-        }
-      };
+        };
+      });
 
       return deferred.promise;
     }

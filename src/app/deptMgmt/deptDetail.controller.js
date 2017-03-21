@@ -6,7 +6,7 @@
     .controller('DeptDetailController', DeptDetailController);
 
   /** @ngInject */
-  function DeptDetailController($log, $window, $cookies, $state, $stateParams, $mdDialog, deptServ, userServ, AuthService) {
+  function DeptDetailController($log, $cookies, $state, $stateParams, $mdDialog, deptServ, userServ, AuthService, toastr) {
     var vm = this;
     var objDept = $stateParams.myParam;
     var id = 4;
@@ -31,10 +31,8 @@
     function addPosition(ev) {
       var confirm = $mdDialog.prompt()
         .title('What is the name of new position?')
-        //.textContent('Bowser is a common name.')
         .placeholder('Position Name')
         .ariaLabel('Position name')
-        //.initialValue('Buddy')
         .targetEvent(ev)
         .ok('Create')
         .cancel('Cancel');
@@ -44,24 +42,23 @@
           objDept.position = [];
         }
 
+        // TODO:: Position Ranking
         objDept.position.push({
           positionId: 1,
           positionName: result
         });
 
         deptServ.editDept(objDept).then(function(msg){
-          alert(msg);
+          toastr.success(msg);
         })
-      }, function() {
-        //$scope.status = 'You didn\'t name your dog.';
-        $log.info("selected no")
       });
     }
 
     //// Private Functions
     function showDeptUsers() {
-      userServ.getUsersByIndex("userDepartment", objDept.name).then(function (users) {
-        vm.users = users;
+      userServ.getUsersByIndex("userDepartment", objDept.name)
+        .then(function (users) {
+          vm.users = users;
       })
     }
 
