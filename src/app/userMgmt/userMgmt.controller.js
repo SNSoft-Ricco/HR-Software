@@ -6,7 +6,7 @@
     .controller('UserMgmtController', UserMgmtController);
 
   /** @ngInject */
-  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, AuthService, syncData) {
+  function UserMgmtController($log, $cookies, $state, $timeout, userServ, deptServ, PermissionService, AuthService, syncData) {
     var vm = this;
     var id=2;
 
@@ -17,23 +17,30 @@
     vm.editUser = editUser;
     vm.deptDetail = deptDetail;
     vm.checkViewPermission = checkViewPermission;
+    vm.getStatusName = getStatusName;
 
     vm.username = "";
     //angular.fromJson($cookies.get("loggedInUser")).username;
 
-    $timeout(showUsers,500);
+      showUsers();
 
     function register() {
       $state.go("userRgst", {isRegister: true});
     }
 
     function showUsers() {
-
       syncData.sync()
       .then(function(result){
         syncData.mergeData(result, userServ.getAllUsers)
         .then(function(users){
           vm.users = users;
+
+          vm.users.map(function(user) {
+            PermissionService.getUserGroupNameByID(user.userGroup)
+              .then(function(code) {
+                user.userGroupName = code;
+              });
+          });
         })
       })
     }
@@ -71,5 +78,11 @@
         console.log("cookies not exist");
     }
     this.checkViewPermission();
+
+    function getStatusName(statusID) {
+      var userStatusList = {0: 'Suspended' ,1: 'Active'};
+
+      return userStatusList[statusID];
+    }
   }
 })();

@@ -24,13 +24,13 @@
                       <tr ng-repeat="user in userMgmt.users track by user.username">
                         <td><div ng-if="!user._id"><span class="glyphicon glyphicon-plus glyphicon-exclamation-sign"></span></div></td>
                         <td> {{ user.name }}</td>
-                        <td> {{ user.userGroup }}</td>
+                        <td> {{ user.userGroupName }}</td>
                         <td ng-click="userMgmt.deptDetail(user.department)"> {{ user.department }}</td>
                         <td> {{ user.position }} </td>
-                        <td> {{ user.status }} </td>
+                        <td> {{ userMgmt.getStatusName(user.status) }} </td>
                         <td>
-                        	<i class="glyphicon glyphicon-pencil" ng-click="userMgmt.editUser(user)"></i>
-                        	<i class="glyphicon glyphicon-remove" ng-click="userMgmt.rmUser(user)"></i>
+                        	<i class="glyphicon glyphicon-pencil" ng-if="user.name !== 'admin'" ng-click="userMgmt.editUser(user)"></i>
+                        	<i class="glyphicon glyphicon-remove" ng-if="user.name !== 'admin'" ng-click="userMgmt.rmUser(user)"></i>
                         </td>
                     </tr>
                     </tbody>

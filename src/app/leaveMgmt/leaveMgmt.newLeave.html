@@ -1,8 +1,8 @@
 <md-dialog aria-label="Apply Leave">
-  <form ng-cloak ng-if="dialog.isAllowed">
+  <form ng-cloak>
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <h2>Apply Leave</h2>
+        <h2>Leave Application Form</h2>
         <span flex></span>
         <!-- Top bar right -->
         <md-button class="md-icon-button" ng-click="dialog.cancel()">
@@ -21,7 +21,7 @@
                 <div layout-gt-xs="row">
                     <md-input-container class="md-block" flex-gt-sm>
                         <label>Leave Type</label>
-                        <md-select ng-model="dialog.type">
+                        <md-select ng-model="dialog.type" ng-change="dialog.loadEntitlement(dialog.type)">
                             <md-option ng-repeat="leave in dialog.types" value="{{leave}}">
                                 {{leave}}
                             </md-option>
@@ -62,7 +62,7 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row">
-      <h4>Leave Balance: </h4>
+      <h4>Leave Balance: {{ dialog.entitleDays}}</h4>
       <span flex></span>
       <md-button ng-click="dialog.cancel()">
         Cancel

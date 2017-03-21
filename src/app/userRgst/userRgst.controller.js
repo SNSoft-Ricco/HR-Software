@@ -8,7 +8,7 @@
   /** @ngInject */
   function UserRgstController(
     $log, $cookies, $state, $timeout, $stateParams,
-    userServ, deptServ, PermissionService, toastr,AuthService, mongoServ) {
+    userServ, deptServ, PermissionService, toastr, AuthService, mongoServ) {
 
     var vm = this;
     var id = 2;
@@ -68,7 +68,20 @@
       }
     };
 
-    vm.userStatusList = [0,1]// ['Active', 'Disabled'];
+    var leaveDaysTemplate = {
+      "Annual Leave":8,
+      "Medical Leave":14,
+      "Compassionate Leave":0,
+      "Hospitalization":60,
+      "Marriage":0,
+      "Maternity":0,
+      "Unpaid Leave":0,
+      "Paternity":0,
+      "Other Reason":0};
+
+    var hiddenFields = ['indexID', 'lastModified', 'userGroupName', 'leaveDays'];
+
+    vm.userStatusList = {0: 'Suspended' ,1: 'Active'};// ['Active', 'Disabled'];
     vm.dynFields = dynTemplate;
     vm.editMode = false;
     vm.title = "New User Registration";
@@ -81,22 +94,20 @@
     vm.loadNext = loadNext;
     vm.checkViewPermission = checkViewPermission;
 
-    $timeout(function(){
-      // Load Permission as select options
-      PermissionService.getAllPermission().then(function(pms){
-        vm.pms = pms;
-      })
+    // Load Permission as select options
+    PermissionService.getAllPermission().then(function(pms){
+      vm.pms = pms;
+    });
 
-      // Load Departments as select options
-      deptServ.getAllDepartments().then(function(depts) {
-        vm.depts = depts;
-      })
+    // Load Departments as select options
+    deptServ.getAllDepartments().then(function(depts) {
+      vm.depts = depts;
+    });
 
-      // Load users as select options
-      userServ.getAllUsers().then(function(users){
-        vm.users = users;
-      })
-    },500);
+    // Load users as select options
+    userServ.getAllUsers().then(function(users){
+      vm.users = users;
+    });
 
     // Refresh Page Handler
     if (!isRegister) {
@@ -115,18 +126,20 @@
 
             loadNext(field, objUser[field]);
           } else {
-            vm.dynFields[field] = {
-              "fieldName": field,
-              "type": "text",
-              "inputType": "textbox",
-              "glyphClass": "glyphicon glyphicon-list-alt"
-            };
+            if (hiddenFields.indexOf(field) < 0) {
+              vm.dynFields[field] = {
+                "fieldName": field,
+                "type": "text",
+                "inputType": "textbox",
+                "glyphClass": "glyphicon glyphicon-list-alt"
+              };
 
-            if (field == 'status') {
-              vm.dynFields[field].inputType = "selectBox";
+              if (field == 'status') {
+                vm.dynFields[field].inputType = "selectBox";
+              }
+
+              vm.inputs[i] = objUser[field];
             }
-
-            vm.inputs[i] = objUser[field];
           }
 
           i++;
@@ -151,6 +164,9 @@
         i++;
       }
 
+      // to be removed - add leave days template to existing users
+      fields['leaveDays'] = leaveDaysTemplate;
+
       // Special handling to set user as department head
       if (fields['position'] === 'Department Head') {
         $log.info("Department Head");
@@ -166,7 +182,7 @@
       {
         console.log(fields);
         userServ.editUser(fields).then(function(){
-          toastr.success("Successfully edited employee", "Success");
+          toastr.success("Successfully edited employee");
           back();
         })
         .then(function(){
@@ -174,7 +190,7 @@
         })
       } else {
         userServ.addUser(fields).then(function(){
-          toastr.success("Successfully added employee", "Success");
+          toastr.success("Successfully added employee");
           back();
         });
 

@@ -10,7 +10,7 @@
   function LeaveMgmtController($mdDialog, $document, $timeout, $cookies, $log, leaveServ, AuthService, syncData) {
     var vm = this;
     var id = 3;
-    vm.leaves;
+
     // Function Declaration
     vm.newLeave = newLeave;
     vm.approveLeave = approveLeave;
@@ -34,18 +34,15 @@
         targetEvent: ev,
         clickOutsideToClose:true,
         fullscreen: vm.customFullscreen // Only for -xs, -sm breakpoints.
-      })
-        .then(function(answer) {
-          vm.status = 'You said the information was "' + answer + '".';
-        }, function() {
-          vm.status = 'You cancelled the dialog.';
-        });
+      });
 
       function DialogController($log, $mdDialog, $cookies, leaveServ, toastr) {
         var vm = this;
 
+        vm.entitleDays = 0;
         vm.checkViewPermission = checkViewPermission;
-        vm.types = ["Annual Leave", "Medical Leave", "Other Reason"];
+        vm.types = ["Annual Leave", "Medical Leave", "Compassionate Leave", "Hospitalization",
+          "Marriage", "Maternity", "Unpaid Leave", "Paternity", "Other Reason"];
 
         vm.hide = function() {
           $mdDialog.hide();
@@ -71,6 +68,10 @@
             loadCurUserLeave();
             vm.cancel();
           });
+        };
+
+        vm.loadEntitlement = function(leaveType) {
+          vm.entitleDays = curUser.leaveDays[leaveType];
         };
       }
     }
@@ -100,13 +101,17 @@
       $timeout(function() {
         leaveServ.getPendingApprovalLeaveByUsername(curUser.username).then(function(leaves) {
           vm.leavesPendingMyApprove = leaves;
+
+          // get all leaves pending approve from department
           if (curUser.position === "Department Head") {
-            leaveServ.getPendingApprovalLeaveByDepartment(curUser.department).then(function(leaves) {
-              leaves.forEach(function(leave) {
-                // if (!vm.leavesPendingMyApprove.find(x => x._id === leave._id)) {
-                //   vm.leavesPendingMyApprove.push(leave);
-                // }
-              });
+            leaveServ.getPendingApprovalLeaveByDepartment(curUser.department)
+              .then(function(leaves) {
+                leaves.forEach(function(leave) {
+                  if (!vm.leavesPendingMyApprove.find(function(x) { return x.indexID === leave.indexID })
+                        && curUser.username !== leave.user) {
+                    vm.leavesPendingMyApprove.push(leave);
+                  }
+                });
             });
           }
         });
