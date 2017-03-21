@@ -56,7 +56,7 @@
 
     function checkViewPermission()
     {
-      if(document.cookie.indexOf('loggedInUser') > -1){
+      if($cookies.getObject('loggedInUser')){
         var username = $cookies.getObject('loggedInUser').username;
 
         AuthService.checkPermission(username,id).then(
@@ -72,7 +72,7 @@
         $log.info("cookies not exist");
     }
 
-    this.checkViewPermission();
-    this.loadProfile();
+    checkViewPermission();
+    loadProfile();
   }
 })();

@@ -119,9 +119,9 @@
           vm.id = "";
           vm.selection = [];
 
-          for(var i=0; i<vm.inputs.length; i++)
+          for(var k=0; k<vm.inputs.length; k++)
           {
-            vm.inputs[i] = "";
+            vm.inputs[k] = "";
           }
         },
         function (error) {
@@ -181,7 +181,7 @@
 
     function checkViewPermission()
     {
-      if(document.cookie.indexOf('loggedInUser') > -1){
+      if($cookies.getObject('loggedInUser')){
         var username = $cookies.getObject('loggedInUser').username;
 
         AuthService.checkPermission(username,id).then(
@@ -211,8 +211,8 @@
       );
     }
 
-    this.checkViewPermission();
-    this.refreshList();
+    checkViewPermission();
+    refreshList();
   }
 
 })();

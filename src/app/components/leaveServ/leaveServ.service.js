@@ -37,7 +37,7 @@
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         var value = event.target.result;
-        console.log('leaveServ run 1 times');
+
         if (value) {
           var sync = true;
           if(sync){

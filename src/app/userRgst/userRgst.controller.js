@@ -180,7 +180,6 @@
 
       if (vm.editMode)
       {
-        console.log(fields);
         userServ.editUser(fields).then(function(){
           toastr.success("Successfully edited employee");
           back();
@@ -224,19 +223,22 @@
 
     function checkViewPermission()
     {
-      if(document.cookie.indexOf('loggedInUser') > -1){
+      if($cookies.getObject('loggedInUser')){
         var username = $cookies.getObject('loggedInUser').username;
-        var promise = AuthService.checkPermission(username,id);
-        promise.then(function(data){
-          vm.isAllowed = data;
-        }, function(err) {
-          console.log("invalid permission checking");
-        });
+
+        AuthService.checkPermission(username,id).then(
+          function(data){
+            vm.isAllowed = data;
+          },
+          function(err) {
+            $log.info(err);
+          }
+        );
       }
       else
-        console.log("cookies not exist");
+        $log.info("cookies not exist");
     }
 
-    this.checkViewPermission();
+    checkViewPermission();
   }
 })();

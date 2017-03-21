@@ -25,7 +25,7 @@
         function() {
           var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').add(obj);
 
-          request.onsuccess = function (event) {
+          request.onsuccess = function () {
             deferred.resolve();
           };
 
@@ -48,7 +48,7 @@
         function () {
           var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').delete(id);
 
-          request.onsuccess = function (event) {
+          request.onsuccess = function () {
             deferred.resolve();
           };
 
@@ -71,7 +71,7 @@
         function () {
           var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').put(obj);
 
-          request.onsuccess = function (event) {
+          request.onsuccess = function () {
             deferred.resolve();
           };
 
@@ -151,12 +151,12 @@
 
                     for (var idb in indexDBNotExist) {
                       // insert no exist record(from mongo) to indexDB
-                      vm.addPermission(indexDBNotExist[idb]);
+                      addPermission(indexDBNotExist[idb]);
                     }
 
                     for (var tnm in mongoDBtimeNotMatch) {
                       //update indexDB data, because the lastmodified date is different(compared to mongodb)
-                      vm.updatePermission(mongoDBtimeNotMatch[tnm]);
+                      updatePermission(mongoDBtimeNotMatch[tnm]);
                     }
                   })
               }
