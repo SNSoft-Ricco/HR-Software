@@ -11,6 +11,7 @@
     this.getPermission = getPermission;
     this.getAllPermission = getAllPermission;
     this.getPermissionUser = getPermissionUser;
+    this.getUserGroupNameByID = getUserGroupNameByID;
 
     var DB_OBJ_PERMISSION = 'permission';
     var DB_OBJ_USER = 'user';
@@ -210,6 +211,26 @@
         }
       );
       return deferred.promise;
+    }
+
+    function getUserGroupNameByID (id) {
+      return new Promise(function(resolve,reject) {
+        localdb.openDb().then(function() {
+          var request =
+            localdb
+              .getObjectStore(DB_OBJ_PERMISSION, 'readonly')
+              .get(id);
+
+          request.onerror = function (event) {
+            reject("get error: " + event.target.errorCode);
+          };
+
+          request.onsuccess = function (event) {
+            var data = event.target.result;
+            resolve(data.code);
+          };
+        });
+      })
     }
   }
 })();
