@@ -4,59 +4,60 @@
     .module('snsoftHr')
     .service('AuthService',AuthService);
 
-  function AuthService($q,localdb,ProfileService,PermissionService){
-    var allowPermission = [];
-    var vm = this;
-    this.getAllowPermission=function(username)
-    {
-      return ProfileService.getUser(username)
-        .then(function(data){
-          return PermissionService.getPermission(data.userGroup)
-            .then (function(result){
-              if(result){
-                allowPermission = result.permissionList;
-                return Promise.resolve(allowPermission);
-              }
-              else
-                return Promise.reject("Invalid permission group!");
-              
-            },function(err) {
-              return Promise.reject("Invalid permission group!");
-            });
-        }, function(err) {
-          return Promise.reject("Invalid user!");
-        });
-    }
+  function AuthService(localdb, ProfileService, PermissionService, $q){
+    this.getAllowPermission = getAllowPermission;
+    this.checkPermission = checkPermission;
+    this.clearList = clearList;
 
-    this.checkPermission=function(username, id)
+    var allowPermission = [];
+
+
+    function getAllowPermission(username)
     {
       var deferred = $q.defer();
 
-      //if(allowPermission.length == 0)
-      //{
-      this.getAllowPermission(username).then(function(data){
-        if(data.indexOf(id) !== -1) {
-          deferred.resolve(true);
-        }
-        else {
-          deferred.resolve(false);
-        }
-      }, function(err) {
-        deferred.reject();
-      });
-      /* }
-       else
-       {
-       if(allowPermission.indexOf(id) !== -1)
-       deferred.resolve(true);
-       else
-       deferred.resolve(false);
-       }*/
+      ProfileService.getUser(username).then(
+        function (data) {
+          PermissionService.getPermission(data.userGroup).then(
+            function (result) {
+              if (result) {
+                allowPermission = result.PermissionList;
+                deferred.resolve(allowPermission);
+              }
+              else
+                deferred.reject("Invalid permission group!");
 
+            }, function (err) {
+              deferred.reject("Invalid permission group.", err);
+            }
+          );
+        },function (err) {
+          deferred.reject("Error to get user profile.", err);
+        }
+      );
       return deferred.promise;
     }
 
-    this.clearList=function()
+    function checkPermission (username, id)
+    {
+      var deferred = $q.defer();
+
+      getAllowPermission(username).then(
+        function (data) {
+          if (data.indexOf(id) !== -1) {
+            deferred.resolve(true);
+          }
+          else {
+            deferred.resolve(false);
+          }
+        }, function (err) {
+          deferred.reject("Error to get all permission.", err);
+        }
+      );
+      return deferred.promise;
+    }
+
+    function clearList()
     {
       allowPermission = [];
     }

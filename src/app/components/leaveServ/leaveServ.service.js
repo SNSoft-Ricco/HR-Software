@@ -37,6 +37,7 @@
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         var value = event.target.result;
+
         if (value) {
           var sync = true;
           if(sync){

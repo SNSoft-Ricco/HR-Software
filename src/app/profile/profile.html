@@ -1,93 +1,93 @@
 
- <div class="container">
-    <sns-navbar></sns-navbar>
+<div class="container">
+  <sns-navbar></sns-navbar>
 
-    <!-- Page Body -->
-	<div class="row" ng-if="profile.isAllowed">
-	    <div class="box col-md-12">
-	      <div class="box-inner">
-	        <div class="box-content">
-	          <!-- Starts Here -->
-		         <div class="panel panel-primary">
-				    <div class="panel-heading">{{profile.title}}</div>
-				      	<div class="panel-body">
-				      		<div class="col-md-12">
+  <!-- Page Body -->
+  <div class="row" ng-if="profile.isAllowed">
+    <div class="box col-md-12">
+      <div class="box-inner">
+        <div class="box-content">
+          <!-- Starts Here -->
+          <div class="panel panel-primary">
+            <div class="panel-heading">{{profile.title}}</div>
+            <div class="panel-body">
+              <div class="col-md-12">
 
-				      			<table>
-				      				<tr>
-				      					<td class="col-md-4"><label class="control-label">Username:</label></td>
-				      					<td class="col-md-4">{{profile.username}}</td>
-				      				</tr>
-				      				<tr>
-				      					<td class="col-md-4"><label class="control-label">Name:</label></td>
-				      					<td class="col-md-4">{{profile.name}}</td>
-				      				</tr>
-				      				<tr>
-				      					<td class="col-md-4"><label class="control-label">Group:</label></td>
-				      					<td class="col-md-4">{{profile.userGroup}}</td>
-				      				</tr>
-				      				<tr>
-				      					<td class="col-md-4"><label class="control-label">Department:</label></td>
-				      					<td class="col-md-4">{{profile.department}}</td>
-				      				</tr>
-				      				<tr>
-				      					<td class="col-md-4"><label class="control-label">Position:</label></td>
-				      					<td class="col-md-4">{{profile.position}}</td>
-				      				</tr>
-				      				<tr>
-				      					<td class="col-md-4"><label class="control-label">Supervisor:</label></td>
-				      					<td class="col-md-4">{{profile.supervisor}}</td>
-				      				</tr>
-				      				<tr>
-				      					<td class="col-md-4"><label class="control-label">Contact No:</label></td>
-				      					<td class="col-md-4">{{profile.contactNo}}</td>
-				      				</tr>
-				      				<tr>
-				      					<td class="col-md-4"><input type="button" value="Update" data-toggle="modal" data-target="#myModal"/></td>
-				      					<td></td>
-				      				</tr>
-				      			</table>
-				      		</div>
-				      	</div>
-				 </div>
-		    </div>
-	      </div>
-	    </div>
-	</div>
+                <table>
+                  <tr>
+                    <td class="col-md-4"><label class="control-label">Username:</label></td>
+                    <td class="col-md-4">{{profile.username}}</td>
+                  </tr>
+                  <tr>
+                    <td class="col-md-4"><label class="control-label">Name:</label></td>
+                    <td class="col-md-4">{{profile.name}}</td>
+                  </tr>
+                  <tr>
+                    <td class="col-md-4"><label class="control-label">Group:</label></td>
+                    <td class="col-md-4">{{profile.userGroup}}</td>
+                  </tr>
+                  <tr>
+                    <td class="col-md-4"><label class="control-label">Department:</label></td>
+                    <td class="col-md-4">{{profile.department}}</td>
+                  </tr>
+                  <tr>
+                    <td class="col-md-4"><label class="control-label">Position:</label></td>
+                    <td class="col-md-4">{{profile.position}}</td>
+                  </tr>
+                  <tr>
+                    <td class="col-md-4"><label class="control-label">Supervisor:</label></td>
+                    <td class="col-md-4">{{profile.supervisor}}</td>
+                  </tr>
+                  <tr>
+                    <td class="col-md-4"><label class="control-label">Contact No:</label></td>
+                    <td class="col-md-4">{{profile.contactNo}}</td>
+                  </tr>
+                  <tr>
+                    <td class="col-md-4"><input type="button" value="Update" data-toggle="modal" data-target="#myModal"/></td>
+                    <td></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 
- <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
 
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Update Profile</h4>
-        </div>
-
-        <div class="modal-body">
-           <form class="well form-horizontal" id="modal_form" name="modal_form">
-             <table>
-               <tr>
-                 <td class="col-md-6"><label>Name:</label></td>
-                 <td><input type="text" name="name" ng-model="profile.fullnameModal" /></td>
-               </tr>
-               <tr>
-                 <td class="col-md-6"><label>Contact No:</label></td>
-                 <td><input type="text" name="contact" ng-model="profile.contactnoModal" /></td>
-               </tr>
-			       </table>
-		   </form>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" ng-click='profile.updateUser()'>Update</button>
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Update Profile</h4>
       </div>
 
+      <div class="modal-body">
+        <form class="well form-horizontal" id="modal_form" name="modal_form">
+          <table>
+            <tr>
+              <td class="col-md-6"><label>Name:</label></td>
+              <td><input type="text" name="name" ng-model="profile.nameModal" /></td>
+            </tr>
+            <tr>
+              <td class="col-md-6"><label>Contact No:</label></td>
+              <td><input type="text" name="contact" ng-model="profile.contactnoModal" /></td>
+            </tr>
+          </table>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click='profile.updateUser()'>Update</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
     </div>
+
   </div>
+</div>

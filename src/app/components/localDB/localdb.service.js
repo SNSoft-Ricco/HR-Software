@@ -19,8 +19,7 @@
 
     var service = {
       openDb: openDb,
-      getObjectStore: getObjectStore,
-      getDbConn: getDbConn
+      getObjectStore: getObjectStore
     };
 
     return service;
@@ -30,6 +29,7 @@
       var deferred = $q.defer();
 
       if(bOpenDB) {
+        $log.info("DB has been opened previously");
         deferred.resolve(true);
         return deferred.promise;
       }
@@ -50,9 +50,9 @@
         var usrObjStore, deptObjStore, leaveObjStore, systemObjStore, lastSyncStore;
 
         var storeCreateIndex = function (objectStore, name, options) {
-            if (!objectStore.indexNames.contains(name)) {
-                objectStore.createIndex(name, name, options);
-            }
+          if (!objectStore.indexNames.contains(name)) {
+            objectStore.createIndex(name, name, options);
+          }
         };
 
         switch(true) {
@@ -75,7 +75,7 @@
 
             //Permission object store
             var store = evt.currentTarget.result
-            .createObjectStore("permission", { keyPath:"indexID"});
+              .createObjectStore("permission", { keyPath:"indexID"});
             store.createIndex('code', 'code', { unique: false });
             store.createIndex('description', 'description', { unique: false });
             store.createIndex('permissionList', 'permissionList', { unique: false });
@@ -99,9 +99,12 @@
                 position: "",name: "admin",department: "",contactNo: "123", _id:" "});
 
             // default permission group
-            var list = [1,2,3,4,5];
-            txn.objectStore('permission').add({code: "System Administrator",description: "System Administrator",
-              permissionList: list, indexID:'admin@snsoft.my-1931993199319233'});
+
+            var list = [1, 2, 3, 4, 5];
+            txn.objectStore('permission').add({
+              code: "P001", desc: "System Administrator permission",
+              PermissionList: list, indexID: 'admin@snsoft.my-1931993199319233'
+            });
 
           case (evt.oldVersion < 7):
             $log.info("IndexedDB Version 7");
@@ -148,11 +151,6 @@
     function getObjectStore(store_name, mode) {
       var tx = db.transaction(store_name, mode);
       return tx.objectStore(store_name);
-    }
-
-    function getDbConn()
-    {
-      return Promise.resolve(db);
     }
   }
 })();

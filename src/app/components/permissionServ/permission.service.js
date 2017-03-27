@@ -4,197 +4,216 @@
     .module('snsoftHr')
     .service('PermissionService',PermissionService);
 
-  function PermissionService($q,localdb, mongoServ, syncData){
+  function PermissionService($log, localdb, mongoServ, syncData, $q){
+    this.addPermission = addPermission;
+    this.removePermission = removePermission;
+    this.updatePermission = updatePermission;
+    this.getPermission = getPermission;
+    this.getAllPermission = getAllPermission;
+    this.getPermissionUser = getPermissionUser;
+    this.getUserGroupNameByID = getUserGroupNameByID;
+
     var DB_OBJ_PERMISSION = 'permission';
     var DB_OBJ_USER = 'user';
     var permissionArray=[];
     var userList=[];
-    var vm = this;
-    
-    this.addPermission=function (obj)
+
+    function addPermission(obj)
     {
       var deferred = $q.defer();
-      obj.indexID = syncData.generateIndexID();
-      obj.lastModified = parseInt((new Date().getTime())/1000);
 
-      localdb.openDb().then(function() {
-        var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').add(obj);
+      localdb.openDb().then(
+        function() {
+          var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').add(obj);
 
-        request.onsuccess = function (event) {
-          deferred.resolve();
-        };
+          request.onsuccess = function () {
+            deferred.resolve();
+          };
 
-        request.onerror = function (event) {
-          deferred.reject();
-          console.log("insert error: " + event.target.errorCode);
-        };
-      });
-
+          request.onerror = function (event) {
+            deferred.reject("Error to add permission", event.target.errorCode);
+          };
+        },
+        function (error) {
+          deferred.reject("Error to check DB connection.", error);
+        }
+      );
       return deferred.promise;
     }
 
-    this.removePermission=function (id)
+    function removePermission (id)
     {
       var deferred = $q.defer();
 
-      localdb.openDb().then(function() {
-        var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').delete(id);
+      localdb.openDb().then(
+        function () {
+          var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').delete(id);
 
-        request.onsuccess = function (event) {
-          deferred.resolve();
-        };
+          request.onsuccess = function () {
+            deferred.resolve();
+          };
 
-        request.onerror = function (event) {
-          deferred.reject();
-          console.log("delete error: " + event.target.errorCode);
-        };
-      });
-
+          request.onerror = function (event) {
+            deferred.reject("Error to remove permission", event.target.errorCode);
+          };
+        },
+        function (error) {
+          deferred.reject("Error to check DB connection.", error);
+        }
+      );
       return deferred.promise;
     }
 
-    this.updatePermission=function(obj)
+    function updatePermission (obj)
     {
       var deferred = $q.defer();
 
-      localdb.openDb().then(function() {
-        var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').put(obj);
+      localdb.openDb().then(
+        function () {
+          var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readwrite').put(obj);
 
-        request.onsuccess = function (event) {
-          deferred.resolve();
-        };
+          request.onsuccess = function () {
+            deferred.resolve();
+          };
 
-        request.onerror = function (event) {
-          deferred.reject();
-          console.log("update error: " + event.target.errorCode);
-        };
-      });
-
+          request.onerror = function (event) {
+            deferred.reject("Error to update permission", event.target.errorCode);
+          };
+        },
+        function (error) {
+          deferred.reject("Error to check DB connection.", error);
+        }
+      );
       return deferred.promise;
     }
 
-    this.getPermission=function(id)
+    function getPermission (id)
     {
       var deferred = $q.defer();
 
-      localdb.openDb().then(function() {
-        var pid = id;
-        var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(pid);
+      localdb.openDb().then(
+        function () {
+          var request = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly').get(id);
 
-        request.onerror = function (event) {
-          deferred.reject();
-          console.log("get error: " + event.target.errorCode);
-        };
+          request.onsuccess = function (event) {
+            var data = event.target.result;
+            deferred.resolve(data);
+          };
 
-        request.onsuccess = function (event) {
-          var data = event.target.result;
-          deferred.resolve(data);
-        };
-      });
+          request.onerror = function (event) {
+            deferred.reject("Error to get a permission", event.target.errorCode);
+          };
+        },
+        function (error) {
+          deferred.reject("Error to check DB connection.", error);
+        }
+      );
       return deferred.promise;
-    };
+    }
 
-    this.getAllPermission=function(sync)
+    function getAllPermission (sync)
     {
       var deferred = $q.defer();
-      permissionArray=[];
-      
-      localdb.openDb().then(function() {
-        var objectStore = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly');
+      localdb.openDb().then(
+        function () {
+          permissionArray = [];
+          var objectStore = localdb.getObjectStore(DB_OBJ_PERMISSION, 'readonly');
 
-        objectStore.openCursor().onsuccess = function (event) {
-          var cursor = event.target.result;
-          if (cursor) {
+          objectStore.openCursor().onsuccess = function (event) {
+            var cursor = event.target.result;
+            if (cursor) {
 
-			    var objPms = {};
-			    objPms = { id: cursor.value.indexID, indexID:cursor.value.indexID, code: cursor.value.code, description: cursor.value.description,permissionList:cursor.value.permissionList, array:cursor.value.permissionList, _id:cursor.value._id, lastModified:cursor.value.lastModified };
+              var objPms = {};
+              objPms = {
+                id: cursor.value.indexID,
+                code: cursor.value.code,
+                desc: cursor.value.desc,
+                array: cursor.value.PermissionList,
+                objectID: cursor.value.objectID,
+                lastModified: cursor.value.lastModified
+              };0
 
-			    permissionArray.push(objPms);
-			    cursor.continue();
-			  }
-			  else {
-		          if(sync){
-		              // compare the file between indexDB & mongoDB , then sync it
-		              syncData.compare(permissionArray, mongoServ.addPermission, mongoServ.getAllPermission)
-		              .then(function(data){
+              permissionArray.push(objPms);
+              cursor.continue();
+            }
+            else {
+              //no more result from cursor, then reach here
+              if (sync) {
+                // compare the file between indexDB & mongoDB , then sync it
+                syncData.compare(permissionArray, mongoServ.addPermission, mongoServ.getAllPermission)
+                  .then(function (data) {
 
-		                  mongoServ.addPermission(data['mongoDBNotExist'])
-		                  .then(function(udata){
-		                      // assign objectID to departments
-		                      if(udata.length==0||!udata.data){ return }
-		                          udata.data.forEach(function(pmRecord){
-		                            var _id = pmRecord._id;
-		                            vm.getPermission(pmRecord.indexID)
-		                              .then(function(indexData){
-		                                indexData._id = _id;
-		                                vm.updatePermission(indexData);
-		                              });
-		                          });
-		                  });
+                    mongoServ.addPermission(data['mongoDBNotExist']);
+                    mongoServ.updatePermission(data['indexDBtimeNotMatch']);
 
-		                  mongoServ.updatePermission(data['indexDBtimeNotMatch']);
+                    var indexDBNotExist = data.indexDBNotExist;
+                    var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
 
-		                  var indexDBNotExist = data.indexDBNotExist;
-		                  var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
+                    for (var idb in indexDBNotExist) {
+                      // insert no exist record(from mongo) to indexDB
+                      addPermission(indexDBNotExist[idb]);
+                    }
 
-		                  for(var idb in indexDBNotExist){
-		                    // insert no exist record(from mongo) to indexDB
-		                    vm.addPermission(indexDBNotExist[idb]);
-		                  }
+                    for (var tnm in mongoDBtimeNotMatch) {
+                      //update indexDB data, because the lastmodified date is different(compared to mongodb)
+                      updatePermission(mongoDBtimeNotMatch[tnm]);
+                    }
+                  })
+              }
+              deferred.resolve(permissionArray);
+            }
+          };
+        },
+        function (error) {
+          deferred.reject("Error to check DB connection.", error);
+        }
+      );
+      return deferred.promise;
+    }
 
-		                  for(var tnm in mongoDBtimeNotMatch){
-		                    //update indexDB data, because the lastmodified date is different(compared to mongodb)
-		                    vm.updatePermission(mongoDBtimeNotMatch[tnm]);
-		                  }
-		              })
-		          }
-        deferred.resolve(permissionArray);
-			  }
-        
-      };
-      });
-      return deferred.promise;  
-		}
+    function getPermissionUser(id)
+    {
+      var deferred = $q.defer();
 
-		this.getPermissionUser=function(id)
-		{
-			var deferred = $q.defer();
+      localdb.openDb().then(
+        function () {
+          var rslt = localdb.getObjectStore(DB_OBJ_USER, 'readonly');
+          var index = rslt.index('userGroup');
+          var sID = id.toString();
+          userList = [];
 
-            localdb.openDb().then(function() {
-              var rslt = localdb.getObjectStore(DB_OBJ_USER, 'readonly');
-              var index = rslt.index('usergroup');
-              var sID = id.toString();
-              userList = [];
+          var request = index.openCursor(IDBKeyRange.only(sID));
 
-              var request = index.openCursor(IDBKeyRange.only(sID));
+          request.onsuccess = function (event) {
+            var cursor = event.target.result;
+            if (cursor) {
+              var objPms = {};
+              objPms = {name: cursor.value.name, dept: cursor.value.department, position: cursor.value.position};
+              userList.push(objPms);
 
-              request.onerror = function () {
-                console.log("Open ObjectStore Error!");
-                deferred.reject();
-              };
+              cursor.continue();
+            }
+            else {
+              deferred.resolve(userList);
+            }
 
-              request.onsuccess = function (event) {
-                var cursor = event.target.result;
-                if (cursor) {
-                  var objPms = {};
-                  objPms = { name: cursor.value.name, dept: cursor.value.department,  position: cursor.value.position };
-                  userList.push(objPms);
+            if (userList)
+              deferred.resolve(userList);
+          };
 
-                  cursor.continue();
-                }
-                else {
-                  deferred.resolve(userList);
-                }
+          request.onerror = function (event) {
+            deferred.reject("Error to get user list", event.target.errorCode);
+          };
+        },
+        function (error) {
+          deferred.reject("Error to check DB connection.", error);
+        }
+      );
+      return deferred.promise;
+    }
 
-                if (userList)
-                  deferred.resolve(userList);
-              };
-            });
-			return deferred.promise;
-		};
-
-		this.getUserGroupNameByID = function(id) {
-		  return new Promise(function(resolve,reject) {
+    function getUserGroupNameByID (id) {
+      return new Promise(function(resolve,reject) {
 
         localdb.openDb().then(function() {
           var request =
@@ -214,5 +233,4 @@
       })
     }
   }
-
 })();

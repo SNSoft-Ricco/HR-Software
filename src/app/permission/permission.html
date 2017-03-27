@@ -1,161 +1,159 @@
+<div class="container" >
+  <sns-navbar></sns-navbar>
 
-    <div class="container" >
-      <sns-navbar></sns-navbar>
+  <!-- Page Body -->
+  <div class="row" ng-if="Permission.isAllowed">
+    <div class="box col-md-12">
+      <div class="box-inner">
+        <div class="box-content">
+          <!-- Starts Here -->
+          <form class="well form-horizontal" id="pms_form" name="pms_form">
+            <fieldset>
+              <!-- Form Name -->
+              <legend>{{ Permission.title }}</legend>
+              <!-- Dynamic Fields Form -->
+              <div class="form-group" ng-repeat="(key, value) in Permission.dynFields track by $index">
+                <label class="col-md-4 control-label">{{value.fieldName | capitalize}}</label>
+                <div class="col-md-4 inputGroupContainer">
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
+                    <input
+                      ng-model="Permission.inputs[$index]"
+                      ng-show="value.inputType == 'textbox'"
+                      ng-disabled="Permission.editMode && value.forEdit"
+                      placeholder="{{value.placeholder}}"
+                      class="form-control"
+                      type="{{value.type}}">
+                  </div>
+                </div>
+              </div>
 
-      <!-- Page Body -->
-	  <div class="row" ng-if="Permission.isAllowed">
-	    <div class="box col-md-12">
-	      <div class="box-inner">
-	        <div class="box-content">
-	          <!-- Starts Here -->
-	          <form class="well form-horizontal" id="pms_form" name="pms_form">
-	            <fieldset>
-	              <!-- Form Name -->
-	              <legend>{{ Permission.title }}</legend>
-	              <!-- Dynamic Fields Form -->
-	              <div class="form-group" ng-repeat="(key, value) in Permission.dynFields track by $index">
-	                <label class="col-md-4 control-label">{{value.fieldName | capitalize}}</label>
-	                <div class="col-md-4 inputGroupContainer">
-	                  <div class="input-group">
-	                    <span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
-	                    <input
-	                      ng-model="Permission.inputs[$index]"
-	                      ng-show="value.inputType == 'textbox'"
-	                      ng-disabled="Permission.editMode && value.forEdit"
-	                      placeholder="{{value.placeholder}}"
-	                      class="form-control"
-	                      type="{{value.type}}">
-	                  </div>
-	                </div>
-	             </div>
+              <div class="form-group">
+                <div class="col-md-4">
+                  <div class="input-group">
+                    <div ng-repeat="pmsName in Permission.PermissionChkBox">
+                      <input
+                        type="checkbox"
+                        name="pmsCheckBox[]"
+                        value="{{pmsName.id}}"
+                        ng-checked="Permission.selection.indexOf(pmsName.id) > -1"
+                        ng-click="Permission.toggleSelection(pmsName.id)"
+                      > {{pmsName.name}}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-				  <div class="form-group">
-						<div class="col-md-4">
-							<div class="input-group">
-								<div ng-repeat="pmsName in Permission.PermissionChkBox">
-								  <input
-								    type="checkbox"
-								    name="pmsCheckBox[]"
-								    value="{{pmsName.id}}"
-								    ng-checked="Permission.selection.indexOf(pmsName.id) > -1"
-								    ng-click="Permission.toggleSelection(pmsName.id)"
-								  > {{pmsName.name}}
-							    </div>
-						    </div>
-						</div>
-				  </div>
+              <!-- Button -->
+              <div class="form-group">
+                <div class="col-md-4">
+                  <div class="input-group">
+                    <input type="hidden" ng-model="Permission.id" />
+                    <input type="button" value="Send" ng-click='Permission.AddPermission()' />
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </form>
 
-				  <!-- Button -->
-				  <div class="form-group">
-						<div class="col-md-4">
-							<div class="input-group">
-						   		<input type="hidden" ng-model="Permission.id" />
-		    					<input type="button" value="Send" ng-click='Permission.AddPermission()' />
-						  </div>
-						</div>
-					</div>
-	              </fieldset>
-	          </form>
-
-	          <div class="row">
-			    <div class="box col-md-12">
-			        <div class="box-inner">
-			            <div class="box-content">
-			                <table class="table table-bordered table-striped table-condensed">
-								<thead>
-									<tr>
-										<th></th>
-									    <th>ID</th>
-									    <th>Code</th>
-									    <th>Description</th>
-									    <th>Permission</th>
-									    <th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr ng-repeat="pms in Permission.pmsArray">
-										<td><div ng-if="!pms._id"><span class="glyphicon glyphicon-plus glyphicon-exclamation-sign"></span></div></td>
-									    <td>{{ pms.id }}</td>
-									    <td>{{ pms.code }}</td>
-									    <td>{{ pms.description }}</td>
-									    <td><div ng-repeat="pmsList in pms.array">{{ pmsList }}</div></td>
-									    <td>
-									        <i class="glyphicon glyphicon-pencil" ng-click="Permission.EditPermission(pms.id)"></i>
-                        					<i class="glyphicon glyphicon-remove" ng-click="Permission.DeletePermission(pms.id)"></i>
-                        					<i class="glyphicon glyphicon-user" data-toggle="modal" data-target="#userModal" ng-click="Permission.ViewPermissionUser(pms.id)"></i>
-									    </td>
-									 </tr>
-								</tbody>
-							</table>
-			            </div>
-			        </div>
-			    </div>
-			  </div>
-	        </div>
-	      </div>
-	    </div>
-	</div>
+          <div class="row">
+            <div class="box col-md-12">
+              <div class="box-inner">
+                <div class="box-content">
+                  <table class="table table-bordered table-striped table-condensed">
+                    <thead>
+                    <tr>
+                      <th></th>
+                      <th>Code</th>
+                      <th>Description</th>
+                      <th>Permission</th>
+                      <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="pms in Permission.pmsArray">
+                      <td><div ng-if="!pms._id"><span class="glyphicon glyphicon-plus glyphicon-exclamation-sign"></span></div></td>
+                      <td>{{ pms.code }}</td>
+                      <td>{{ pms.desc }}</td>
+                      <td><div ng-repeat="pmsList in pms.array">{{ pmsList }}</div></td>
+                      <td>
+                        <i class="glyphicon glyphicon-pencil" ng-click="Permission.EditPermission(pms.id)"></i>
+                        <i class="glyphicon glyphicon-remove" ng-click="Permission.DeletePermission(pms.id)"></i>
+                        <i class="glyphicon glyphicon-user" data-toggle="modal" data-target="#userModal" ng-click="Permission.ViewPermissionUser(pms.id)"></i>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="userModal" role="dialog">
-<div class="modal-dialog">
+  <div class="modal-dialog">
 
-  <!-- Modal content-->
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal">&times;</button>
-      <h4 class="modal-title">User List</h4>
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">User List</h4>
+      </div>
+
+      <div class="modal-body">
+        <form class="well form-horizontal" id="modal_form" name="modal_form">
+          <fieldset>
+            <div class="box col-md-12">
+              <table class="table table-bordered table-striped table-condensed">
+                <tr>
+                  <th>Name</th><th>Position</th><th>Department</th>
+                </tr>
+                <tr ng-repeat="n in Permission.PermissionUser">
+                  <td>{{n.name}}</td>
+                  <td>{{n.position}}</td>
+                  <td>{{n.dept}}</td>
+                </tr>
+
+              </table>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
     </div>
 
-    <div class="modal-body">
-       <form class="well form-horizontal" id="modal_form" name="modal_form">
-            <fieldset>
-             <div class="box col-md-12">
-			  <table class="table table-bordered table-striped table-condensed">
-			    <tr>
-			    	<th>Name</th><th>Position</th><th>Department</th>
-			    </tr>
-			  	<tr ng-repeat="n in Permission.PermissionUser">
-					  <td>{{n.name}}</td>
-					  <td>{{n.position}}</td>
-					  <td>{{n.dept}}</td>
-				</tr>
-
-			  </table>
-			 </div>
-		    </fieldset>
-	   </form>
-    </div>
-
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    </div>
   </div>
-
-</div>
 </div>
 
-      <!-- <form>
-		    <label>Permission Code</label><br>
-		        <input type="text" name="code" ng-model="Permission.code"/><br>
-		    <label>Description</label> <br>
-		        <input type="text" name="description" ng-model="Permission.description"/><br>
 
-		    <br>
-		    <div ng-repeat="pmsName in Permission.PermissionChkBox">
-			  <input
-			    type="checkbox"
-			    name="pmsCheckBox[]"
-			    value="{{pmsName.id}}"
-			    ng-checked="Permission.selection.indexOf(pmsName.id) > -1"
-			    ng-click="Permission.toggleSelection(pmsName.id)"
-			  > {{pmsName.name}}
-			</div><br><br>
+<!-- <form>
+      <label>Permission Code</label><br>
+          <input type="text" name="code" ng-model="Permission.code"/><br>
+      <label>Description</label> <br>
+          <input type="text" name="desc" ng-model="Permission.desc"/><br>
 
-		    <input type="hidden" ng-model="Permission.id" />
-		    <input type="button" value="Send" ng-click='Permission.AddPermission()' />
-		</form>-->
+      <br>
+      <div ng-repeat="pmsName in Permission.PermissionChkBox">
+        <input
+          type="checkbox"
+          name="pmsCheckBox[]"
+          value="{{pmsName.id}}"
+          ng-checked="Permission.selection.indexOf(pmsName.id) > -1"
+          ng-click="Permission.toggleSelection(pmsName.id)"
+        > {{pmsName.name}}
+      </div><br><br>
+
+      <input type="hidden" ng-model="Permission.id" />
+      <input type="button" value="Send" ng-click='Permission.AddPermission()' />
+  </form>-->
 
 
 
