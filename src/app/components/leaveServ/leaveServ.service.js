@@ -91,9 +91,9 @@
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
         .get(indexID);
-
       request.onerror = function(event) {
         // Add leave trasaction - Error
+
         $log.debug("Transaction error: ", event);
         deferred.reject();
       };
@@ -118,9 +118,13 @@
       // Set Leave as Pending
       objLeave.approveStatus = "Pending";
       objLeave.status = 1;
-      objLeave.indexID = syncData.generateIndexID();
+
+      if(!objLeave.indexID||objLeave.indexID==""){
+        objLeave.indexID = syncData.generateIndexID();
+      }
+
       if(!objLeave.lastModified){
-        objLeave.lastModified = new Date().getTime();
+        objLeave.lastModified = new Date();
       }
 
 
@@ -130,7 +134,8 @@
 
       request.onerror = function(event) {
         // Add leave trasaction - Error
-        $log.debug("Transaction error: ", event);
+
+        $log.debug("Transaction error: ", event.target.error);
         deferred.reject();
       };
       request.onsuccess = function() {
@@ -148,7 +153,7 @@
     function editLeave(objLeave){
       var deferred = $q.defer();
       // var indexID = objLeave.indexID;
-
+      objLeave.lastModified = new Date().getTime();
       var request = localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .put(objLeave);
 

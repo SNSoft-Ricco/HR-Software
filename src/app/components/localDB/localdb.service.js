@@ -62,8 +62,8 @@
             usrObjStore = dataBase.createObjectStore("user", { keyPath : "username" });
             usrObjStore.createIndex('userGroup', 'userGroup', { unique: false });
 
-            lastSyncStore = dataBase.createObjectStore("lastSync", {keyPath : "sync"});
-            lastSyncStore.put({'sync':'syncDB','lastSync':null});
+            lastSyncStore = dataBase.createObjectStore("lastsync", {keyPath : "sync"});
+            lastSyncStore.add({'sync':'syncDB','lastsync':null});
             deptObjStore = dataBase.createObjectStore("department", { keyPath : "indexID"});
             leaveObjStore = dataBase.createObjectStore("leave", { keyPath : "indexID" });
 
@@ -77,8 +77,8 @@
             var store = evt.currentTarget.result
               .createObjectStore("permission", { keyPath:"indexID"});
             store.createIndex('code', 'code', { unique: false });
-            store.createIndex('desc', 'desc', { unique: false });
-            store.createIndex('PermissionList', 'PermissionList', { unique: false });
+            store.createIndex('description', 'description', { unique: false });
+            store.createIndex('permissionList', 'permissionList', { unique: false });
 
             // default departments
             var timestamp = new Date().getTime();
@@ -99,10 +99,11 @@
                 position: "",name: "admin",department: "",contactNo: "123", _id:" "});
 
             // default permission group
+
             var list = [1, 2, 3, 4, 5];
             txn.objectStore('permission').add({
-              code: "P001", desc: "System Administrator permission",
-              PermissionList: list, indexID: 'admin@snsoft.my-1931993199319233'
+              code: "P001", description: "System Administrator permission",
+              permissionList: list, indexID: 'admin@snsoft.my-1931993199319233'
             });
 
           case (evt.oldVersion < 7):

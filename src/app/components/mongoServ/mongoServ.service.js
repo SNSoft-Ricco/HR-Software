@@ -161,13 +161,13 @@
         data:objLeave
       }).then(function(results){ 
 
-        callback(results)
-      })
+        callback(results);
+      });
 
       // return $http({method:"POST", url:"/editDeptObjectID/",
       //   data:{'data':objectID}
       // })
-      console.log('addLeave');
+      $log.info('addLeave');
       return deferred.promise;
 
     }
@@ -178,8 +178,8 @@
       //   data{'data':objDept});
       // })
       if(objLeaves.length>0){
-        console.log(objLeaves);
-        console.log('Edit Leave');
+        $log.info(objLeaves);
+        $log.info('Edit Leave');
       }
     }
 
@@ -429,7 +429,7 @@
       //   data{'data':username});
       // })
     }
-    function addUser(objUser, callback){
+    function addUser(objUser){
 
 
       var deferred = $q.defer();
@@ -440,13 +440,18 @@
           var result = $http({method:"POST", url:SITE_URL+"/user/",
             data:objUser
           }).then(function(results){ 
-
-           callback(results) 
+           $log.info('addUser');
+           deferred.resolve(results);
+          }, function(err){
+            var errors =  err.config.data;
+            for(var error in errors){
+              $log.info(errors[error].username +' ' +err.data.message);
+            }
+            deferred.resolve(err);
           })
-          console.log('addUser');
 
       }else{
-          callback([])
+           deferred.resolve([]);
       }
 
       return deferred.promise;
@@ -463,10 +468,10 @@
         data:objUser
       }).then(function(results){ 
 
-       deferred.resolve(results)
+       deferred.resolve(results);
       })
 
-      console.log('rmUser');
+      $log.info('rmUser');
       return deferred.promise;
 
 
@@ -478,7 +483,7 @@
 
       var deferred = $q.defer();
 
-      var id = objUser._id
+      var id = objUser._id;
 
       if(!id){
         deferred.reject();
@@ -499,7 +504,7 @@
 
 
 
-      // console.log('Mongo editUser');
+      // $log.info('Mongo editUser');
       // var deferred = $q.defer();
 
       // var result = $http({method:"POST", url:SITE_URL+"/editUserObjectID/",
@@ -509,7 +514,7 @@
       //  deferred.resolve(results)
       // })
 
-      // console.log('editUser');
+      // $log.info('editUser');
       // return deferred.promise;
 
       // return $http({method:"POST", url:"/editUser/",
@@ -522,40 +527,60 @@
     // PERMISSION
     //////////////
 
-    function addPermission(){
+    function addPermission(permission){
       var deferred = $q.defer();
-      var permission = [];
+      // var permission = [];
       if(permission.length>0){
-        console.log('add permission record to mongodb');
+        $log.info('add permission record to mongodb');
+      
+    
+       var result =  $http({method:"POST", url:SITE_URL+"/permission/",
+        data:permission})
+       .then(function(pm){
+          deferred.resolve(pm);
+       });
+      }else{
+          deferred.resolve([]);
       }
-     
-      deferred.resolve(permission);
       return deferred.promise;
-      // return $http({method:"POST", url:"/addPermission/",
-      //   data{'data':username});
-      // })
     }
 
     function removePermission(){
+
       var deferred = $q.defer();
-      var permission = [];
-      
-      deferred.resolve(permission);
+      var id = objPm._id;
+      if(!id){
+        deferred.reject();
+      }else{
+
+        var result =  $http({method:"PATCH", url:SITE_URL+"/permission/"+id+"/",
+          data:objPm
+        }).then(function(permission){ 
+
+          deferred.resolve(permission);
+        })
+      }
       return deferred.promise;
-      // return $http({method:"POST", url:"/removePermission/",
-      //   data{'data':username});
-      // })
     }
 
-    function updatePermission(){
+    function updatePermission(objPm){
+
       var deferred = $q.defer();
-      var permission = [];
-      
-      deferred.resolve(permission);
+      var id = objPm._id;
+
+      if(!id){
+        deferred.reject();
+      }else{
+
+        var result =  $http({method:"PATCH", url:SITE_URL+"/permission/"+id+"/",
+          data:objPm
+        }).then(function(permission){ 
+
+          deferred.resolve(permission);
+        })
+      }
       return deferred.promise;
-      // return $http({method:"POST", url:"/updatePermission/",
-      //   data{'data':username});
-      // })
+
     }
 
     function getAllPermission(){
@@ -566,16 +591,16 @@
       // *** need to have objectID , or it will create everytime ***
       // var permission=[
       //   {
-      //     PermissionList:[1,2,3],
+      //     permissionList:[1,2,3],
       //     code:"Operators 1",
-      //     desc:"Operators 1",
+      //     description:"Operators 1",
       //     objectID:"a12345",
       //     lastModified:14883264307
       //   },
       //   {
-      //     PermissionList:[1,5],
+      //     permissionList:[1,5],
       //     code:"Shopkeeper",
-      //     desc:"Shopkeeper",
+      //     description:"Shopkeeper",
       //     objectID:"b12345",
       //     lastModified:1488326400
       //   }
@@ -585,16 +610,16 @@
       // ***** need to copy indexID , or it will create new record *****
       // var permission=[
       //   {
-      //     PermissionList:[1,2,5],
+      //     permissionList:[1,2,5],
       //     code:"Operators 1",
-      //     desc:"Operators 1",
+      //     description:"Operators 1",
       //     objectID:"a12345",
       //     lastModified:14883264307
       //   },
       //   {
-      //     PermissionList:[1,5],
+      //     permissionList:[1,5],
       //     code:"Cleaner",
-      //     desc:"Cleaner",
+      //     description:"Cleaner",
       //     objectID:"d12345",
       //     lastModified:1488326400
       //   }
@@ -604,9 +629,9 @@
       // ***** need to copy indexID , or it will create new record *****
       // var permission=[
       //   {
-      //     PermissionList:[1,2,5],
+      //     permissionList:[1,2,5],
       //     code:"Operators 423",
-      //     desc:"Operators 423",
+      //     description:"Operators 423",
       //     indexID:"admin@snsoft.my-1489118096722",
       //     objectID:"a12345",
       //     lastModified:1504224012
@@ -617,14 +642,17 @@
       // ***** need to copy indexID , or it will create new record *****
       // var permission=[
       //   {
-      //     PermissionList:[1,2,5],
+      //     permissionList:[1,2,5],
       //     code:"Operators 1",
-      //     desc:"Operators 1",
+      //     description:"Operators 1",
       //     objectID:"a12345",
       //     indexID:"admin@snsoft.my-1489113382465",
       //     lastModified:1483228800
       //   }
       // ]
+
+      var permission =  $http({method: "GET", url:SITE_URL+"/permission/"});
+
 
       deferred.resolve(permission);
       return deferred.promise;

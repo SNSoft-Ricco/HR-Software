@@ -14,7 +14,7 @@
 			  		<span class="input-group-addon"><i class="{{value.glyphClass}}"></i></span>
 			  		<input
               name="dynamic_text_input"
-			  			ng-model="userRgst.inputs[$index]"
+			  			ng-model="userRgst.inputs[key]"
 			  			ng-if="value.inputType == 'textbox'"
               ng-disabled="userRgst.editMode && value.forEdit == 'false'"
               ng-required="true"
@@ -22,15 +22,15 @@
 			  			class="form-control"
 			  			type="{{value.type}}">
 			  		<select
-			  			ng-model="userRgst.inputs[$index]"
+			  			ng-model="userRgst.inputs[key]"
 			  			ng-show="value.inputType == 'selectbox' && key == 'userGroup'"
 			  			class="form-control selectpicker">
 				      <option value=" ">Please select the permission group</option>
 							<option ng-repeat="(key, value) in userRgst.pms track by $index" value="{{value.id}}">{{value.code}}</option>
 					  </select>
 					  <select
-			  			ng-model="userRgst.inputs[$index]"
-							ng-disabled="!userRgst.inputs[$index-1]"
+			  			ng-model="userRgst.inputs[key]"
+							
 			  			ng-show="value.inputType == 'selectbox' && key == 'department'"
 							ng-change="userRgst.loadNext(key, userRgst.inputs[$index])"
 			  			class="form-control selectpicker">
@@ -38,8 +38,8 @@
 				      <option ng-repeat="(key, value) in userRgst.depts track by $index">{{value.name}}</option>
 					  </select>
 						<select
-			  			ng-model="userRgst.inputs[$index]"
-							ng-disabled="!userRgst.inputs[$index-1]"
+			  			ng-model="userRgst.inputs[key]"
+							
 			  			ng-show="value.inputType == 'selectbox' && key == 'position'"
 							ng-change="userRgst.loadNext(key, userRgst.inputs[$index])"
 			  			class="form-control selectpicker">
@@ -47,7 +47,7 @@
 				      <option ng-repeat="(key, value) in userRgst.positions track by $index">{{value.positionName}}</option>
 					  </select>
 						<select
-			  			ng-model="userRgst.inputs[$index]"
+			  			ng-model="userRgst.inputs[key]"
 			  			ng-show="value.inputType == 'selectbox' && key == 'supervisor'"
 			  			class="form-control selectpicker">
 				      <option value=" ">None</option>

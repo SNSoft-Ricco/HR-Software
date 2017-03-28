@@ -1,3 +1,4 @@
+
 (function() {
   'use strict';
 
@@ -68,6 +69,7 @@
       }
     };
 
+
     var leaveDaysTemplate = {
       "Annual Leave":8,
       "Medical Leave":14,
@@ -122,7 +124,7 @@
 
         for (var field in objUser) {
           if(vm.dynFields.hasOwnProperty(field)) {
-            vm.inputs[i] = objUser[field];
+            vm.inputs[field] = objUser[field];
 
             loadNext(field, objUser[field]);
           } else {
@@ -138,13 +140,14 @@
                 vm.dynFields[field].inputType = "selectBox";
               }
 
-              vm.inputs[i] = objUser[field];
+              vm.inputs[field] = objUser[field];
             }
           }
-
           i++;
-        }
+        } 
       }
+
+
     }
 
 
@@ -160,8 +163,8 @@
 
       // Get dynamic fields
       for (var field in vm.dynFields) {
-        fields[field] = vm.inputs[i];
-        i++;
+        fields[field] = vm.inputs[field];
+        i++
       }
 
       // to be removed - add leave days template to existing users
@@ -180,6 +183,7 @@
 
       if (vm.editMode)
       {
+
         userServ.editUser(fields).then(function(){
           toastr.success("Successfully edited employee");
           back();

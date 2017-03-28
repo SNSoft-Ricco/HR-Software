@@ -31,7 +31,8 @@
       }
     };
 
-		var hiddenFields = ['position', 'indexID', 'lastModified'];
+		// var hiddenFields = ['position'];
+    var hiddenFields = ['position', 'lastModified','_id','status'];
 
 		vm.dynFields = dynTemplate;
 		vm.editMode = false;
@@ -54,21 +55,21 @@
         if(vm.dynFields.hasOwnProperty(field)) {
           vm.inputs[field] = objDept[field];
         } else {
-					if (hiddenFields.indexOf(field) < 0) {
-						vm.dynFields[dept] = {
-							"fieldName": dept,
-							"type": "text",
-							"inputType": "textbox",
-							"glyphClass": "glyphicon glyphicon-list-alt"
-						};
+          if (hiddenFields.indexOf(field) < 0) {
+            vm.dynFields[field] = {
+              "fieldName": field,
+              "type": "text",
+              "inputType": "textbox",
+              "glyphClass": "glyphicon glyphicon-list-alt"
+            };
 
-						vm.inputs[i] = objDept[dept];
-					}
+            vm.inputs[field] = objDept[field];
+          }
         }
 
         i++;
       }
-		}
+    }
 
 		// Load users as select options
 		userServ.getAllUsers().then(function(users){
@@ -81,7 +82,7 @@
 
       // Get dynamic fields
       for (var field in vm.dynFields) {
-        fields[field] = vm.inputs[i];
+        fields[field] = vm.inputs[field];
         i++;
       }
 
@@ -115,6 +116,7 @@
 
     function checkViewPermission()
     {
+
       if($cookies.getObject('loggedInUser')){
         var username = $cookies.getObject('loggedInUser').username;
 

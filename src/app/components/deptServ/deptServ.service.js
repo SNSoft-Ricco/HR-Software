@@ -39,11 +39,12 @@
             cursor.continue();
           }
           else {
+            sync = true;
             if(sync){
               // compare the file between indexDB & mongoDB , then sync it
               syncData.compare(departments, mongoServ.addDept, mongoServ.getAllDepartments)
                 .then(function(data){
-
+                  
                   mongoServ.addDept(data['mongoDBNotExist'] , function(udata){
                     // assign objectID to departments
                     if(udata.length==0||!udata.data){ return }
@@ -62,12 +63,14 @@
                   var indexDBNotExist = data.indexDBNotExist;
                   var mongoDBtimeNotMatch = data.mongoDBtimeNotMatch;
 
+
+                if(indexDBNotExist.length>0){
                   for(var idb in indexDBNotExist){
                     // insert no exist record(from mongo) to indexDB
-                    addDept(indexDBNotExist[idb], function(data){
-
+                      addDept(indexDBNotExist[idb], function(data){
                     });
                   }
+                }
 
                   for(var tnm in mongoDBtimeNotMatch){
                     //update indexDB data, because the lastmodified date is different(compared to mongodb)
@@ -93,7 +96,7 @@
 
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readonly')
-          .index('name')
+          // .index('name')
           .get(deptName);
 
       request.onerror = function() {
@@ -144,6 +147,7 @@
       // Do something when all the data is added to the database.
       request.onsuccess = function(event) {
         // deferred.resolve("Successfully added department.");
+        $log.info(objDept);
         deferred.resolve("Successfully added department.");
       };
 
@@ -172,10 +176,6 @@
       // Remove department - Success
       request.onsuccess = function() {
         deferred.resolve("Successfully removed department.")
-
-        mongoServ.editDept(objDept, function(){
-          editDept(objDept);
-        });
       };
 
       return deferred.promise;
@@ -186,7 +186,7 @@
     // Promise Resolve - Success Message
     function editDept(objDept) {
       var deferred = $q.defer();
-
+      objDept.lastModified = new Date().getTime();
       var request =
         localdb.getObjectStore(DB_STORENAME, 'readwrite')
         .put(objDept);

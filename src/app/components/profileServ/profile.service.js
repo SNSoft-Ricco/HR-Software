@@ -4,16 +4,18 @@
     .module('snsoftHr')
     .service('ProfileService',ProfileService);
 
+
   function ProfileService(localdb, $q){
     this.getUser = getUser;
     this.updateUser = updateUser;
+
 
     var DB_OBJ_STORE_NAME = 'user';
 
     function getUser (uid)
     {
       var deferred = $q.defer();
-
+      
       localdb.openDb().then(
         function () {
           var request = localdb.getObjectStore(DB_OBJ_STORE_NAME, 'readonly').get(uid);
