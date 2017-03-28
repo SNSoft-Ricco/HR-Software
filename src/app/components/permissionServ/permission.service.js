@@ -132,7 +132,7 @@
                 code: cursor.value.code,
                 description: cursor.value.description,
                 array: cursor.value.permissionList,
-                objectID: cursor.value.objectID,
+                _id: cursor.value._id,
                 lastModified: cursor.value.lastModified
               };
 

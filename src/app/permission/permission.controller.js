@@ -40,7 +40,29 @@
         "placeholder": "Enter a description",
         "value": "test",
         "forEdit": "false"
+      },
+      "indexID": {
+        "fieldName": "indexID",
+        "type": "text",
+        "inputType": "textbox",
+        "glyphClass": "glyphicon glyphicon-info-sign",
+        "placeholder": "Enter a description",
+        "value": "test",
+        "forEdit": "false"
+      },
+      "_id": {
+        "fieldName": "_id",
+        "type": "text",
+        "inputType": "textbox",
+        "glyphClass": "glyphicon glyphicon-info-sign",
+        "placeholder": "Enter a description",
+        "value": "test",
+        "forEdit": "false"
       }
+
+
+
+
     }
     vm.dynFields = dynTemplate;
     vm.editMode = false;
@@ -84,7 +106,7 @@
       }
       else //update
       {
-        obj = { indexID:vm.id , code: fields.code, description: fields.description, permissionList:vm.selection };
+        obj = { indexID:fields.indexID , code: fields.code, description: fields.description, permissionList:vm.selection };
 
         PermissionService.updatePermission(obj).then (
           function(){
@@ -159,6 +181,8 @@
               vm.inputs[1] = result[field];
             else if(field == "indexID")
               vm.inputs[2] = result[field];
+            else if(field == "_id")
+              vm.inputs[3] = result[field];
           }
         },
         function (error) {
