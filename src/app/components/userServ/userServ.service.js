@@ -97,9 +97,10 @@
                     //update indexDB data, because the lastmodified date is different(compared to mongodb)
                       editUser(mongoDBtimeNotMatch[tnm]);
                   }
-                  deferred.resolve(users);
+                  
 
                   })
+                  deferred.resolve(users);
           }
       }
       }

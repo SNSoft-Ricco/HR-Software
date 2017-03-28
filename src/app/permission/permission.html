@@ -74,7 +74,7 @@
                     <tr ng-repeat="pms in Permission.pmsArray">
                       <td><div ng-if="!pms._id"><span class="glyphicon glyphicon-plus glyphicon-exclamation-sign"></span></div></td>
                       <td>{{ pms.code }}</td>
-                      <td>{{ pms.desc }}</td>
+                      <td>{{ pms.description }}</td>
                       <td><div ng-repeat="pmsList in pms.array">{{ pmsList }}</div></td>
                       <td>
                         <i class="glyphicon glyphicon-pencil" ng-click="Permission.EditPermission(pms.id)"></i>

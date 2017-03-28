@@ -102,8 +102,8 @@
 
             var list = [1, 2, 3, 4, 5];
             txn.objectStore('permission').add({
-              code: "P001", desc: "System Administrator permission",
-              PermissionList: list, indexID: 'admin@snsoft.my-1931993199319233'
+              code: "P001", description: "System Administrator permission",
+              permissionList: list, indexID: 'admin@snsoft.my-1931993199319233'
             });
 
           case (evt.oldVersion < 7):

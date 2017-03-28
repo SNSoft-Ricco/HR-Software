@@ -21,7 +21,7 @@
           PermissionService.getPermission(data.userGroup).then(
             function (result) {
               if (result) {
-                allowPermission = result.PermissionList;
+                allowPermission = result.permissionList;
                 deferred.resolve(allowPermission);
               }
               else

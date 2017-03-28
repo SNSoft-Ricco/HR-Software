@@ -21,6 +21,8 @@
     function addPermission(obj)
     {
       var deferred = $q.defer();
+      obj.indexID = syncData.generateIndexID();
+      obj.lastModified = parseInt((new Date().getTime())/1000);
 
       localdb.openDb().then(
         function() {
@@ -126,15 +128,17 @@
               var objPms = {};
               objPms = {
                 id: cursor.value.indexID,
+                indexID:cursor.value.indexID, 
                 code: cursor.value.code,
-                desc: cursor.value.desc,
-                array: cursor.value.PermissionList,
+                description: cursor.value.description,
+                array: cursor.value.permissionList,
                 objectID: cursor.value.objectID,
                 lastModified: cursor.value.lastModified
-              };0
+              };
 
               permissionArray.push(objPms);
               cursor.continue();
+
             }
             else {
               //no more result from cursor, then reach here
@@ -143,7 +147,20 @@
                 syncData.compare(permissionArray, mongoServ.addPermission, mongoServ.getAllPermission)
                   .then(function (data) {
 
-                    mongoServ.addPermission(data['mongoDBNotExist']);
+                    mongoServ.addPermission(data['mongoDBNotExist'])
+                    .then(function(udata){
+                        // assign objectID to departments
+                        if(udata.length==0||!udata.data){ return }
+                            udata.data.forEach(function(pmRecord){
+                              var _id = pmRecord._id;
+                              vm.getPermission(pmRecord.indexID)
+                                .then(function(indexData){
+                                  indexData._id = _id;
+                                  vm.updatePermission(indexData);
+                                });
+                            });
+                    });
+
                     mongoServ.updatePermission(data['indexDBtimeNotMatch']);
 
                     var indexDBNotExist = data.indexDBNotExist;

@@ -32,7 +32,7 @@
         "value": "test",
         "forEdit": "false"
       },
-      "desc": {
+      "description": {
         "fieldName": "Description",
         "type": "text",
         "inputType": "textbox",
@@ -70,7 +70,7 @@
 
       if(vm.id == null || vm.id=="") //insert
       {
-        obj = { indexID:indexID, code: fields.code, desc: fields.desc, PermissionList:vm.selection };
+        obj = { indexID:indexID, code: fields.code, description: fields.description, permissionList:vm.selection };
         obj.lastModified = parseInt((new Date().getTime())/1000);
 
         PermissionService.addPermission(obj).then (
@@ -84,7 +84,7 @@
       }
       else //update
       {
-        obj = { indexID:vm.id , code: fields.code, desc: fields.description, PermissionList:vm.selection };
+        obj = { indexID:vm.id , code: fields.code, description: fields.description, permissionList:vm.selection };
 
         PermissionService.updatePermission(obj).then (
           function(){
@@ -149,13 +149,13 @@
         function(result){
           vm.id = result.indexID;
           vm.selection = [];
-          vm.selection = result.PermissionList;
+          vm.selection = result.permissionList;
 
           for(var field in result)
           {
             if(field == "code")
               vm.inputs[0] = result[field];
-            else if(field == "desc")
+            else if(field == "description")
               vm.inputs[1] = result[field];
             else if(field == "indexID")
               vm.inputs[2] = result[field];
