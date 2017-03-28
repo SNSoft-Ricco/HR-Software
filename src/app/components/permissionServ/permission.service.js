@@ -153,10 +153,10 @@
                         if(udata.length==0||!udata.data){ return }
                             udata.data.forEach(function(pmRecord){
                               var _id = pmRecord._id;
-                              vm.getPermission(pmRecord.indexID)
+                              getPermission(pmRecord.indexID)
                                 .then(function(indexData){
                                   indexData._id = _id;
-                                  vm.updatePermission(indexData);
+                                  updatePermission(indexData);
                                 });
                             });
                     });
