@@ -83,7 +83,6 @@
       var i = 0;
       var fields = {};
       var obj = {};
-      var indexID = syncData.generateIndexID();
       // Get dynamic fields
       for (var field in vm.dynFields) {
         fields[field] = vm.inputs[i];
@@ -92,6 +91,7 @@
 
       if(vm.id == null || vm.id=="") //insert
       {
+        var indexID = syncData.generateIndexID();
         obj = { indexID:indexID, code: fields.code, description: fields.description, permissionList:vm.selection };
         obj.lastModified = parseInt((new Date().getTime())/1000);
 
@@ -106,7 +106,7 @@
       }
       else //update
       {
-        obj = { indexID:fields.indexID , code: fields.code, description: fields.description, permissionList:vm.selection };
+        obj = {  indexID:fields.indexID, _id:fields._id, code: fields.code, description: fields.description, permissionList:vm.selection };
 
         PermissionService.updatePermission(obj).then (
           function(){
